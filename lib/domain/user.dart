@@ -2,7 +2,14 @@
 
 import 'package:ricettario/domain/birthday.dart';
 
+///
+/// Classe software che identifica l'utente che utilizza l'applicazione.
+/// All'utente sono associate le sue generalità tra cui la data di nascita, quindi
+/// è creator e information Expert(pattern grasp)
+/// di un Birthday
+///
 class User{
+
   String name;
   String surname;
   Birthday birthday;
@@ -23,6 +30,7 @@ class User{
     return this;
   }
   User setBirthday(Birthday birthday){
+    //TODO controlla da UserChecker
     this.birthday=birthday;
     return this;
   }
@@ -31,10 +39,12 @@ class User{
     return this;
   }
   User setEmail(String email){
+    //TODO controlla da UserChecker
     this.email=email;
     return this;
   }
   User setPassword(String pass){
+    //TODO controlla da UserChecker
     this.password=pass;
     return this;
   }

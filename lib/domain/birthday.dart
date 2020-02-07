@@ -1,5 +1,9 @@
 
-
+///
+/// La data di nascita da associare all'utente.
+/// Non essendo un dato primitivo si è vista a necessità di creare una classe.
+///
+///
 class Birthday{
 
   int day;
