@@ -1,5 +1,6 @@
 
-import 'package:ricettario/domain/unit.dart';
+
+import 'package:ricettario/domain/ingredient/unit.dart';
 
 ///
 /// La quantità con la quale viene misurato un ingrediente;
@@ -32,4 +33,9 @@ class Quantity{
     return this;
   }
 
+  @override
+  String toString() {
+    //return 'Quantity{amount: $amount, unit: $unit}';
+    return "$amount,$unit";
+  }
 }

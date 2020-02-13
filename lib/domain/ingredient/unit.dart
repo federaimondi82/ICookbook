@@ -18,7 +18,8 @@ class Unit{
 
   @override
   String toString() {
-    return 'Unit{acronym: $acronym}';
+    //return 'Unit{acronym: $acronym}';
+    return "$acronym";
   }
 
 }

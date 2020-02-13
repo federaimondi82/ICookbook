@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:ricettario/domain/birthday.dart';
+import 'package:ricettario/domain/user/birthday.dart';
 ///
 /// Classe per controllare i dati inseriti dall'utente, consente anche di cifrare la password
 ///
@@ -40,13 +40,13 @@ class UserChecker{
 
   bool controlBirthday(Birthday birthday){
     var now=new DateTime.now();
-    //print("${birthday.year} è minore di ${now.year-15}");
+
     if(birthday==null) throw new Exception("data di nasciata nullo");
     else if(birthday.day>31 || birthday.day<1) throw new Exception("giorno errato");
     else if(birthday.month>12 || birthday.month<1) throw new Exception("mese errato");
     else if(birthday.year>now.year) throw new Exception("anno non valido");
     else if((now.year-birthday.year)<17 || (now.year-birthday.year)>100) throw new Exception("anno non valido");
-    return true;//2020-1900=120
+    return true;
   }
 
 

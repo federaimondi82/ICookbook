@@ -1,25 +1,26 @@
 
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/birthday.dart';
-import 'package:ricettario/domain/quantity.dart';
-import 'package:ricettario/domain/unit.dart';
-import 'package:ricettario/domain/userChecker.dart';
-
-import 'package:ricettario/main.dart';
-import 'package:ricettario/domain/user.dart';
+import 'package:ricettario/domain/user/birthday.dart';
+import 'package:ricettario/domain/user/userChecker.dart';
+import 'package:ricettario/domain/user/user.dart';
 
 void main() {
 
-  test ("user not null",(){
-    User u=new User("mario", "rossi", new Birthday(10, 10, 2010));
+  test ("user singleton",(){
+    User u=new User();
+    User u2=new User();
     expect(u,isNotNull);
+    expect(u2,isNotNull);
+    expect(u==u2,equals(true));
 
   });
 
   test("Right toStringBirthday", () {
-    User u=new User("mario", "rossi", new Birthday(10, 10, 2010));
+    User u=new User();
+    u.setName("Mario");
+    u.setSurname("Rossi");
+    u.setBirthday(new Birthday(10, 10, 2010));
     expect(u.getBirthday().toString() , "10/10/2010");
   });
 

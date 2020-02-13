@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'domain/user.dart';
+import 'domain/user/user.dart';
 
 void main() => runApp(MyApp());
 

@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/domain/birthday.dart';
+import 'package:ricettario/domain/user/birthday.dart';
 
 ///
 /// Classe software che identifica l'utente che utilizza l'applicazione.
@@ -17,8 +17,13 @@ class User{
   String email;
   String password;
 
+  static final User _user=User._internal();
 
-  User(this.name,this.surname,this.birthday);
+  User._internal();
+
+  factory User(){
+    return _user;
+  }
 
 
   User setName(String name){

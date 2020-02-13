@@ -1,14 +1,9 @@
 
 
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/birthday.dart';
-import 'package:ricettario/domain/quantity.dart';
-import 'package:ricettario/domain/unit.dart';
-import 'package:ricettario/domain/unitRegister.dart';
+import 'package:ricettario/domain/ingredient/quantity.dart';
+import 'package:ricettario/domain/ingredient/unitRegister.dart';
 
-import 'package:ricettario/main.dart';
-import 'package:ricettario/domain/user.dart';
 
 void main() {
 
@@ -31,6 +26,15 @@ void main() {
   test ("Right singleton unitRegister",(){
     UnitRegister u1=new UnitRegister();
     expect(u1.getUnits().elementAt(0).acronym,equals("gr"));
+
+  });
+
+  test("quantity instance 'quanto basta'",(){
+    UnitRegister u1=new UnitRegister();
+    Quantity q=new Quantity();//una quantità di "quanto basta"
+    q.setAmout(0).setUnit(u1.getUnits().elementAt(0));
+    expect(q, isNotNull);
+    expect(q.getUnit().acronym,equals("gr"));
 
   });
 
