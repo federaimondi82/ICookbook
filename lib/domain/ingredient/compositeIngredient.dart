@@ -3,6 +3,7 @@ import 'dart:collection';
 
 import 'package:ricettario/domain/ingredient/ingredient.dart';
 import 'package:ricettario/domain/ingredient/quantity.dart';
+import 'package:ricettario/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/domain/ingredient/simpleIngredientFactory.dart';
 
 ///un ingrediente composto da altri ingredienti semplici (SimpleIngredient),
@@ -141,5 +142,24 @@ class CompositeIngredient implements Ingredient{
   @override
   String toString() {
     return '{$name,$amount,$composition}';
+  }
+
+  bool equals(Object obj) {
+    if(obj==null) return false;
+    if(!(obj is CompositeIngredient))return false;
+    CompositeIngredient comp=(obj as CompositeIngredient);
+    if(this.getName()!=comp.getName()) return false;
+    if(comp.getIngredients().length!=composition.length) return false;
+    bool trovato =true;
+    for(Ingredient i in comp.getIngredients()){
+      Ingredient here=getIngredient(i.getName());
+      if(i is SimpleIngredient){
+        if(!(i as SimpleIngredient).equals(here))trovato=false;
+      }
+      else if(i is CompositeIngredient){
+        if(!(i as CompositeIngredient).equals(here)) trovato=false;
+      }
+    }
+    return trovato;
   }
 }

@@ -22,8 +22,8 @@ void main() {
     expect(reg1==reg2, equals(true));
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);
+    /*reg1.addFactory("simple",simple);
+    reg1.addFactory("composite",composite);*/
 
     expect(reg2.size(),equals(2));
   });
@@ -33,14 +33,14 @@ void main() {
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    reg3.addFactory("simple",simple);
-    reg3.addFactory("composite",composite);
+    /*reg3.addFactory("simple",simple);
+    reg3.addFactory("composite",composite);*/
 
     reg3.removeFactory("simple");
     expect(reg3.size(),equals(1));
   });
 
-  test("IngredientRegister add exception",(){
+  /*test("IngredientRegister add exception",(){
     IngredientRegister reg1=new IngredientRegister();
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
@@ -49,19 +49,19 @@ void main() {
     expect(()=>reg1.addFactory(null, simple),throwsException);
     expect(()=>reg1.addFactory("simple", null),throwsException);
 
-    reg1.addFactory("simple", simple);
+    //reg1.addFactory("simple", simple);
     expect(()=>reg1.addFactory("simple", simple),throwsException);
 
     expect(reg1.size(),equals(1));
-  });
+  });*/
 
   test("IngredientRegister remove exceptions",(){
     IngredientRegister reg1=new IngredientRegister();
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);
+    /*reg1.addFactory("simple",simple);
+    reg1.addFactory("composite",composite);*/
 
     expect(()=>reg1.removeFactory(""),throwsException);
     expect(()=>reg1.removeFactory(null),throwsException);
@@ -77,8 +77,8 @@ void main() {
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);
+    /*reg1.addFactory("simple",simple);
+    reg1.addFactory("composite",composite);*/
     expect(reg1.size(),equals(2));
 
     Recipe rep1=new Recipe("pizza margherita");
@@ -105,10 +105,10 @@ void main() {
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);
+    /*reg1.addFactory("simple",simple);
+    reg1.addFactory("composite",composite);*/
 
-    Ingredient ing1=reg1.getFactory("composite").createIngredient("impasto pizza", 500, "gr");
+    Ingredient ing1=reg1.getFactory("composite").createIngredient("impasto per pizza", 500, "gr");
     if(ing1 is CompositeIngredient){
       (ing1 as CompositeIngredient).add(SimpleIngredientFactory().createIngredient("farina 00", 200, "gr"));
       (ing1 as CompositeIngredient).add(SimpleIngredientFactory().createIngredient("lievito di birra", 5, "gr"));
@@ -117,21 +117,32 @@ void main() {
       (ing1 as CompositeIngredient).add(SimpleIngredientFactory().createIngredient("acqua", 300, "ml"));
     }
 
-    Ingredient ing2=reg1.getFactory("simple").createIngredient("polpa pomodoro", 1, "l");
-    Ingredient ing3=reg1.getFactory("simple").createIngredient("mozzarella", 100, "gr");
-    Ingredient ing4=reg1.getFactory("simple").createIngredient("basilico", 0, "gr");
+    Recipe recipe1=new Recipe("pizza margherita");
+    expect(recipe1,isNotNull);
 
-    Recipe rep1=new Recipe("pizza margherita");
-    expect(rep1,isNotNull);
-    rep1.add(ing1).add(ing2).add(ing3).add(ing4);
+    recipe1.addSimple("polpa pomodoro", 1, "l")
+    .addSimple("mozzarella", 100, "gr")
+    .addSimple("basilico", 0, "gr");
 
-    expect(()=>rep1.add(null),throwsException);
-    expect(()=>rep1.add(ing1),throwsException);
-    expect(()=>rep1.contains(null),throwsException);
+    recipe1.addComposite("impasto per pizza", 500, "gr");
+    recipe1.getIngredient("impasto per pizza")
+        .addByParameter("farina 00", 200, "gr")
+        .addByParameter("lievito di birra", 5, "gr")
+        .addByParameter("sale", 10, "gr")
+        .addByParameter("olio", 35, "gr")
+        .addByParameter("acqua", 300, "ml");
 
-    expect(()=>rep1.remove(null),throwsException);
-    rep1.remove(ing1);
-    expect(()=>rep1.remove(ing1),throwsException);
+    expect(recipe1.getIngredient("impasto per pizza").equals(ing1),equals(true));
+
+    expect(()=>recipe1.add(null),throwsException);
+    expect(()=>recipe1.add(ing1),throwsException);
+    expect(()=>recipe1.contains(null),throwsException);
+
+    expect(()=>recipe1.remove(null),throwsException);
+    recipe1.remove(ing1);
+
+    expect(recipe1.contains(ing1),equals(false));
+    expect(()=>recipe1.remove(ing1),throwsException);
 
   });
 

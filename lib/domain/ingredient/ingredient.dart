@@ -30,4 +30,11 @@ abstract class Ingredient{
   ///
   String getName(){}
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Ingredient && runtimeType == other.runtimeType;
+
+  @override
+  int get hashCode => 0;
 }

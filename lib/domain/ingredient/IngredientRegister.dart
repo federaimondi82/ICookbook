@@ -1,5 +1,6 @@
 
 import 'dart:collection';
+import 'dart:ui';
 
 import 'package:ricettario/domain/ingredient/compositeIngredientFactory.dart';
 import 'package:ricettario/domain/ingredient/ingredient.dart';
@@ -31,6 +32,7 @@ class IngredientRegister{
 
   static void initializeRegister(){
     if(register==null) register=new HashMap<String,IngredientFactory>();
+    if(register.isEmpty) loadFactories();
   }
 
   void addFactory(String s, IngredientFactory simple) {
@@ -68,7 +70,7 @@ class IngredientRegister{
     register.clear();
   }
 
-  void loadFactories(){
+  static void loadFactories(){
     _register.addFactory("simple",new SimpleIngredientFactory());
     _register.addFactory("composite",new CompositeIngredientFactory());
   }

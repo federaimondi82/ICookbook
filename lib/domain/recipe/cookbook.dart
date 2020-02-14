@@ -1,5 +1,7 @@
 
 
+import 'dart:collection';
+
 import 'package:ricettario/domain/recipe/recipe.dart';
 
 class CookBook{
@@ -20,17 +22,26 @@ class CookBook{
 
   Recipe getRecipe(String name){
     if(name==null || name=="") throw new Exception("Nome non valido");
-    if(!contains(name)) throw new Exception("ricetta non presete");
+    if(!containsByName(name)) throw new Exception("ricetta non presete");
     return recipes.firstWhere((el)=>el.getName()==name);
   }
 
   void addRecipe(String name){
     if(name==null || name=="") throw new Exception("Nome non valido");
-    if(contains(name)) throw new Exception("ricetta esistente");
+    if(containsByName(name)) throw new Exception("ricetta esistente");
     recipes.add(new Recipe(name));
   }
 
-  bool contains(String name){
+  bool contains(Recipe recipe){
+    if(recipe==null) throw new Exception("Ricetta nulla");
+    bool trovato=false;
+    for (Recipe el in recipes) {
+      if (el==recipe) trovato = true;
+    }
+    return trovato;
+  }
+
+  bool containsByName(String name){
     if(name==null || name=="") throw new Exception("Nome non valido");
     bool trovato=false;
     for (Recipe el in recipes) {
@@ -41,6 +52,12 @@ class CookBook{
 
   void clear() {
     recipes.clear();
+  }
+
+  void remove(Recipe r) {
+    if(r==null) throw new Exception("Ricetta nulla");
+    if(!this.contains(r)) throw new Exception("Ricetta non presente");
+    recipes.remove(r);
   }
 
 }

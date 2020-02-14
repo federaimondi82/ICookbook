@@ -22,4 +22,11 @@ class Unit{
     return "$acronym";
   }
 
+  bool equals(Object obj){
+    if(obj==null) return false;
+    if(!(obj is Unit)) return false;
+    Unit u=(obj as Unit);
+    if(u.getAcronym()==this.acronym)return true;
+  }
+
 }

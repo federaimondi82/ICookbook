@@ -38,4 +38,14 @@ class Quantity{
     //return 'Quantity{amount: $amount, unit: $unit}';
     return "$amount,$unit";
   }
+
+  bool equals(Object obj){
+    if(obj==null) return false;
+    if(!(obj is Quantity)) return false;
+    Quantity u=(obj as Quantity);
+    if(u.getAmount()==this.amount
+        && this.unit.equals(u.getUnit()))
+      return true;
+  }
+
 }
