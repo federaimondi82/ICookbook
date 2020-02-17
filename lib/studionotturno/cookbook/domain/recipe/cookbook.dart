@@ -1,22 +1,21 @@
 
 
-import 'dart:collection';
 
-import 'package:ricettario/domain/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
-class CookBook{
+class Cookbook{
 
-  static final CookBook _cookBook=CookBook._internal();
-  static List<Recipe> recipes;
+  static final Cookbook _cookBook=Cookbook._internal();
+  static Set<Recipe> recipes;
 
-  CookBook._internal();
+  Cookbook._internal();
 
-  factory CookBook(){
-    if(recipes==null) recipes=new List<Recipe>();
+  factory Cookbook(){
+    if(recipes==null) recipes=new Set<Recipe>();
     return _cookBook;
   }
 
-  List<Recipe> getRecipes(){
+  Set<Recipe> getRecipes(){
     return recipes;
   }
 

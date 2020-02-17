@@ -1,17 +1,17 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/ingredient/IngredientRegister.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredientFactory.dart';
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/quantity.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredientFactory.dart';
-import 'package:ricettario/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 
 void main() {
 
   tearDown((){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     cookBook.clear();
   });
 
@@ -109,7 +109,7 @@ void main() {
   });
 
   test("USE CASE inserimento ingrediente",(){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
 
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
@@ -144,7 +144,7 @@ void main() {
 
   test("USE CASE modifica ingredient",(){
 
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     expect(cookBook.getRecipes().length,equals(1));
@@ -174,7 +174,7 @@ void main() {
   });
 
   test("USE CASE cancella ingrediente",(){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     //aggiunta di una ingrediente composto

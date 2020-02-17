@@ -1,7 +1,7 @@
 
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
-import 'package:ricettario/domain/user/birthday.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/user/birthday.dart';
 ///
 /// Classe per controllare i dati inseriti dall'utente, consente anche di cifrare la password
 ///

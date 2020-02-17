@@ -1,8 +1,8 @@
 
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/ingredient/quantity.dart';
-import 'package:ricettario/domain/ingredient/unitRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
 
 
 void main() {
@@ -35,6 +35,8 @@ void main() {
     q.setAmout(0).setUnit(u1.getUnits().elementAt(0));
     expect(q, isNotNull);
     expect(q.getUnit().acronym,equals("gr"));
+
+    print(q.toString());
 
   });
 

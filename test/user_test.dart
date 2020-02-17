@@ -1,9 +1,10 @@
 
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/user/birthday.dart';
-import 'package:ricettario/domain/user/userChecker.dart';
-import 'package:ricettario/domain/user/user.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/user/birthday.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/user/user.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/user/userChecker.dart';
+
 
 void main() {
 

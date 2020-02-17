@@ -1,7 +1,7 @@
 
 
 
-import 'package:ricettario/domain/ingredient/unit.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 
 ///
 /// Singleton per memorizzare tutte le unità di misura da associare alle quantità per gli ingredienti.

@@ -1,10 +1,10 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredientFactory.dart';
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
 
 void main() {
 

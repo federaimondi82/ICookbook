@@ -1,28 +1,26 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/domain/recipe/cookbook.dart';
-import 'package:ricettario/domain/recipe/recipe.dart';
-import 'package:ricettario/domain/user/birthday.dart';
-import 'package:ricettario/domain/user/user.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
 void main() {
 
   tearDown((){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     cookBook.clear();
     cookBook=null;
   });
 
   test("cookbook exceptions",(){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
 
     cookBook.addRecipe("pizza margherita");
     expect(()=>cookBook.addRecipe("pizza margherita"),throwsException);
   });
 
   test("cookbook getRecipe exception",(){
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
 
     cookBook.addRecipe("pizza margherita");
     expect(()=>cookBook.getRecipe("pizza margherit"),throwsException);
@@ -32,7 +30,7 @@ void main() {
 
   test("USE CASE inserimento ricetta",(){
 
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     //aggiunta di una ingrediente composto
@@ -57,7 +55,7 @@ void main() {
 
   test("USE CASE Cancella ricetta",(){
 
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     //aggiunta di una ingrediente composto
@@ -83,7 +81,7 @@ void main() {
 
   test("USE CASE modifica ricetta",(){
 
-    CookBook cookBook=new CookBook();
+    Cookbook cookBook=new Cookbook();
     //nuova ricetta 1
     cookBook.addRecipe("pizza margherita1");
     //aggiunta di una ingrediente composto

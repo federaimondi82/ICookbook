@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "901793288311",
+    "firebase_url": "https://ricettario-13af3.firebaseio.com",
+    "project_id": "ricettario-13af3",
+    "storage_bucket": "ricettario-13af3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901793288311:android:0d3cfdb0a1aadd907f3672",
+        "android_client_info": {
+          "package_name": "net.studionotturno.ricettario"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901793288311-80jhic8nu2v1bp6fj49eh5pb2c96s41o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "net.studionotturno.ricettario",
+            "certificate_hash": "0b7b5dac1d05dc4117a8bec3885b7017855ca580"
+          }
+        },
+        {
+          "client_id": "901793288311-4i1vs8sj63j5i61jl16du6ajl15dgrkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCOoBKX8DyeDFYzEw-pV_qvnzh9fqLQh3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901793288311-4i1vs8sj63j5i61jl16du6ajl15dgrkj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

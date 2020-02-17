@@ -1,9 +1,9 @@
 
 
-import 'package:ricettario/domain/ingredient/ingredientFactory.dart';
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/domain/ingredient/unitRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
 
 import 'quantity.dart';
 

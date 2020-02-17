@@ -1,9 +1,11 @@
 
-import 'package:ricettario/domain/ingredient/IngredientRegister.dart';
-import 'package:ricettario/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/domain/recipe/timer.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
+
+import 'dart:html';
 
 ///una ricetta è formata sia da ingredienti semplici (sale,olio ecc...) ma anche
 /// da ingredienti composti ( es: impasto per la pizza che contiene farina,acqua,sale ecc...).
@@ -16,7 +18,7 @@ class Recipe {
   String description;
   int difficult;
   List<Ingredient> ingredients;
-  Timer executionTime;
+  ExecutionTime executionTime;
 
   IngredientRegister ingredientRegister;
 
@@ -24,7 +26,6 @@ class Recipe {
     this.ingredients=new List<Ingredient>();
     ingredientRegister=new IngredientRegister();
     //if(ingredientRegister.getIngredientFactories().length==0)ingredientRegister.loadFactories();
-    executionTime=new Timer();
   }
 
   String getName(){
@@ -39,7 +40,7 @@ class Recipe {
   List<Ingredient> getIngredients(){
     return this.ingredients;
   }
-  Timer getExecutionTime(){
+  ExecutionTime getExecutionTime(){
     return this.executionTime;
   }
   void setName(String name){
@@ -51,7 +52,7 @@ class Recipe {
   void setDescription(String description){
     this.description=description;
   }
-  void setExecutionTime(Timer executionTime){
+  void setExecutionTime(ExecutionTime executionTime){
     this.executionTime=executionTime;
   }
 
@@ -91,12 +92,18 @@ class Recipe {
   bool contains(Ingredient ingredient) {
     if(ingredient==null) throw new Exception("Ingrediente null");
     bool trovato=false;
-    for (Ingredient el in this.ingredients) {
-      if(ingredient is SimpleIngredient){
-        if((ingredient as SimpleIngredient).equals(el))trovato=true;
+    for(Ingredient ingRecipe in this.ingredients){
+      if(ingRecipe is SimpleIngredient && ingredient is SimpleIngredient){
+        if(ingRecipe.getName()==ingredient.getName()) trovato=true;
       }
-      else if(ingredient is CompositeIngredient){
-        if((ingredient as CompositeIngredient).equals(el)) trovato=true;
+      else if(ingRecipe is CompositeIngredient && ingredient is SimpleIngredient){
+        if((ingRecipe as CompositeIngredient).contains(ingredient.getName()))trovato=true;
+        /*for(Ingredient comp in ingRecipe.getIngredients()) {
+          if(comp.getName()==ingredient.getName())trovato=true;
+        }*/
+      }
+      else if(ingRecipe is CompositeIngredient && ingredient is CompositeIngredient){
+        if(ingRecipe.equals(ingredient))trovato=true;
       }
     }
     return trovato;
@@ -110,7 +117,13 @@ class Recipe {
     if(name==null || name=="") throw new Exception("Ingrediente null");
     bool trovato=false;
     for (Ingredient el in this.ingredients) {
-      if (el.getName() == name) trovato = true;
+      if(el.getName()==name)trovato=true;
+      /*if(el is SimpleIngredient){
+        if ((el as SimpleIngredient).getName() == name) trovato= true;
+      }
+      if(el is CompositeIngredient){
+        if ((el as CompositeIngredient).contains(name)) trovato = true;
+      }*/
     }
     return trovato;
   }
@@ -122,10 +135,10 @@ class Recipe {
     if(ingredient==null) throw new Exception("Ingrediente null");
     if(!contains(ingredient)) throw new Exception("Ingrediente non trovato");
       if(ingredient is SimpleIngredient){
-        this.ingredients.removeWhere((el)=>(ingredient as SimpleIngredient).equals(el));
+        this.ingredients.removeWhere((el)=>ingredient.equals(el));
       }
       else if(ingredient is CompositeIngredient){
-        this.ingredients.removeWhere((el)=>(ingredient as CompositeIngredient).equals(el));
+        this.ingredients.removeWhere((el)=>ingredient.equals(el));
       }
   }
 
@@ -150,8 +163,29 @@ class Recipe {
 
   @override
   String toString() {
-    return 'Recipe{name: $name, description: $description, difficult: $difficult, ingredients: $ingredients, executionTime: $executionTime}';
+    return "'name':'$name','description':'$description','difficult:'$difficult','executionTime':'$executionTime','ingredients':$ingredients}";
   }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "name": this.name,
+      "description": this.description,
+      "difficult": this.difficult,
+      "executionTime": this.executionTime,
+      "ingredients":this.ingredients
+    };
+  }
+
+  Recipe fromJson(Map<String, dynamic> json){
+    name = json['name'];
+    description = json['description'];
+    difficult = json['difficult'];
+    //String m=json['executionTime'].toString();
+    //executionTime= new ExecutionTime(0,0).fromJson(m);
+    //ingredients = json['ingredients'];
+    return this;
+  }
+
 
   @override
   bool operator ==(Object other) =>

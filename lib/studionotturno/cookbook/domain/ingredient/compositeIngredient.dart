@@ -1,10 +1,8 @@
 
-import 'dart:collection';
-
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/quantity.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
 
 ///un ingrediente composto da altri ingredienti semplici (SimpleIngredient),
 ///Implementa l'interfaccia comune, IngredientInterface, sia per gli ingredienti semplici
@@ -141,8 +139,22 @@ class CompositeIngredient implements Ingredient{
 
   @override
   String toString() {
-    return '{$name,$amount,$composition}';
+    return toJson().toString();
+    //return "{'name':'$name',$amount ingredient':$composition}";
   }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "name": this.name,
+      "amount": this.amount,
+      "ingredient": this.composition
+    };
+  }
+
+  CompositeIngredient.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        amount = json['amount'],
+        composition = json['ingredient'];
 
   bool equals(Object obj) {
     if(obj==null) return false;

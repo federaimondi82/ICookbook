@@ -1,13 +1,9 @@
 
 import 'dart:collection';
-import 'dart:ui';
 
-import 'package:ricettario/domain/ingredient/compositeIngredientFactory.dart';
-import 'package:ricettario/domain/ingredient/ingredient.dart';
-import 'package:ricettario/domain/ingredient/ingredientFactory.dart';
-import 'package:ricettario/domain/ingredient/quantity.dart';
-import 'package:ricettario/domain/ingredient/simpleIngredientFactory.dart';
-import 'package:ricettario/domain/ingredient/unitRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredientFactory.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
 
 ///Questa classe è rappresentata come Singleton  ma anche un Facade (design patterns GOF)
 /// permettendo l'accesso univoco agli ingredienti; Nasconde tutte le classi del pattern

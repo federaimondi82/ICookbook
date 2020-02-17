@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/domain/user/birthday.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/user/birthday.dart';
 
 ///
 /// Classe software che identifica l'utente che utilizza l'applicazione.

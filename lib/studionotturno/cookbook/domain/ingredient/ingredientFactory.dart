@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/domain/ingredient/ingredient.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 
 ///Secondo il design pattern factory method, forniamo una metodologia per
 ///delegare l'istanziazione degli oggetti alle sottoclassi.

@@ -18,9 +18,18 @@ class Unit{
 
   @override
   String toString() {
-    //return 'Unit{acronym: $acronym}';
-    return "$acronym";
+    return toJson().toString();
+    //return "'unit':'$acronym',";
   }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "unit": this.acronym
+    };
+  }
+
+  Unit.fromJson(Map<String, dynamic> json)
+      : acronym = json['unit'];
 
   bool equals(Object obj){
     if(obj==null) return false;

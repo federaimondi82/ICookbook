@@ -1,5 +1,5 @@
 
-import 'package:ricettario/domain/ingredient/quantity.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 
 ///
 /// Gli ingredienti sono stati realizzati applicando il design pattern Composite,

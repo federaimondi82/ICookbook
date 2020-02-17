@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/domain/ingredient/unit.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 
 ///
 /// La quantità con la quale viene misurato un ingrediente;
@@ -35,9 +35,20 @@ class Quantity{
 
   @override
   String toString() {
-    //return 'Quantity{amount: $amount, unit: $unit}';
-    return "$amount,$unit";
+    return toJson().toString();
+   // return "'amount':'$amount',$unit";
   }
+
+  Map<String,dynamic> toJson(){
+    return {
+      "amount": this.amount,
+      "unit": this.unit
+    };
+  }
+
+  Quantity.fromJson(Map<String, dynamic> json)
+      : amount = json['amount'],
+        unit = json['unit'];
 
   bool equals(Object obj){
     if(obj==null) return false;
