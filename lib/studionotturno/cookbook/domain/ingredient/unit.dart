@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 ///
 ///Unità di misura da associare alle quantità per gli ingredienti.
 ///
@@ -18,8 +20,16 @@ class Unit{
 
   @override
   String toString() {
-    return toJson().toString();
-    //return "'unit':'$acronym',";
+    //return toJson().toString();
+    //return "'unit':'$acronym";
+    return "unit:$acronym";
+  }
+
+  bool equals(Object obj){
+    if(obj==null) return false;
+    if(!(obj is Unit)) return false;
+    Unit u=(obj as Unit);
+    if(u.getAcronym()==this.acronym)return true;
   }
 
   Map<String,dynamic> toJson(){
@@ -28,14 +38,7 @@ class Unit{
     };
   }
 
-  Unit.fromJson(Map<String, dynamic> json)
+  Unit.fromJson(LinkedHashMap<dynamic, dynamic> json)
       : acronym = json['unit'];
-
-  bool equals(Object obj){
-    if(obj==null) return false;
-    if(!(obj is Unit)) return false;
-    Unit u=(obj as Unit);
-    if(u.getAcronym()==this.acronym)return true;
-  }
 
 }

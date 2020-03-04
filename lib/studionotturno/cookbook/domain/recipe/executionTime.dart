@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 ///Il tempo di esecuzione di una ricetta non è un dato primitivo, quindi è sorta
 /// l'esigenza di creare una classe apposita.
 class ExecutionTime {
@@ -29,11 +31,10 @@ class ExecutionTime {
     };
   }
 
-  ExecutionTime fromJson(Map<String, dynamic> json){
-    _houres = json['HH'];
+  ExecutionTime.fromJson(LinkedHashMap<dynamic, dynamic> json)
+    : _houres = json['HH'],
     _minutes= json['MM'];
-    return this;
-  }
+
 
   int toMinutes(){
     int m=_houres*60;

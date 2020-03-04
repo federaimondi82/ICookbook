@@ -5,7 +5,6 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 
-import 'dart:html';
 
 ///una ricetta è formata sia da ingredienti semplici (sale,olio ecc...) ma anche
 /// da ingredienti composti ( es: impasto per la pizza che contiene farina,acqua,sale ecc...).
@@ -43,17 +42,21 @@ class Recipe {
   ExecutionTime getExecutionTime(){
     return this.executionTime;
   }
-  void setName(String name){
+  Recipe setName(String name){
     this.name=name;
+    return this;
   }
-  void setDifficult(int difficult){
+  Recipe setDifficult(int difficult){
     this.difficult=difficult;
+    return this;
   }
-  void setDescription(String description){
+  Recipe setDescription(String description){
     this.description=description;
+    return this;
   }
-  void setExecutionTime(ExecutionTime executionTime){
+  Recipe setExecutionTime(ExecutionTime executionTime){
     this.executionTime=executionTime;
+    return this;
   }
 
   CompositeIngredient getIngredient(String name) {
@@ -118,12 +121,6 @@ class Recipe {
     bool trovato=false;
     for (Ingredient el in this.ingredients) {
       if(el.getName()==name)trovato=true;
-      /*if(el is SimpleIngredient){
-        if ((el as SimpleIngredient).getName() == name) trovato= true;
-      }
-      if(el is CompositeIngredient){
-        if ((el as CompositeIngredient).contains(name)) trovato = true;
-      }*/
     }
     return trovato;
   }
@@ -163,7 +160,7 @@ class Recipe {
 
   @override
   String toString() {
-    return "'name':'$name','description':'$description','difficult:'$difficult','executionTime':'$executionTime','ingredients':$ingredients}";
+    return 'name:$name,description:$description,difficult:$difficult,executionTime:$executionTime,ingredients:$ingredients';
   }
 
   Map<String,dynamic> toJson(){
@@ -176,18 +173,21 @@ class Recipe {
     };
   }
 
-  Recipe fromJson(Map<String, dynamic> json){
-    name = json['name'];
-    description = json['description'];
-    difficult = json['difficult'];
-    //String m=json['executionTime'].toString();
-    //executionTime= new ExecutionTime(0,0).fromJson(m);
-    //ingredients = json['ingredients'];
-    return this;
+  Recipe.fromJson(Map<String, dynamic> recipeJson){
+    name = recipeJson['name'];
+    description = recipeJson['description'];
+    difficult = recipeJson['difficult'];
+   // print('bo');
+    //print(recipeJson['executionTime']);
+    executionTime=ExecutionTime.fromJson(recipeJson['executionTime']);
+    Iterable l= recipeJson['ingredients'];//json.decode(comp['ingredients']);
+    ingredients = l.map((model)=>CompositeIngredient.fromJson(model)).toList();
   }
 
 
-  @override
+
+
+  /*@override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is Recipe &&
@@ -196,8 +196,7 @@ class Recipe {
           description == other.description &&
           difficult == other.difficult &&
           ingredients == other.ingredients &&
-          executionTime == other.executionTime &&
-          ingredientRegister == other.ingredientRegister;
+          executionTime == other.executionTime;
 
   @override
   int get hashCode =>
@@ -205,8 +204,7 @@ class Recipe {
       description.hashCode ^
       difficult.hashCode ^
       ingredients.hashCode ^
-      executionTime.hashCode ^
-      ingredientRegister.hashCode;
+      executionTime.hashCode;*/
 
 
 }

@@ -1,5 +1,7 @@
 
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 
@@ -44,8 +46,7 @@ class SimpleIngredient implements Ingredient{
 
   @override
   String toString() {
-    return toJson().toString();
-    //return "{'name':'$name',$amount}";
+    return "name:$name,$amount";
   }
 
   Map<String,dynamic> toJson(){
@@ -55,9 +56,9 @@ class SimpleIngredient implements Ingredient{
     };
   }
 
-  SimpleIngredient.fromJson(Map<String, dynamic> json)
+  SimpleIngredient.fromJson(LinkedHashMap<dynamic, dynamic> json)
       : name = json['name'],
-        amount = json['amount'];
+        amount = Quantity.fromJson(json['amount']);
 
   @override
   bool equals(Object obj) {
@@ -70,10 +71,5 @@ class SimpleIngredient implements Ingredient{
         && simple.getName()==this.name)
       return true;
   }
-
-/* @override
-  String toString() {
-    return '{name: $name} '+this.amount.toString();
-  }*/
 
 }

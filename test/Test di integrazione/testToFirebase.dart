@@ -1,28 +1,37 @@
+import 'dart:convert';
 
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/parser.dart';
 
 void main() {
+ // WidgetsFlutterBinding.ensureInitialized();
+  //TestWidgetsFlutterBinding.ensureInitialized();
 
+  test("parser Recipe to json",()
+  {
+    //TestWidgetsFlutterBinding.ensureInitialized();
+    //WidgetsFlutterBinding.ensureInitialized();
 
-  test("parser1",(){
     caricaRicette2();
-    Cookbook cookbook=new Cookbook();
+    Cookbook cookbook = new Cookbook();
 
-    Parser parser=new Parser();
-    Map<String,dynamic> map=parser.parseRecipe(cookbook.getRecipe("pizza marinara"));
+    Recipe recipe = cookbook.getRecipe("pizza margherita2");
+    String recipeEncoded = json.encode(
+        recipe); //da oggetto a json per il server
+    var recipeVar = json.decode(recipeEncoded);
 
-    expect(map,isNotNull);
-    //map.entries.forEach((el)=>print(el.toString()/*.key.toString()+";"+el.value.toString()*/));
-
-    Recipe r=parser.parseMap(map);
-    print(r.toString());
+    Firestore.instance
+        .collection('Federico Raimondi')
+        .document('pizza margherita').get().then((DocumentSnapshot ds) {
+      print(Recipe.fromJson(ds.data).toString());
+    });
   });
+  
 }
 
 void caricaRicette() {
@@ -136,45 +145,3 @@ void caricaRicette2() {
 
 
 }
-
-/*test("connection to firestone",(){
-      final db = Firestore.instance;
-
-      db.collection("Federico Raimondi")
-          .document("recipe1")
-            .setData(
-            {'name':'pizza margherita',
-              'executionTime':'30',
-              'difficult':'2,',
-             'ingredients':
-              [
-                {'name':'impasto per pizza',
-                'amount':'200',
-                'unit':'gr',
-                'ingredients':
-                [
-                  {'name':'farina 00',
-                  'amount':'200',
-                  'unit':'gr'},
-                  {'name':'olio',
-                  'amount':'20',
-                  'unit':'gr'}
-                  ]
-                },
-                {'name':'sugo',
-                  'amount':'200',
-                  'unit':'ml',
-                  'ingredients':
-                  [
-                    {'name':'pomodoro',
-                      'amount':'200',
-                      'unit':'gr'},
-                    {'name':'olio',
-                      'amount':'20',
-                      'unit':'gr'}
-                  ]
-                }
-              ]}
-              );
-
-  });*/

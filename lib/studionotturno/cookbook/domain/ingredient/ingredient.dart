@@ -10,7 +10,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.da
 /// L'interfaccia IngredientInterface si implementa in SimpleIngredient o CompositeIngredient
 ///
 ///
-abstract class Ingredient{
+class Ingredient{
 
   /// Metodo modificatore per la quantità di un ingrediente
   /// amount : la quantità da usare di questo ingrediente
@@ -37,4 +37,9 @@ abstract class Ingredient{
 
   @override
   int get hashCode => 0;
+
+  Ingredient.fromJson(Map<String, dynamic> json);
+
+  String toString();
+
 }

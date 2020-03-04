@@ -22,12 +22,11 @@ class Parser{
 
   }
 
-  Map<String,dynamic> parseRecipe(Recipe recipe) {
+  Map<String,dynamic> parseRecipeToServer(Recipe recipe) {
 
-    return recipe.toJson();
   }
 
-  Recipe parseMap(Map<String,dynamic> map) {
-    return Recipe("").fromJson(map);
+  Recipe parseRecipeFromServer(Map<String,dynamic> map) {
+    //return Recipe("").fromJson(map);
   }
 }

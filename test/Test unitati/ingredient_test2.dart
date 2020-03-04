@@ -122,8 +122,5 @@ void main() {
     expect(comp.lenght(),equals(0));
   });
 
-  test("get ingredient by register",(){
-    //TODO
-  });
 
 }

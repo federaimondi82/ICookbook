@@ -3,14 +3,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/cookbookLoader.dart';
 
 void main() {
 
-  tearDown((){
+ /* tearDown((){
     Cookbook cookBook=new Cookbook();
     cookBook.clear();
     cookBook=null;
-  });
+  });*/
 
   test("cookbook exceptions",(){
     Cookbook cookBook=new Cookbook();
@@ -56,7 +57,10 @@ void main() {
   test("USE CASE Cancella ricetta",(){
 
     Cookbook cookBook=new Cookbook();
-    //nuova ricetta
+    CookbookLoader loader=new CookbookLoader();
+      loader.caricaRicette2();
+
+   /* //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     //aggiunta di una ingrediente composto
     cookBook.getRecipe("pizza margherita").addComposite("sugo", 100, "gr");
@@ -69,13 +73,14 @@ void main() {
     c2.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
         .addByParameter("olio", 35, "gr")
-        .addByParameter("lievito di birra", 5, "gr");
+        .addByParameter("lievito di birra", 5, "gr");*/
 
     Recipe r=cookBook.getRecipe("pizza margherita");
+    expect(cookBook.getRecipes().contains(r),equals(true));
     cookBook.remove(r);
+
     expect(cookBook.contains(r),equals(false));
     expect(cookBook.containsByName(r.getName()),equals(false));
-    expect(cookBook.getRecipes().length,equals(0));
     expect(()=>cookBook.getRecipe(r.getName()),throwsException);
   });
 
