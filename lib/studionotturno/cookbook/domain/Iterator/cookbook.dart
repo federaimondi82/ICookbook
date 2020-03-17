@@ -3,9 +3,9 @@ import 'dart:collection';
 
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/cookbookLoader.dart';
+import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
 
-import 'executionTime.dart';
+import '../recipe/executionTime.dart';
 
 class Cookbook{
 

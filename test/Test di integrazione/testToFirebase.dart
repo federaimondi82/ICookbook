@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
@@ -28,7 +28,7 @@ void main() {
     Firestore.instance
         .collection('Federico Raimondi')
         .document('pizza margherita').get().then((DocumentSnapshot ds) {
-      print(Recipe.fromJson(ds.data).toString());
+     // print(Recipe.fromJson(ds.data).toString());
     });
   });
   

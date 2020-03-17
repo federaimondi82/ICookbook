@@ -4,7 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
 import 'recipePage.dart';
@@ -62,7 +62,6 @@ class CookbookPageState extends State<CookbookPage>{
             MaterialPageRoute(
                 builder: (context) => RecipePage(r)),
           );
-        //TODO go to specific RecipePage
         },
         onLongPress: (){
           //mostrare il dialog _deleteRecipeDialog
@@ -93,7 +92,7 @@ class CookbookPageState extends State<CookbookPage>{
       elevation: 5,
       children: [
         Text(
-          "Are you sure to delete this recipe?",
+          "Are you sure to remove $recipeName?",
           style: TextStyle(fontSize: 20),textAlign: TextAlign.center,
         ),
         Padding(

@@ -6,7 +6,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIn
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 
 void main() {
 

@@ -55,7 +55,7 @@ class Quantity{
       return true;
   }
 
-  Map<String,dynamic> toJson(){
+  /*Map<String,dynamic> toJson(){
     return {
       "amount": this.amount,
       "unit": this.unit
@@ -64,6 +64,6 @@ class Quantity{
 
   Quantity.fromJson(LinkedHashMap<dynamic, dynamic> json)
       : amount = json['amount'],
-        unit = Unit.fromJson(json['unit']);
+        unit = Unit.fromJson(json['unit']);*/
 
 }

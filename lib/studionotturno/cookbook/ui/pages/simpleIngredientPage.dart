@@ -8,7 +8,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.da
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/compositeIngredientPage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';

@@ -1,9 +1,9 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/cookbookLoader.dart';
+import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
 
 void main() {
 

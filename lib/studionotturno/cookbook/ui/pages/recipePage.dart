@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/components/compositeIngredientExpansion.dart';
@@ -117,9 +117,6 @@ class RecipePageState extends State<RecipePage>{
                   ),
                   onChanged: (value){
                     saveState();
-                    /*setState(() {
-                      saveState();
-                    });*/
                   },
                   controller: recipeDescription,
                 ),
@@ -277,6 +274,9 @@ class RecipePageState extends State<RecipePage>{
               );
               //TODO go to specific RecipePage
             },
+          onLongPress: (){
+            showDialog(context: context,child: _simpleDialog(context,simple.getName()));
+          },
             leading: const Icon(Icons.plus_one,size: 40.0, color: Colors.blueGrey),
             subtitle: Text(simple.getAmount().toString()),
         ));
@@ -291,6 +291,42 @@ class RecipePageState extends State<RecipePage>{
             color: Colors.blueGrey,
             tiles: list
         ).toList()
+    );
+  }
+
+  Widget _simpleDialog(BuildContext context,String ingredientName) {
+    return SimpleDialog(
+      title: Text("Remove ingredient",textAlign: TextAlign.center),
+      titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15),
+      ),
+      elevation: 5,
+      children: [
+        Text(
+          "Are you sure to remove $ingredientName from "+this.recipe.getName()+"?",
+          style: TextStyle(fontSize: 20),textAlign: TextAlign.center,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: RaisedButton(
+            onPressed: (){
+              setState(() {
+                this.recipe.removeByName(ingredientName);
+                Navigator.of(context).pop();
+              });
+            },
+            color: Colors.blueGrey[900],
+            highlightColor: Colors.lightGreenAccent,
+            elevation: 5,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)),
+            child: Text('REMOVE',style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+          ),
+        ),
+      ],
+
     );
   }
 

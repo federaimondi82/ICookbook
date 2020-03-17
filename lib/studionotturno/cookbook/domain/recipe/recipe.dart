@@ -163,7 +163,7 @@ class Recipe {
     return 'name:$name,description:$description,difficult:$difficult,executionTime:$executionTime,ingredients:$ingredients';
   }
 
-  Map<String,dynamic> toJson(){
+  /*Map<String,dynamic> toJson(){
     return {
       "name": this.name,
       "description": this.description,
@@ -171,9 +171,9 @@ class Recipe {
       "executionTime": this.executionTime,
       "ingredients":this.ingredients
     };
-  }
+  }*/
 
-  Recipe.fromJson(Map<String, dynamic> recipeJson){
+ /* Recipe.fromJson(Map<String, dynamic> recipeJson){
     name = recipeJson['name'];
     description = recipeJson['description'];
     difficult = recipeJson['difficult'];
@@ -182,7 +182,7 @@ class Recipe {
     executionTime=ExecutionTime.fromJson(recipeJson['executionTime']);
     Iterable l= recipeJson['ingredients'];//json.decode(comp['ingredients']);
     ingredients = l.map((model)=>CompositeIngredient.fromJson(model)).toList();
-  }
+  }*/
 
 
 

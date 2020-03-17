@@ -148,7 +148,7 @@ class CompositeIngredient implements Ingredient{
     return "name:$name,$amount,ingredients:$composition";
   }
 
- Map<String,dynamic> toJson(){
+ /*Map<String,dynamic> toJson(){
     return {
       "name": this.name,
       "amount": this.amount,
@@ -161,7 +161,7 @@ class CompositeIngredient implements Ingredient{
     amount = Quantity.fromJson(comp['amount']);
     Iterable l= comp['ingredients'];//json.decode(comp['ingredients']);
     composition = l.map((model)=>SimpleIngredient.fromJson(model)).toList();
-  }
+  }*/
 
 
   bool equals(Object obj) {

@@ -38,7 +38,6 @@ class Ingredient{
   @override
   int get hashCode => 0;
 
-  Ingredient.fromJson(Map<String, dynamic> json);
 
   String toString();
 

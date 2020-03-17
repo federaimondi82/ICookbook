@@ -32,13 +32,13 @@ class Unit{
     if(u.getAcronym()==this.acronym)return true;
   }
 
-  Map<String,dynamic> toJson(){
+  /*Map<String,dynamic> toJson(){
     return {
       "unit": this.acronym
     };
   }
 
   Unit.fromJson(LinkedHashMap<dynamic, dynamic> json)
-      : acronym = json['unit'];
+      : acronym = json['unit'];*/
 
 }

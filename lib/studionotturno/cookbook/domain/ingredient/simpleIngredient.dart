@@ -49,16 +49,16 @@ class SimpleIngredient implements Ingredient{
     return "name:$name,$amount";
   }
 
-  Map<String,dynamic> toJson(){
+ /* Map<String,dynamic> toJson(){
     return {
       "name": this.name,
       "amount": this.amount
     };
-  }
+  }*/
 
-  SimpleIngredient.fromJson(LinkedHashMap<dynamic, dynamic> json)
+  /*SimpleIngredient.fromJson(LinkedHashMap<dynamic, dynamic> json)
       : name = json['name'],
-        amount = Quantity.fromJson(json['amount']);
+        amount = Quantity.fromJson(json['amount']);*/
 
   @override
   bool equals(Object obj) {
