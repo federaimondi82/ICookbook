@@ -1,31 +1,30 @@
 
 import 'dart:collection';
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
 
-import '../recipe/executionTime.dart';
 
 class Cookbook{
 
   static final Cookbook _cookBook=Cookbook._internal();
   static HashSet<Recipe> recipes;
-  static CookbookLoader loader;
 
   Cookbook._internal();
 
   factory Cookbook(){
     if(recipes==null) {
       recipes = new HashSet<Recipe>();
-      loader=new CookbookLoader();
-      loader.caricaRicette2();
     }
       return _cookBook;
   }
 
-  HashSet<Recipe> getRecipes(){
+  /*HashSet<Recipe> getRecipes(){
     return recipes;
+  }*/
+
+  List<Recipe> getRecipes(){
+    recipes.toList().sort((a,b)=>a.getName().compareTo(b.getName()));
+    return recipes.toList();
   }
 
   ///consente ci avere l'istanza dela ricetta in base al nome; le ricette hanno un nome univo e non ripetibile
@@ -37,7 +36,6 @@ class Cookbook{
       if(el.getName()==name) r=el;
     }
     return r;
-    //return recipes.firstWhere((el)=>el.getName()==name);
   }
 
   ///aggiunge na ricetta al ricettario
@@ -45,6 +43,12 @@ class Cookbook{
     if(name==null || name=="") throw new Exception("Nome non valido");
     if(containsByName(name)) throw new Exception("ricetta esistente");
     recipes.add(new Recipe(name));
+  }
+
+  ///aggiunge na ricetta al ricettario
+  void addRecipeObject(Recipe r){
+    if(containsByName(r.getName())) throw new Exception("ricetta esistente");
+    recipes.add(r);
   }
 
   /// Consente di sapere se una ricetta è stata menorizzata nel ricettario

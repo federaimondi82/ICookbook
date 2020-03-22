@@ -1,5 +1,7 @@
 
 
+import 'dart:collection';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
@@ -87,7 +89,7 @@ void main() {
         .addByParameter("sale", 0, "gr");
 
 
-    Map<String,dynamic> map=CompositeIngredientAdapter().setIngredient(comp1).toJson();
+    LinkedHashMap<String,dynamic> map=CompositeIngredientAdapter().setIngredient(comp1).toJson();
     print(comp1.toString()); print(map.toString());
 
     CompositeIngredient comp2=CompositeIngredientAdapter().toObject(map);

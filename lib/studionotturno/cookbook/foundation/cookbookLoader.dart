@@ -1,8 +1,14 @@
 
 
+import 'dart:io';
+import 'dart:convert';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
+
+import 'package:path_provider/path_provider.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/recipeAdapter.dart';
 
 class CookbookLoader{
 
@@ -10,6 +16,62 @@ class CookbookLoader{
 
   CookbookLoader(){
     this.cookBook=new Cookbook();
+  }
+
+  void read() async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      //print(directory);
+      File('${directory.path}/recipes.txt').create();
+      final file = File('${directory.path}/recipes.txt');
+      //file.delete();
+      Future<List<String>> future= file.readAsLines();
+      future.then((list)=>list.forEach((ele){
+        String s1=ele.toString();
+        Map<dynamic,dynamic> s2=JsonDecoder().convert(ele);
+        Recipe r=RecipeAdapter().toObject(s2);
+        /*print(s1);
+        print(s2.toString());
+        print(r.toString());*/
+       cookBook.addRecipeObject(r);
+      }));
+      //print("fine");
+    } catch (e) {
+      print("Couldn't read file"+ e.toString());
+    }
+  }
+
+  void saveRecipe(Recipe r) async{
+    try{
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/recipes.txt');
+
+      Map<dynamic,dynamic> s1=RecipeAdapter().setRecipe(r).toJson();
+      String s2=JsonEncoder().convert(s1);
+      await file.writeAsString(s2+"\n",mode:FileMode.append,flush: true);
+      print(s2.toString());
+    }catch(e){
+      print("non si legge"+e);
+    }
+  }
+
+  void saveAllRecipes() async {
+    try{
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/recipes.txt');
+      file.delete();
+      file.create();
+
+      this.cookBook.getRecipes().forEach((recipe) async {
+        Map<dynamic,dynamic> s1=RecipeAdapter().setRecipe(recipe).toJson();
+        String s2=JsonEncoder().convert(s1);
+        await file.writeAsString(s2+"\n",mode:FileMode.append,flush: true);
+        print(s2.toString());
+      });
+    }catch(e){
+      print("non si legge"+e);
+    }
+
   }
 
   void caricaRicette2() {
@@ -57,34 +119,34 @@ class CookbookLoader{
     cookBook.getRecipe("pizza margherita1").setDifficult(4);
     cookBook.getRecipe("pizza margherita1").setExecutionTime(new ExecutionTime(1,0));
     //aggiunta di una ingrediente composto
-    cookBook.getRecipe("pizza margherita1").addComposite("sugo1", 100, "gr");
-    CompositeIngredient c5=cookBook.getRecipe("pizza margherita1").getIngredient("sugo1");
-    c5.addByParameter("salsa di pomodoro1", 1, "l")
+    cookBook.getRecipe("pizza margherita1").addComposite("sugo", 100, "gr");
+    CompositeIngredient c5=cookBook.getRecipe("pizza margherita1").getIngredient("sugo");
+    c5.addByParameter("salsa di pomodoro", 1, "l")
         .addByParameter("sale", 0, "gr");
     //aggiunta di un secondo ingrediente composto
-    cookBook.getRecipe("pizza margherita1").addComposite("impasto per pizza1", 1, "kg");
-    CompositeIngredient c6=cookBook.getRecipe("pizza margherita1").getIngredient("impasto per pizza1");
+    cookBook.getRecipe("pizza margherita1").addComposite("impasto per pizza", 1, "kg");
+    CompositeIngredient c6=cookBook.getRecipe("pizza margherita1").getIngredient("impasto per pizza");
     c6.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
-        .addByParameter("olio1", 35, "gr")
-        .addByParameter("lievito di birra2", 5, "gr");
+        .addByParameter("olio", 35, "gr")
+        .addByParameter("lievito di birra", 5, "gr");
 
     //nuova ricetta4
     cookBook.addRecipe("pizza margherita2");
     cookBook.getRecipe("pizza margherita2").setDifficult(3);
     cookBook.getRecipe("pizza margherita2").setExecutionTime(new ExecutionTime(1,30));
     //aggiunta di una ingrediente composto
-    cookBook.getRecipe("pizza margherita2").addComposite("sugo2", 100, "gr");
-    CompositeIngredient c7=cookBook.getRecipe("pizza margherita2").getIngredient("sugo2");
+    cookBook.getRecipe("pizza margherita2").addComposite("sugo", 100, "gr");
+    CompositeIngredient c7=cookBook.getRecipe("pizza margherita2").getIngredient("sugo");
     c7.addByParameter("salsa di pomodoro2", 1, "l")
         .addByParameter("sale", 0, "gr");
     //aggiunta di un secondo ingrediente composto
-    cookBook.getRecipe("pizza margherita2").addComposite("impasto per pizza2", 1, "kg");
-    CompositeIngredient c8=cookBook.getRecipe("pizza margherita2").getIngredient("impasto per pizza2");
+    cookBook.getRecipe("pizza margherita2").addComposite("impasto per pizza", 1, "kg");
+    CompositeIngredient c8=cookBook.getRecipe("pizza margherita2").getIngredient("impasto per pizza");
     c8.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
-        .addByParameter("olio1", 35, "gr")
-        .addByParameter("lievito di birra2", 5, "gr");
+        .addByParameter("olio", 35, "gr")
+        .addByParameter("lievito di birra", 5, "gr");
 
     //nuova ricetta5
     cookBook.addRecipe("pizza marinara1");
@@ -94,13 +156,14 @@ class CookbookLoader{
     cookBook.getRecipe("pizza marinara1").addComposite("sugo", 100, "gr");
     CompositeIngredient c9=cookBook.getRecipe("pizza marinara1").getIngredient("sugo");
     c9.addByParameter("salsa di pomodoro", 1, "l")
-        .addByParameter("sale", 0, "gr");
+        .addByParameter("sale", 0, "gr")
+        .addByParameter("alici", 20, "pz");
     //aggiunta di un secondo ingrediente composto
     cookBook.getRecipe("pizza marinara1").addComposite("impasto per pizza", 1, "kg");
     CompositeIngredient c10=cookBook.getRecipe("pizza marinara1").getIngredient("impasto per pizza");
     c10.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
-        .addByParameter("olio1", 35, "gr")
+        .addByParameter("olio", 35, "gr")
         .addByParameter("lievito di birra", 5, "gr");
 
     //nuova ricetta6
@@ -117,7 +180,7 @@ class CookbookLoader{
     CompositeIngredient c12=cookBook.getRecipe("pizza marinara2").getIngredient("impasto per pizza");
     c12.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
-        .addByParameter("olio1", 35, "gr")
+        .addByParameter("olio", 35, "gr")
         .addByParameter("lievito di birra", 5, "gr");
 
     //nuova ricetta7
@@ -134,7 +197,7 @@ class CookbookLoader{
     CompositeIngredient c14=cookBook.getRecipe("pizza marinara3").getIngredient("impasto per pizza");
     c14.addByParameter("farina 00", 200, "gr")
         .addByParameter("sale", 10, "gr")
-        .addByParameter("olio1", 35, "gr")
+        .addByParameter("olio", 35, "gr")
         .addByParameter("lievito di birra", 5, "gr");
 
   }

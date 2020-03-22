@@ -9,7 +9,9 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngre
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/ui/components/compositeIngredientExpansion.dart';
+import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
+import 'package:ricettario/studionotturno/cookbook/ui/components/recipePage/compositeIngredientExpansion.dart';
+import 'package:ricettario/studionotturno/cookbook/ui/components/recipePage/simpleIngredientsListView.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/cookbookPage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/simpleIngredientPage.dart';
 
@@ -31,31 +33,51 @@ class RecipePage extends StatefulWidget{
 
 class RecipePageState extends State<RecipePage>{
 
+  //#region parametri di classe
   var _name,_description,_difficult;int difficult=0;//key per i componenti grafici
-
   static TextEditingController recipeName,recipeDescription;//componeneti grafici
   Recipe recipe;
   Cookbook cookbook;
+  ExecutionTime time;
 
+  //#endregion parametri di classe
+
+  ///Costruttore
   RecipePageState(Recipe recipe){
     this.recipe=recipe;
     cookbook=new Cookbook();
     if(this.recipe.getDifficult()==null)this.difficult=0;
     else this.difficult=this.recipe.getDifficult();
+    if(this.recipe.getExecutionTime()==null) this.time=new ExecutionTime(0, 0);
+    else this.time=this.recipe.getExecutionTime();
   }
 
+  //#region elementi grafici
+
+  static const Color iconsColor=Colors.blueGrey;
+  static const double iconSize=40;
+  static const TextStyle labelStyle=TextStyle(fontSize: 24,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2);
+  static const TextStyle textStyle=TextStyle(fontSize: 20,color: Colors.blueGrey,fontStyle: FontStyle.italic,letterSpacing: 1.2);
+
+  //#endregion elementi grafici
+
+  //#region metodi
   ///
   /// Salva una nuova ricetta nel ricettario,
   /// se si sta agendo su una ricetta già presente nel ricettario questa viene modificata
   ///
-  void saveRecipe() {
+  void saveRecipe()async {
     if(!cookbook.containsByName(this.recipe.getName())){
       cookbook.addRecipe(this.recipe.getName());
     }
-    cookbook.getRecipe(this.recipe.getName())
+   await cookbook.getRecipe(this.recipe.getName())
         .setDescription(this.recipe.getDescription())
         .setDifficult(this.recipe.getDifficult())
-        .setExecutionTime(new ExecutionTime(0, 30));//TODO
+        .setExecutionTime(this.time);//TODO
+
+    print(cookbook.getRecipe(this.recipe.getName()).toString());
+    await CookbookLoader().saveAllRecipes();
+    //await c.save();
 
     Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
 
@@ -64,9 +86,11 @@ class RecipePageState extends State<RecipePage>{
   void saveState() {
     this.recipe.setName(recipeName.text)
         .setDescription(recipeDescription.text)
-        .setDifficult(this.difficult);
+        .setDifficult(this.difficult)
+        .setExecutionTime(this.time);
   }
 
+  //#endregion metodi
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +110,8 @@ class RecipePageState extends State<RecipePage>{
 
     return Scaffold(
       appBar: AppBar(
+        leading: Icon(
+            Icons.local_dining, size: iconSize, color: iconsColor),
         title: Text((recipe.getName()=="")?'New Recipe':recipe.getName().toUpperCase()),
       ),
       body: Padding(
@@ -95,90 +121,18 @@ class RecipePageState extends State<RecipePage>{
             key: _formKey,
             child:Column(
               children: <Widget>[
-                TextFormField(
-                  key: _name,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
-                  ),
-                  onChanged: (value){
-                    this.recipe.setName(value);
-                  },
-                  controller:recipeName,
-                ),
-                TextFormField(
-                  key: _description,
-                  maxLines: 10,
-                  minLines: 1,
-                  style: TextStyle(),
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
-                  ),
-                  onChanged: (value){
-                    saveState();
-                  },
-                  controller: recipeDescription,
-                ),
-                Row(
-                  children: <Widget>[
-                    IconButton(
-                      icon: Icon(Icons.remove),
-                      color: Colors.blueGrey[900],
-                      onPressed:()=>{
-                        setState(() {
-                        if(this.difficult>0){
-                          this.difficult--;
-                        }
-                        saveState();
-                        })
-                      },
-                      splashColor: Colors.purple,
-                      iconSize: 50,
-                    ),
-                    Expanded(
-                      flex: 20,
-                      child: Slider(
-                        key: _difficult,
-                        min: 0,
-                        max:10,
-                        label: 'Difficult : $difficult',
-                        value: difficult.toDouble(),
-                        divisions: 10,
-                        onChanged: (double newValue) {
-                          setState(() {
-                            difficult = newValue.round();
-                          });
-                          saveState();
-                        },
-                        activeColor: Colors.purple,
-                        inactiveColor:Colors.blueGrey[900],
-                      ),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      color: Colors.blueGrey[900],
-                      onPressed:()=>{
-                        setState((){
-                          if(this.difficult<10){
-                            this.difficult++;
-                          }
-                          saveState();
-                        })
-                      },
-                      splashColor: Colors.purple,
-                      iconSize: 50,
-                    ),
-                  ]
-                ),
+                myTextField(_name,"Name",(value)=>this.recipe.setName(value),recipeName),
+                myTextField(_description,"Description",(value)=>saveState(),recipeDescription),
+                difficultWidgetColumn(context),
+                executionTimeColumn(context),
                 Column(
                   children: <Widget>[
                     Padding(
                       padding: EdgeInsets.all(10),
-                      child: Text("Ingredients",style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+                      child: Text("Ingredients",style: labelStyle),
                     ),
                     new CompositeIngredientExpansion(recipe),
-                    _simpleIngredients(context),//Lista ingredienti
+                    new SimpleIngredientsListView(context,recipe),//Lista ingredienti
                   ],
                 ),
                 Padding(
@@ -198,7 +152,7 @@ class RecipePageState extends State<RecipePage>{
                       elevation: 5,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)),
-                      child: Text('Save Recipe',style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+                      child: Text('Save Recipe',style: labelStyle),
                     ),
                   ),
                 ),
@@ -231,10 +185,9 @@ class RecipePageState extends State<RecipePage>{
               labelStyle: TextStyle(fontSize: 18.0),
               onTap: () {
                 saveState();
-                saveRecipe();
+                //saveRecipe();
                 Navigator.push(
                   context,
-
                   MaterialPageRoute(
                   builder: (context) => CompositeIngredientPage(this.recipe.getName(),null)),
                 );
@@ -247,7 +200,7 @@ class RecipePageState extends State<RecipePage>{
             labelStyle: TextStyle(fontSize: 18.0),
             onTap: (){
               saveState();
-              saveRecipe();
+              //saveRecipe();
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -260,76 +213,132 @@ class RecipePageState extends State<RecipePage>{
     );
   }
 
-  Widget _simpleIngredients(BuildContext context){
-    List<Widget> list = new List<Widget>();
-    for(Ingredient simple in this.recipe.getIngredients()){
-      if(simple is SimpleIngredient){
-        list.add(new ListTile(
-            title: Text(simple.getName().toUpperCase(),style:TextStyle(fontWeight: FontWeight.bold,fontSize: 30,fontStyle: FontStyle.italic)),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => SimpleIngredientPage(this.recipe.getName(),null,simple)),
-              );
-              //TODO go to specific RecipePage
-            },
-          onLongPress: (){
-            showDialog(context: context,child: _simpleDialog(context,simple.getName()));
-          },
-            leading: const Icon(Icons.plus_one,size: 40.0, color: Colors.blueGrey),
-            subtitle: Text(simple.getAmount().toString()),
-        ));
-      }
-
-    }
-    return new ListView(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        children: ListTile.divideTiles(
-            context: context,
-            color: Colors.blueGrey,
-            tiles: list
-        ).toList()
+  Widget myTextField(Key key,String labelName,Function(String) function,TextEditingController controller){
+    return TextFormField(
+      key: key,
+      style: textStyle,
+      decoration: InputDecoration(
+        labelText: labelName,
+        labelStyle: labelStyle,
+      ),
+      onChanged: function,
+      controller: controller,
     );
   }
 
-  Widget _simpleDialog(BuildContext context,String ingredientName) {
-    return SimpleDialog(
-      title: Text("Remove ingredient",textAlign: TextAlign.center),
-      titlePadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      elevation: 5,
-      children: [
-        Text(
-          "Are you sure to remove $ingredientName from "+this.recipe.getName()+"?",
-          style: TextStyle(fontSize: 20),textAlign: TextAlign.center,
-        ),
+  Widget executionTimeColumn(BuildContext context){
+    return Column(
+      children: <Widget>[
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: RaisedButton(
-            onPressed: (){
-              setState(() {
-                this.recipe.removeByName(ingredientName);
-                Navigator.of(context).pop();
-              });
-            },
-            color: Colors.blueGrey[900],
-            highlightColor: Colors.lightGreenAccent,
-            elevation: 5,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
-            child: Text('REMOVE',style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
-          ),
+          padding: EdgeInsets.all(10),
+          child: Text("Execution time",style: labelStyle),
+        ),
+        Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.remove),
+                color: iconsColor,
+                onPressed:()=>{
+                  setState(() {
+                    if(this.time.toMinutes()<10){}
+                    else addTime(-10);
+                    saveState();
+                  })
+                },
+                splashColor: Colors.purple,
+                iconSize: iconSize,
+              ),
+              Expanded(
+                child: Center(
+                  child: Text(
+                    this.time.getTime(),style: textStyle.copyWith(fontSize: 50),
+                  ),
+                ),
+                flex: 20,
+              ),
+              IconButton(
+                icon: Icon(Icons.add),
+                color: iconsColor,
+                onPressed:()=>{
+                  setState((){
+                    addTime(10);
+                    saveState();
+                  })
+                },
+                splashColor: Colors.purple,
+                iconSize: iconSize,
+              ),
+            ]
         ),
       ],
-
     );
   }
 
+  Widget difficultWidgetColumn(BuildContext context){
+    return Column(
+      children: <Widget>[
+        Padding(
+          padding: EdgeInsets.all(10),
+          child: Text("Difficult",style: labelStyle),
+        ),
+        Row(
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.remove),
+                color: iconsColor,
+                onPressed:()=>{
+                  setState(() {
+                    if(this.difficult>0){
+                      this.difficult--;
+                    }
+                    saveState();
+                  })
+                },
+                splashColor: Colors.purple,
+                iconSize: iconSize,
+              ),
+              Expanded(
+                flex: 20,
+                child: Slider(
+                  key: _difficult,
+                  min: 0,
+                  max:10,
+                  label: 'Difficult : $difficult',
+                  value: difficult.toDouble(),
+                  divisions: 10,
+                  onChanged: (double newValue) {
+                    setState(() {
+                      difficult = newValue.round();
+                    });
+                    saveState();
+                  },
+                  activeColor: Colors.purple,
+                  inactiveColor:Colors.blueGrey,
+                ),
+              ),
+              IconButton(
+                icon: Icon(Icons.add),
+                color: iconsColor,
+                onPressed:()=>{
+                  setState((){
+                    if(this.difficult<10){
+                      this.difficult++;
+                    }
+                    saveState();
+                  })
+                },
+                splashColor: Colors.purple,
+                iconSize: iconSize,
+              ),
+            ]
+        ),
+      ],
+    );
+  }
 
+  String addTime(double time) {
+    this.time.addMinute(time);
+    print(this.time.toString());
+  }
 }
 

@@ -1,5 +1,7 @@
 
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
 
@@ -26,7 +28,7 @@ class UnitAdapter extends Target{
   }
 
   @override
-  Unit toObject(Map<String, dynamic> data) {
+  Unit toObject(Map<dynamic, dynamic> data){
     this.unit.acronym = data['unit'];
     return this.unit;
   }

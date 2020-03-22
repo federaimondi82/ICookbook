@@ -1,13 +1,10 @@
 
+import 'dart:convert';
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/executionTimeAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/simpleIngredientAdapter.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
 
-import 'compositeIngredientAdapter.dart';
 import 'ingredientAdapter.dart';
 
 ///Implementa Target e è quindi la classe Adattatore di una Ricetta.
@@ -28,6 +25,7 @@ class RecipeAdapter extends Target{
 
   @override
   Map<String, dynamic> toJson() {
+    print(this.recipe.executionTime);
     return {
       "name": this.recipe.name,
       "description": this.recipe.description,
@@ -38,7 +36,7 @@ class RecipeAdapter extends Target{
   }
 
   @override
-  Recipe toObject(Map<String,dynamic> data) {
+  Recipe toObject(Map<dynamic, dynamic> data) {
     this.recipe.name = data['name'];
     this.recipe.description = data['description'];
     this.recipe.difficult = data['difficult'];
@@ -46,6 +44,12 @@ class RecipeAdapter extends Target{
     Iterable l= data['ingredients'];
     this.recipe.ingredients = l.map((model)=>IngredientAdapter().toObject(model)).toList();
     return this.recipe;
+  }
+
+  Recipe toObjectByString(String ele) {
+    Map<dynamic,dynamic> s=jsonDecode(ele);
+    return toObject(s);
+
   }
 
 }

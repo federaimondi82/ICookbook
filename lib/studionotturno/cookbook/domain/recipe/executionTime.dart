@@ -5,10 +5,10 @@ import 'dart:collection';
 /// l'esigenza di creare una classe apposita.
 class ExecutionTime {
 
-  int minutes;
-  int houres;
+  double minutes;
+  double houres;
 
-  ExecutionTime(int houres,int minutes){
+  ExecutionTime(double houres,double minutes){
     if(houres==null || minutes==null || houres>24 || houres<0 ||minutes>59||minutes<0) throw new Exception(" tempo non valido");
     this.houres=houres;
     this.minutes=minutes;
@@ -17,23 +17,24 @@ class ExecutionTime {
   getHoures() { return this.houres;}
   getMinutes() { return this.minutes;}
 
+  setHoures(double houres){this.houres=houres;}
+  setMinutes(double minutes){this.minutes=minutes;}
 
 
-  /*Map<String,dynamic> toJson(){
-    return {
-      "HH": this._houres,
-      "MM": this._minutes
-    };
+  double toMinutes(){
+    double m=houres*60;
+    return minutes+m;
   }
 
-  ExecutionTime.fromJson(LinkedHashMap<dynamic, dynamic> json)
-    : _houres = json['HH'],
-    _minutes= json['MM'];*/
+  ExecutionTime addMinute(double minutes){
+    double time1=toMinutes()+minutes;
+    double time2=toMinutes()+minutes;
 
-
-  int toMinutes(){
-    int m=houres*60;
-    return minutes+=m;
+    double h=(time1/60).truncate().toDouble();
+    double m=time2%60;
+    setHoures(h.toDouble());
+    setMinutes(m.toDouble());
+    return this;
   }
 
   bool equals(ExecutionTime t) {
@@ -41,6 +42,12 @@ class ExecutionTime {
     if(t.getHoures()!=this.getHoures()) return false;
     if(t.getMinutes()!=this.getMinutes()) return false;
     return true;
+  }
+
+  String getTime(){
+    int h=houres.round();
+    int m=minutes.round();
+    return "$h : $m";
   }
 
   @override

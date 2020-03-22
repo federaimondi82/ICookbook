@@ -4,14 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/ui/pages/compositeIngredientPage.dart';
-import 'package:ricettario/studionotturno/cookbook/ui/pages/cookbookPage.dart';
 
 ///
 /// Componente visuale interno al componente expander di un ingrediente composto
-///
-/// TODO visualizza gli ingredienti sempili al suo interno
+/// Visualizza gli ingredienti semplici al suo interno
 ///
 ///
 
@@ -49,7 +45,7 @@ class CompositeIngredientItemState extends State<CompositeIngredientItem> {
     );
   }
 
-
+  static const TextStyle textStyle = TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Colors.blueGrey);
   Widget showSimpleIngredient(BuildContext context) {
     List<Widget> list = new List<Widget>();
 
@@ -58,11 +54,10 @@ class CompositeIngredientItemState extends State<CompositeIngredientItem> {
       String subtitel = simple.getAmount().getAmount().toString() + " " +
           simple.getAmount().getUnit().getAcronym();
 
-      TextStyle style = new TextStyle(
-          fontSize: 20, fontStyle: FontStyle.italic, color: Colors.purple);
+
       list.add(new ListTile(
-        title: Text(name, style: style),
-        subtitle: Text(subtitel, style: style),
+        title: Text(name+"  "+subtitel, style: textStyle),
+        //subtitle: Text(subtitel, style: textStyle),
       ));
     }
     return new ListView(
@@ -70,7 +65,7 @@ class CompositeIngredientItemState extends State<CompositeIngredientItem> {
         shrinkWrap: true,
         children: ListTile.divideTiles(
             context: context,
-            color: Colors.blueGrey,
+            color: Colors.purple,
             tiles: list
         ).toList()
     );

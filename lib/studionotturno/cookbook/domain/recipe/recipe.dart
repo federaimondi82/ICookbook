@@ -18,14 +18,29 @@ class Recipe {
   int difficult;
   List<Ingredient> ingredients;
   ExecutionTime executionTime;
-
   IngredientRegister ingredientRegister;
+
+  bool trovato;
 
   Recipe(this.name){
     this.ingredients=new List<Ingredient>();
     ingredientRegister=new IngredientRegister();
-    //if(ingredientRegister.getIngredientFactories().length==0)ingredientRegister.loadFactories();
+    this.trovato=false;
+
   }
+
+  setTrovato(bool trovato){
+    this.trovato=trovato;
+  }
+
+  bool getTrovato(){
+    return this.trovato;
+  }
+  /*bool getValue(){
+    ServiceFireStone s= new ServiceFireStone(this.name);
+    s.exists().asStream().forEach((value)=>trovato=value);
+    return this.trovato;
+  }*/
 
   String getName(){
     return this.name;
@@ -162,6 +177,11 @@ class Recipe {
   String toString() {
     return 'name:$name,description:$description,difficult:$difficult,executionTime:$executionTime,ingredients:$ingredients';
   }
+
+  /*@override
+  int compareTo(other) {
+    return this.getName().compareTo(other.getName());
+  }*/
 
   /*Map<String,dynamic> toJson(){
     return {

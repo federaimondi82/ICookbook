@@ -7,7 +7,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngre
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorLocal.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 
 void main() {
@@ -17,16 +17,21 @@ void main() {
     cookBook.clear();
     cookBook=null;
 
-    ConcreteIterator searcher=new ConcreteIterator();
-    searcher.clear();
-    searcher=null;
+  });
+
+  test("Ricerca ricetta like a name",(){
+    caricaRicette2();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
+
+    searcher.searchByRecipeName("pizza").getRecipes().forEach((ele)=>print(ele.toString()));
+    expect(false,equals(false));
   });
 
   test("Searcher searchByIngredientName",(){
 
     caricaRicette();
 
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
     expect(searcher.searchByIngredientName("impasto per pizza").getRecipes().length,equals(2));
     searcher.clear();
     expect(searcher.searchByIngredientName("sale").getRecipes().length,equals(2));
@@ -46,7 +51,7 @@ void main() {
       ing1.add(SimpleIngredientFactory().createIngredient("olio", 35, "gr"));
     }
 
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
     expect(searcher.searchByIngredient(ing1).getRecipes().length,equals(2));
     searcher.clear();
@@ -65,7 +70,7 @@ void main() {
       list.add(s1);list.add(s2);list.add(s3);list.add(s4);
 
 
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
     expect(searcher.searchByIngredients(list).getRecipes().length,equals(2));
     searcher.clear();
@@ -76,7 +81,7 @@ void main() {
 
     caricaRicette();
 
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
     expect(searcher.searchByRecipeName("pizza margherita").getRecipes().length,equals(1));
     expect(searcher.searchByRecipeName("pizza marinara").getRecipes().length,equals(2));
@@ -90,18 +95,14 @@ void main() {
 
     caricaRicette();
 
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
-    expect(searcher.searchByExecutionTime(0,30).getRecipes(),isNotNull);
+    expect(searcher.searchByExecutionTime(30).getRecipes(),isNotNull);
     searcher.clear();
-    expect(searcher.searchByExecutionTime(1,30).getRecipes().length,equals(0));
-    expect(searcher.searchByExecutionTime(0,30).getRecipes().length,equals(2));
-    expect(()=>searcher.searchByExecutionTime(-1,0),throwsException);
-    expect(()=>searcher.searchByExecutionTime(0,-1),throwsException);
-    expect(()=>searcher.searchByExecutionTime(null,0),throwsException);
-    expect(()=>searcher.searchByExecutionTime(1,null),throwsException);
-    expect(()=>searcher.searchByExecutionTime(25,null),throwsException);
-    expect(()=>searcher.searchByExecutionTime(1,61),throwsException);
+    expect(searcher.searchByExecutionTime(90).getRecipes().length,equals(0));
+    expect(searcher.searchByExecutionTime(30).getRecipes().length,equals(2));
+    expect(()=>searcher.searchByExecutionTime(-1),throwsException);
+    expect(()=>searcher.searchByExecutionTime(null),throwsException);
     searcher.clear();
 
   });
@@ -109,7 +110,7 @@ void main() {
   test("ricerca multipla1",(){
 
     caricaRicette2();
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
     IngredientRegister register=new IngredientRegister();
     expect(searcher.searchByIngredientName("sale").getRecipes().length,equals(6));
     searcher.clear();
@@ -138,7 +139,7 @@ void main() {
   test("ricerca multipla2",(){
 
     caricaRicette2();
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
     IngredientRegister register=new IngredientRegister();
     Ingredient ing1=register.getFactory("simple").createIngredient("olio1", 35, "gr");
     Ingredient ing2=register.getFactory("simple").createIngredient("lievito di birra2", 5, "gr");
@@ -163,7 +164,7 @@ void main() {
   test("ricerca multipla3",(){
 
     caricaRicette2();
-    ConcreteIterator searcher=new ConcreteIterator();
+    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
     expect(searcher.searchByIngredientName("sale")
         .thenByIngrendientName("olio1").getRecipes().length,equals(4));
@@ -183,19 +184,11 @@ void main() {
     expect(searcher.searchByIngredientName("sale")
         .thenByIngrendientName("olio1")
         .thenByIngrendientName("lievito di birra2")
-        .thenByDifficult(4).thenByExecutionTime(2, 0).getRecipes().length,equals(0));
+        .thenByDifficult(4).thenByExecutionTime(120).getRecipes().length,equals(0));
     searcher.clear();
 
-
-    /*Set<Recipe> set1=searcher.searchByIngredientName("sale")
-        .thenByIngrendientName("olio1")
-        .thenByIngrendientName("lievito di birra2")
-        .thenByDifficult(4).getRecipes().toSet();
-
-    for(Recipe recipe in set1) print(recipe.toString());
-    searcher.clear();*/
-
   });
+
 
 }
 

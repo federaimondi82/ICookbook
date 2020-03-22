@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
 
@@ -11,6 +13,7 @@ class ExecutionTimeAdapter extends Target{
   }
 
   ExecutionTimeAdapter setTime(ExecutionTime time){
+    //TODO
     this.exec=time;
     return this;
   }
@@ -25,10 +28,11 @@ class ExecutionTimeAdapter extends Target{
   }
 
   @override
-  ExecutionTime toObject(Map<String,dynamic> data) {
+  ExecutionTime toObject(Map<dynamic, dynamic> data) {
     this.exec.houres = data['HH'];
     this.exec.minutes= data['MM'];
     return this.exec;
   }
+
 
 }

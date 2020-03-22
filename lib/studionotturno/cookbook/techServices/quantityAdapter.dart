@@ -1,4 +1,6 @@
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/unitAdapter.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
@@ -25,7 +27,7 @@ class QuantityAdapter extends Target{
   }
 
   @override
-  Quantity toObject(Map<String,dynamic> data) {
+  Quantity toObject(Map<dynamic, dynamic> data) {
     this.quantity.amount = data['amount'];
     this.quantity.unit=UnitAdapter().toObject(data['unit']);
     //this.quantity.unit=data['unit'];

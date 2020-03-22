@@ -1,6 +1,8 @@
 
 
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/compositeIngredientAdapter.dart';
@@ -29,7 +31,7 @@ class IngredientAdapter extends Target {
   }
 
   @override
-  Ingredient toObject(Map<String,dynamic> data) {
+  Ingredient toObject(Map<dynamic, dynamic> data) {
     try{
       this.ingredient=CompositeIngredientAdapter().toObject(data);
 

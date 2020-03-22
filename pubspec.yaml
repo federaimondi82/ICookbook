@@ -17,6 +17,8 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  path_provider: ^1.6.5
+  flutter_tags: "^0.4.8"
   flutter:
     sdk: flutter
   firebase_core: ^0.4.0+9

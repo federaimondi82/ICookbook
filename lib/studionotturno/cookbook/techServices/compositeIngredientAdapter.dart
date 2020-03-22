@@ -1,5 +1,7 @@
 
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/quantityAdapter.dart';
@@ -29,7 +31,7 @@ class CompositeIngredientAdapter extends Target{
   }
 
   @override
-  CompositeIngredient toObject(Map<dynamic,dynamic > data) {
+  CompositeIngredient toObject(Map<dynamic, dynamic> data) {
     this.composite.name = data['name'];
     this.composite.amount = QuantityAdapter().toObject(data['amount']);
     Iterable l= data['ingredients'];//json.decode(comp['ingredients']);

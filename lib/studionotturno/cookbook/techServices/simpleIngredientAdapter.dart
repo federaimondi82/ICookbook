@@ -1,6 +1,8 @@
 
 
 
+import 'dart:collection';
+
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/techServices/quantityAdapter.dart';
@@ -32,7 +34,7 @@ class SimpleIngredientAdapter extends Target{
   }
 
   @override
-  SimpleIngredient toObject(Map<String,dynamic> data) {
+  SimpleIngredient toObject(Map<dynamic, dynamic> data) {
     this.ingredient.name = data['name'];
     this.ingredient.amount = QuantityAdapter().toObject(data['amount']);
     return this.ingredient;
