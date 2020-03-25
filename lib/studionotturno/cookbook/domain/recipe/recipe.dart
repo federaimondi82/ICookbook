@@ -13,34 +13,18 @@ import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.d
 /// Dovendo memorizzare gli ingredienti è anche Information expert (grasp) degli ingredient
 class Recipe {
 
-  String name;
-  String description;
+  String name,description;
   int difficult;
   List<Ingredient> ingredients;
   ExecutionTime executionTime;
   IngredientRegister ingredientRegister;
 
-  bool trovato;
-
   Recipe(this.name){
     this.ingredients=new List<Ingredient>();
     ingredientRegister=new IngredientRegister();
-    this.trovato=false;
-
   }
 
-  setTrovato(bool trovato){
-    this.trovato=trovato;
-  }
-
-  bool getTrovato(){
-    return this.trovato;
-  }
-  /*bool getValue(){
-    ServiceFireStone s= new ServiceFireStone(this.name);
-    s.exists().asStream().forEach((value)=>trovato=value);
-    return this.trovato;
-  }*/
+  //#region getter & setter
 
   String getName(){
     return this.name;
@@ -80,6 +64,8 @@ class Recipe {
     return ingredients.firstWhere((el)=>el.getName()==name);
   }
 
+  //#endregion getter & setter
+
   Recipe add(Ingredient ingredient){
     if(ingredient==null) throw new Exception("Ingrediente null");
     if(contains(ingredient)) throw new Exception("Ingrediente già presente");
@@ -116,9 +102,6 @@ class Recipe {
       }
       else if(ingRecipe is CompositeIngredient && ingredient is SimpleIngredient){
         if((ingRecipe as CompositeIngredient).contains(ingredient.getName()))trovato=true;
-        /*for(Ingredient comp in ingRecipe.getIngredients()) {
-          if(comp.getName()==ingredient.getName())trovato=true;
-        }*/
       }
       else if(ingRecipe is CompositeIngredient && ingredient is CompositeIngredient){
         if(ingRecipe.equals(ingredient))trovato=true;
@@ -149,7 +132,7 @@ class Recipe {
       if(ingredient is SimpleIngredient){
         this.ingredients.removeWhere((el)=>ingredient.equals(el));
       }
-      else if(ingredient is CompositeIngredient){
+      if(ingredient is CompositeIngredient){
         this.ingredients.removeWhere((el)=>ingredient.equals(el));
       }
   }
@@ -177,54 +160,5 @@ class Recipe {
   String toString() {
     return 'name:$name,description:$description,difficult:$difficult,executionTime:$executionTime,ingredients:$ingredients';
   }
-
-  /*@override
-  int compareTo(other) {
-    return this.getName().compareTo(other.getName());
-  }*/
-
-  /*Map<String,dynamic> toJson(){
-    return {
-      "name": this.name,
-      "description": this.description,
-      "difficult": this.difficult,
-      "executionTime": this.executionTime,
-      "ingredients":this.ingredients
-    };
-  }*/
-
- /* Recipe.fromJson(Map<String, dynamic> recipeJson){
-    name = recipeJson['name'];
-    description = recipeJson['description'];
-    difficult = recipeJson['difficult'];
-   // print('bo');
-    //print(recipeJson['executionTime']);
-    executionTime=ExecutionTime.fromJson(recipeJson['executionTime']);
-    Iterable l= recipeJson['ingredients'];//json.decode(comp['ingredients']);
-    ingredients = l.map((model)=>CompositeIngredient.fromJson(model)).toList();
-  }*/
-
-
-
-
-  /*@override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Recipe &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          description == other.description &&
-          difficult == other.difficult &&
-          ingredients == other.ingredients &&
-          executionTime == other.executionTime;
-
-  @override
-  int get hashCode =>
-      name.hashCode ^
-      description.hashCode ^
-      difficult.hashCode ^
-      ingredients.hashCode ^
-      executionTime.hashCode;*/
-
 
 }

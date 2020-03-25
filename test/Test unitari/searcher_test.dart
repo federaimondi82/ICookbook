@@ -1,194 +1,134 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorLocal.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
 void main() {
 
-  tearDown((){
-    Cookbook cookBook=new Cookbook();
-    cookBook.clear();
-    cookBook=null;
 
-  });
+  test("Ricerca ricetta per nome",(){
 
-  test("Ricerca ricetta like a name",(){
+    Cookbook cookbook=new Cookbook();
     caricaRicette2();
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
+    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
 
-    searcher.searchByRecipeName("pizza").getRecipes().forEach((ele)=>print(ele.toString()));
-    expect(false,equals(false));
-  });
+    expect(iterator,isNotNull);
+    expect(iterator.hasNext(),equals(true));
 
-  test("Searcher searchByIngredientName",(){
-
-    caricaRicette();
-
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-    expect(searcher.searchByIngredientName("impasto per pizza").getRecipes().length,equals(2));
-    searcher.clear();
-    expect(searcher.searchByIngredientName("sale").getRecipes().length,equals(2));
-    searcher.clear();
-  });
-
-  test("Searcher searchByIngredient",(){
-
-    caricaRicette();
-
-    IngredientRegister reg1=new IngredientRegister();
-    Ingredient ing1=reg1.getFactory("composite").createIngredient("impasto per pizza", 500, "gr");
-    if(ing1 is CompositeIngredient){
-      ing1.add(SimpleIngredientFactory().createIngredient("farina 00", 200, "gr"));
-      ing1.add(SimpleIngredientFactory().createIngredient("lievito di birra", 5, "gr"));
-      ing1.add(SimpleIngredientFactory().createIngredient("sale", 10, "gr"));
-      ing1.add(SimpleIngredientFactory().createIngredient("olio", 35, "gr"));
+   iterator.reset();
+   Set<Recipe> set2=new Set<Recipe>();
+    while(iterator.hasNext()){
+      set2.add(iterator.next());
     }
-
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-
-    expect(searcher.searchByIngredient(ing1).getRecipes().length,equals(2));
-    searcher.clear();
-
+    iterator.reset();
+    expect(set2.length,greaterThan(1));
   });
 
-  test("Searcher searchByIngredients",(){
+  test("Ricerca ricetta per nome due volte",(){
 
-    caricaRicette();
-
-      SimpleIngredient s1=SimpleIngredientFactory().createIngredient("farina 00", 200, "gr");
-      SimpleIngredient s2=SimpleIngredientFactory().createIngredient("lievito di birra", 5, "gr");
-      SimpleIngredient s3=SimpleIngredientFactory().createIngredient("sale", 10, "gr");
-      SimpleIngredient s4=SimpleIngredientFactory().createIngredient("olio", 35, "gr");
-      List<Ingredient> list=new List<Ingredient>();
-      list.add(s1);list.add(s2);list.add(s3);list.add(s4);
-
-
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-
-    expect(searcher.searchByIngredients(list).getRecipes().length,equals(2));
-    searcher.clear();
-
-  });
-
-  test("Searcher searchByRecipeName",(){
-
-    caricaRicette();
-
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-
-    expect(searcher.searchByRecipeName("pizza margherita").getRecipes().length,equals(1));
-    expect(searcher.searchByRecipeName("pizza marinara").getRecipes().length,equals(2));
-    expect(()=>searcher.searchByRecipeName("pizza fritta"),throwsException);
-    expect(searcher.searchByRecipeName("pizza marinara").getRecipes().length,equals(2));
-    searcher.clear();
-
-  });
-
-  test("Searcher searchByRecipeName",(){
-
-    caricaRicette();
-
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-
-    expect(searcher.searchByExecutionTime(30).getRecipes(),isNotNull);
-    searcher.clear();
-    expect(searcher.searchByExecutionTime(90).getRecipes().length,equals(0));
-    expect(searcher.searchByExecutionTime(30).getRecipes().length,equals(2));
-    expect(()=>searcher.searchByExecutionTime(-1),throwsException);
-    expect(()=>searcher.searchByExecutionTime(null),throwsException);
-    searcher.clear();
-
-  });
-
-  test("ricerca multipla1",(){
-
+    Cookbook cookbook=new Cookbook();
+    cookbook.clear();
     caricaRicette2();
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-    IngredientRegister register=new IngredientRegister();
-    expect(searcher.searchByIngredientName("sale").getRecipes().length,equals(6));
-    searcher.clear();
+    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngredient(register.getFactory("simple").createIngredient("olio1", 35, "gr")).getRecipes().length,equals(4));
-    searcher.clear();
+    Set<Recipe> set2=new Set<Recipe>();
+    while(iterator.hasNext()) set2.add(iterator.next());
 
-    /*Set<Recipe> set1=searcher.searchByIngredientName("sale")
-        .thenByIngredient(register.getFactory("simple").createIngredient("olio1", 35, "gr")).getRecipes();
-    for(Recipe recipe in set1){
-      print(recipe.toString());
-    }*/
-    searcher.clear();
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngredient(register.getFactory("simple").createIngredient("olio1", 35, "gr"))
-        .thenByIngredient(register.getFactory("simple").createIngredient("lievito di birra2", 5, "gr"))
-        .getRecipes().length,equals(2));
-    /*for(Recipe recipe in set1){
-      print(recipe.toString());
-    }*/
-    searcher.clear();
+    RecipesIterator iterator2=cookbook.createIteratorByName(set2, 'margherita');
+    Set<Recipe> set3=new Set<Recipe>();
+    while(iterator2.hasNext()) set3.add(iterator2.next());
+    expect(set3.length,equals(3));
+
+    RecipesIterator iterator3=cookbook.createIteratorByName(set3, 'marinara');
+    Set<Recipe> set4=new Set<Recipe>();
+    while(iterator3.hasNext()) set4.add(iterator3.next());
+    expect(set4.length,equals(0));
+
 
   });
 
-  test("ricerca multipla2",(){
 
+  test("Ricerca ricetta per ingrediente",(){
+
+    Cookbook cookbook=new Cookbook();
+    cookbook.clear();
     caricaRicette2();
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
-    IngredientRegister register=new IngredientRegister();
-    Ingredient ing1=register.getFactory("simple").createIngredient("olio1", 35, "gr");
-    Ingredient ing2=register.getFactory("simple").createIngredient("lievito di birra2", 5, "gr");
-    List<Ingredient> list=new List<Ingredient>();
-    list.add(ing1);
-    list.add(ing2);
+    RecipesIterator iterator = cookbook.createIteratorByIngredient(cookbook.getRecipes(),'alici');
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngredient(ing1).getRecipes().length,equals(4));
-    searcher.clear();
+    expect(iterator,isNotNull);
+    expect(iterator.hasNext(),equals(true));
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngredients(list).getRecipes().length,equals(2));
-    searcher.clear();
-
-    Set<Recipe> set1=searcher.searchByIngredientName("sale").thenByIngredients(list).getRecipes();
-    for(Recipe recipe in set1) print(recipe.toString());
-    searcher.clear();
-
+    iterator.reset();
+    Set<Recipe> set2=new Set<Recipe>();
+    while(iterator.hasNext()){
+      set2.add(iterator.next());
+    }
+    iterator.reset();
+    expect(set2.length,equals(1));
   });
 
-  test("ricerca multipla3",(){
 
+  test("Ricerca ricetta per nome e ingrediente",(){
+
+    Cookbook cookbook=new Cookbook();
+    cookbook.clear();
     caricaRicette2();
-    ConcreteIteratorLocal searcher=new ConcreteIteratorLocal();
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngrendientName("olio1").getRecipes().length,equals(4));
-    searcher.clear();
+    //riceca ingrediente con nome pizza
+    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    Set<Recipe> set=new Set<Recipe>();
+    while(iterator.hasNext()) set.add(iterator.next());
+    expect(set.length,equals(6));
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngrendientName("olio1")
-        .thenByIngrendientName("lievito di birra2").getRecipes().length,equals(2));
-    searcher.clear();
+    //riceca ingrediente con nome pizza & margherita
+    RecipesIterator iterator2 = cookbook.createIteratorByName(set,'marinara');
+    Set<Recipe> set2=new Set<Recipe>();
+    while(iterator2.hasNext()){
+      //Recipe r=iterator2.next();
+      set2.add(iterator2.next());
+    }
+    expect(set2.length,equals(3));
 
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngrendientName("olio1")
-        .thenByIngrendientName("lievito di birra2")
-        .thenByDifficult(4).getRecipes().length,equals(1));
-    searcher.clear();
-
-    expect(searcher.searchByIngredientName("sale")
-        .thenByIngrendientName("olio1")
-        .thenByIngrendientName("lievito di birra2")
-        .thenByDifficult(4).thenByExecutionTime(120).getRecipes().length,equals(0));
-    searcher.clear();
+    //riceca ingrediente con nome pizza & margherita
+    RecipesIterator iterator3 = cookbook.createIteratorByIngredient(set2,'alici');
+    Set<Recipe> set3=new Set<Recipe>();
+    while(iterator3.hasNext()){
+      set3.add(iterator3.next());
+    }
+      expect(set3.length,equals(1));
 
   });
 
+  test("Ricerca ricetta per nome,ingrediente e difficoltà",(){
+
+    Cookbook cookbook=new Cookbook();
+    caricaRicette2();
+    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    Set<Recipe> set=new Set<Recipe>();
+    while(iterator.hasNext()) set.add(iterator.next());
+    expect(set.length,equals(6));
+
+    RecipesIterator iterator1 = cookbook.createIteratorByIngredient(set,'farina');
+    Set<Recipe> set1=new Set<Recipe>();
+    while(iterator1.hasNext()) set1.add(iterator1.next());
+    expect(set1.length,equals(6));
+
+    RecipesIterator iterator2= cookbook.createIteratorByDifficult(set1,5);
+    Set<Recipe> set2=new Set<Recipe>();
+    while(iterator2.hasNext()) set2.add(iterator2.next());
+    expect(set2.length,equals(1));
+
+
+    RecipesIterator iterator3= cookbook.createIteratorByTime(set2,35);
+    Set<Recipe> set3=new Set<Recipe>();
+    while(iterator3.hasNext()) set3.add(iterator3.next());
+    expect(set3.length,equals(1));
+
+
+  });
 
 }
 
@@ -196,8 +136,8 @@ void caricaRicette() {
   Cookbook cookBook=new Cookbook();
   //nuova ricetta
   cookBook.addRecipe("pizza margherita");
-  cookBook.getRecipe("pizza margherita").setDifficult(3);
-  cookBook.getRecipe("pizza margherita").setExecutionTime(new ExecutionTime(0,30));
+  cookBook.getRecipe("pizza margherita").setDifficult(30);
+  cookBook.getRecipe("pizza margherita").setExecutionTime(new ExecutionTime(3,30));
   //aggiunta di una ingrediente composto
   cookBook.getRecipe("pizza margherita").addComposite("sugo", 100, "gr");
   CompositeIngredient c1=cookBook.getRecipe("pizza margherita").getIngredient("sugo");
@@ -214,8 +154,8 @@ void caricaRicette() {
 
   //nuova ricetta2
   cookBook.addRecipe("pizza marinara");
-  cookBook.getRecipe("pizza marinara").setDifficult(3);
-  cookBook.getRecipe("pizza marinara").setExecutionTime(new ExecutionTime(0,30));
+  cookBook.getRecipe("pizza marinara").setDifficult(30);
+  cookBook.getRecipe("pizza marinara").setExecutionTime(new ExecutionTime(3,30));
   //aggiunta di una ingrediente composto
   cookBook.getRecipe("pizza marinara").addComposite("sugo", 100, "gr");
   CompositeIngredient c3=cookBook.getRecipe("pizza marinara").getIngredient("sugo");
@@ -234,72 +174,75 @@ void caricaRicette2() {
   caricaRicette();
   Cookbook cookBook=new Cookbook();
   //nuova ricetta3
-  cookBook.addRecipe("pizza margherita1");
-  cookBook.getRecipe("pizza margherita1").setDifficult(4);
-  cookBook.getRecipe("pizza margherita1").setExecutionTime(new ExecutionTime(1,0));
+  cookBook.addRecipe("pizza margherita 1");
+  cookBook.getRecipe("pizza margherita 1").setDifficult(40);
+  cookBook.getRecipe("pizza margherita 1").setExecutionTime(new ExecutionTime(3,0));
   //aggiunta di una ingrediente composto
-  cookBook.getRecipe("pizza margherita1").addComposite("sugo1", 100, "gr");
-  CompositeIngredient c1=cookBook.getRecipe("pizza margherita1").getIngredient("sugo1");
+  cookBook.getRecipe("pizza margherita 1").addComposite("sugo1", 100, "gr");
+  CompositeIngredient c1=cookBook.getRecipe("pizza margherita 1").getIngredient("sugo1");
   c1.addByParameter("salsa di pomodoro1", 1, "l")
       .addByParameter("sale", 0, "gr");
   //aggiunta di un secondo ingrediente composto
-  cookBook.getRecipe("pizza margherita1").addComposite("impasto per pizza1", 1, "kg");
-  CompositeIngredient c2=cookBook.getRecipe("pizza margherita1").getIngredient("impasto per pizza1");
+  cookBook.getRecipe("pizza margherita 1").addComposite("impasto per pizza1", 1, "kg");
+  CompositeIngredient c2=cookBook.getRecipe("pizza margherita 1").getIngredient("impasto per pizza1");
   c2.addByParameter("farina 00", 200, "gr")
       .addByParameter("sale", 10, "gr")
       .addByParameter("olio1", 35, "gr")
       .addByParameter("lievito di birra2", 5, "gr");
 
   //nuova ricetta4
-  cookBook.addRecipe("pizza margherita2");
-  cookBook.getRecipe("pizza margherita2").setDifficult(3);
-  cookBook.getRecipe("pizza margherita2").setExecutionTime(new ExecutionTime(1,30));
+  cookBook.addRecipe("pizza margherita 2");
+  cookBook.getRecipe("pizza margherita 2").setDifficult(30);
+  cookBook.getRecipe("pizza margherita 2").setExecutionTime(new ExecutionTime(3,30));
   //aggiunta di una ingrediente composto
-  cookBook.getRecipe("pizza margherita2").addComposite("sugo2", 100, "gr");
-  CompositeIngredient c5=cookBook.getRecipe("pizza margherita2").getIngredient("sugo2");
+  cookBook.getRecipe("pizza margherita 2").addComposite("sugo2", 100, "gr");
+  CompositeIngredient c5=cookBook.getRecipe("pizza margherita 2").getIngredient("sugo2");
   c5.addByParameter("salsa di pomodoro2", 1, "l")
       .addByParameter("sale", 0, "gr");
   //aggiunta di un secondo ingrediente composto
-  cookBook.getRecipe("pizza margherita2").addComposite("impasto per pizza2", 1, "kg");
-  CompositeIngredient c6=cookBook.getRecipe("pizza margherita2").getIngredient("impasto per pizza2");
+  cookBook.getRecipe("pizza margherita 2").addComposite("impasto per pizza2", 1, "kg");
+  CompositeIngredient c6=cookBook.getRecipe("pizza margherita 2").getIngredient("impasto per pizza2");
   c6.addByParameter("farina 00", 200, "gr")
       .addByParameter("sale", 10, "gr")
       .addByParameter("olio1", 35, "gr")
       .addByParameter("lievito di birra2", 5, "gr");
 
   //nuova ricetta5
-  cookBook.addRecipe("pizza marinara1");
-  cookBook.getRecipe("pizza marinara1").setDifficult(3);
-  cookBook.getRecipe("pizza marinara1").setExecutionTime(new ExecutionTime(0,30));
+  cookBook.addRecipe("pizza marinara 1");
+  cookBook.getRecipe("pizza marinara 1").setDifficult(30);
+  cookBook.getRecipe("pizza marinara 1").setExecutionTime(new ExecutionTime(3,30));
   //aggiunta di una ingrediente composto
-  cookBook.getRecipe("pizza marinara1").addComposite("sugo", 100, "gr");
-  CompositeIngredient c7=cookBook.getRecipe("pizza marinara1").getIngredient("sugo");
+  cookBook.getRecipe("pizza marinara 1").addComposite("sugo", 100, "gr");
+  CompositeIngredient c7=cookBook.getRecipe("pizza marinara 1").getIngredient("sugo");
   c7.addByParameter("salsa di pomodoro", 1, "l")
       .addByParameter("sale", 0, "gr");
   //aggiunta di un secondo ingrediente composto
-  cookBook.getRecipe("pizza marinara1").addComposite("impasto per pizza", 1, "kg");
-  CompositeIngredient c8=cookBook.getRecipe("pizza marinara1").getIngredient("impasto per pizza");
+  cookBook.getRecipe("pizza marinara 1").addComposite("impasto per pizza", 1, "kg");
+  CompositeIngredient c8=cookBook.getRecipe("pizza marinara 1").getIngredient("impasto per pizza");
   c8.addByParameter("farina 00", 200, "gr")
       .addByParameter("sale", 10, "gr")
       .addByParameter("olio1", 35, "gr")
       .addByParameter("lievito di birra", 5, "gr");
 
   //nuova ricetta6
-  cookBook.addRecipe("pizza marinara2");
-  cookBook.getRecipe("pizza marinara2").setDifficult(3);
-  cookBook.getRecipe("pizza marinara2").setExecutionTime(new ExecutionTime(0,30));
+  cookBook.addRecipe("pizza marinara 2");
+  cookBook.getRecipe("pizza marinara 2").setDifficult(3);
+  cookBook.getRecipe("pizza marinara 2").setExecutionTime(new ExecutionTime(0,30));
   //aggiunta di una ingrediente composto
-  cookBook.getRecipe("pizza marinara2").addComposite("sugo", 100, "gr");
-  CompositeIngredient c3=cookBook.getRecipe("pizza marinara2").getIngredient("sugo");
+  cookBook.getRecipe("pizza marinara 2").addComposite("sugo", 100, "gr");
+  CompositeIngredient c3=cookBook.getRecipe("pizza marinara 2").getIngredient("sugo");
   c3.addByParameter("salsa di pomodoro", 1, "l")
       .addByParameter("sale", 0, "gr");
   //aggiunta di un secondo ingrediente composto
-  cookBook.getRecipe("pizza marinara2").addComposite("impasto per pizza", 1, "kg");
-  CompositeIngredient c4=cookBook.getRecipe("pizza marinara2").getIngredient("impasto per pizza");
+  cookBook.getRecipe("pizza marinara 2").addComposite("impasto per pizza", 1, "kg");
+  CompositeIngredient c4=cookBook.getRecipe("pizza marinara 2").getIngredient("impasto per pizza");
   c4.addByParameter("farina 00", 200, "gr")
       .addByParameter("sale", 10, "gr")
       .addByParameter("olio1", 35, "gr")
       .addByParameter("lievito di birra", 5, "gr");
+
+  //Ingredient simple=SimpleIngredientFactory().createIngredient("alici", 200, "gr");
+  cookBook.getRecipe("pizza marinara 2").addSimple("alici", 200, "gr");
 
 
 }

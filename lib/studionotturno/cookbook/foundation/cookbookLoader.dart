@@ -18,24 +18,37 @@ class CookbookLoader{
     this.cookBook=new Cookbook();
   }
 
+  /*void myReading() async{
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/recipes.txt');
+
+      Future<List<String>> future= file.readAsLines();
+      future.then((list)=>list.forEach((ele) async{
+        Map<String,dynamic> s2=await JsonDecoder().convert(ele);
+        Recipe r=await RecipeAdapter().toObject(s2);
+
+      }));
+    } catch (e) {
+      print("Couldn't read file"+ e.toString());
+    }
+  }*/
+
   void read() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-      //print(directory);
+
       File('${directory.path}/recipes.txt').create();
       final file = File('${directory.path}/recipes.txt');
+
       //file.delete();
       Future<List<String>> future= file.readAsLines();
       future.then((list)=>list.forEach((ele){
-        String s1=ele.toString();
-        Map<dynamic,dynamic> s2=JsonDecoder().convert(ele);
+        Map<String,dynamic> s2=JsonDecoder().convert(ele);
         Recipe r=RecipeAdapter().toObject(s2);
-        /*print(s1);
-        print(s2.toString());
-        print(r.toString());*/
+
        cookBook.addRecipeObject(r);
       }));
-      //print("fine");
     } catch (e) {
       print("Couldn't read file"+ e.toString());
     }
@@ -46,10 +59,9 @@ class CookbookLoader{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/recipes.txt');
 
-      Map<dynamic,dynamic> s1=RecipeAdapter().setRecipe(r).toJson();
-      String s2=JsonEncoder().convert(s1);
-      await file.writeAsString(s2+"\n",mode:FileMode.append,flush: true);
-      print(s2.toString());
+      Map<String,dynamic> s1=await RecipeAdapter().setRecipe(r).toJson();
+      String s2=await JsonEncoder().convert(s1);
+      await file.writeAsStringSync(s2+"\n",flush: true,mode:FileMode.append,encoding: Encoding.getByName("UTF-8"));
     }catch(e){
       print("non si legge"+e);
     }
@@ -63,10 +75,7 @@ class CookbookLoader{
       file.create();
 
       this.cookBook.getRecipes().forEach((recipe) async {
-        Map<dynamic,dynamic> s1=RecipeAdapter().setRecipe(recipe).toJson();
-        String s2=JsonEncoder().convert(s1);
-        await file.writeAsString(s2+"\n",mode:FileMode.append,flush: true);
-        print(s2.toString());
+        await saveRecipe(recipe);
       });
     }catch(e){
       print("non si legge"+e);

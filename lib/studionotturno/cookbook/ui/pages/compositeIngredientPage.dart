@@ -47,6 +47,8 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
   //controllers per i componeneti grafici
   static TextEditingController ingredientName,ingredientQuantity;
 
+  static TextStyle textStyle=TextStyle( fontWeight: FontWeight.bold, fontSize: 30, fontStyle: FontStyle.italic);
+  static TextStyle textFieldStyle=TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2);
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,8 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
 
     //#endregion Controllers
 
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text((this.compositeIngredient.getName()==null || this.compositeIngredient.getName()=="")?'New ingredient':this.compositeIngredient.getName().toUpperCase(),style:TextStyle(fontSize: 20)),
@@ -79,7 +83,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                 key: _name,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
+                  labelStyle: textFieldStyle,
                 ),
                 validator: (value) {
                   if (value.isEmpty) return 'Please enter the name';
@@ -96,7 +100,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Quantity',
-                  labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
+                  labelStyle: textFieldStyle,
                 ),
                 validator: (value) {
                   if (value.isEmpty) return 'Please enter the name';
@@ -113,7 +117,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                 //height: 200.0,
                 child: Row(
                   children: <Widget>[
-                    Text("Unit   ",style: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),),
+                    Text("Unit   ",style: textFieldStyle,),
                     getListOfUnit(context)
                   ],
                 ),
@@ -122,7 +126,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.all(10),
-                    child: Text("Ingredients",style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+                    child: Text("Ingredients",style: textFieldStyle.copyWith(fontSize: 30)),
                   ),
                   _simpleIngredients(context),//Lista ingredienti
                 ],
@@ -141,7 +145,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    child: Text('Save Ingredient',style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+                    child: Text('Save Ingredient',style: textFieldStyle),
                   ),
                 ),
               ),
@@ -170,15 +174,9 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
     if(r.containsByName(this.compositeIngredient.getName())){
       //ingrediente già presente->modificarlo
     }
-    else{
-      //ingrediente non presente->salvarlo
-      r.add(this.compositeIngredient);
-    }
+    else  r.add(this.compositeIngredient);
 
-
-    Navigator.pushReplacement (
-        context,
-        MaterialPageRoute(builder: (_) => RecipePage(r)));
+    Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => RecipePage(r)));
 
   }
 
@@ -218,25 +216,18 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
     List<Widget> list = new List<Widget>();
     for (SimpleIngredient simple in this.compositeIngredient.getIngredients()) {
       list.add(new ListTile(
-        title: Text(simple.getName().toUpperCase(), style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-            fontStyle: FontStyle.italic)),
+        title: Text(simple.getName().toUpperCase(), style: textStyle),
         onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    SimpleIngredientPage(
-                        this.recipe, this.compositeIngredient, simple)),
+          Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>
+                    SimpleIngredientPage(this.recipe, this.compositeIngredient, simple)),
           );
         },
         onLongPress: (){
           showDialog(context: context,child:_simpleDialog(context,simple.getName()));
         },
-        leading: const Icon(Icons.plus_one, size: 40.0, color: Colors.blueGrey),
-        subtitle: Text(simple.getAmount().toString()),
-      ));
+        trailing: const Icon(Icons.plus_one, size: 40.0, color: Colors.blueGrey),
+        subtitle: Text(simple.getAmount().getAmount().round().toString()+' '+simple.getAmount().getUnit().getAcronym().toString().toLowerCase()),
+        ));
     }
     return new ListView(
         scrollDirection: Axis.vertical,

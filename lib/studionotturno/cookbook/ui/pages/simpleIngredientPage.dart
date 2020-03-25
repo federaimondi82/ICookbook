@@ -39,6 +39,8 @@ class SimpleIngredientPage extends StatefulWidget{
 
 class SimpleIngredientPageState extends State<SimpleIngredientPage>{
 
+  //#region parametri di classe
+
   SimpleIngredient simple;
   CompositeIngredient comp;
   String recipeName;
@@ -46,9 +48,13 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
   UnitRegister unitRegister;
   IngredientRegister register;
 
-  final _formKey = GlobalKey<FormState>();//per la validazione della form
   TextEditingController ingredientName,ingredientQuantity;
   var _name,_quantity,_dropdownValue;
+
+  //#endregion parametri di classe
+
+  static TextStyle textStyle=TextStyle( fontWeight: FontWeight.bold,color: Colors.purple, fontSize: 30, fontStyle: FontStyle.italic);
+  static TextStyle textFieldStyle=TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2);
 
   SimpleIngredientPageState(String recipeName,CompositeIngredient comp,SimpleIngredient simple){
     this.simple=simple;
@@ -61,16 +67,21 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
     this.register=new IngredientRegister();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
+
+    //#region conteollers
+
     ingredientName= new TextEditingController(
         text: this.simple.getName()=="new simple"?"":this.simple.getName(),
     );
     ingredientQuantity= new TextEditingController(
       text: this.simple.getAmount().getAmount().toString()=="0.0"?"0":this.simple.getAmount().getAmount().toString()
     );
+
+    //#endregion conteollers
+
+
 
     return Scaffold(
       appBar: AppBar(
@@ -87,7 +98,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 key: _name,
                 decoration: InputDecoration(
                   labelText: 'Name',
-                  labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
+                  labelStyle: textFieldStyle,
                 ),
                 controller:ingredientName,
                 onChanged: (value){
@@ -100,7 +111,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 key: _quantity,
                 decoration: InputDecoration(
                   labelText: 'Quantity',
-                  labelStyle: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),
+                  labelStyle: textFieldStyle,
                 ),
                 onChanged: (value){
                   this.newValue=double.parse(value);
@@ -113,7 +124,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 //height: 200.0,
                 child: Row(
                   children: <Widget>[
-                    Text("Unit   ",style: TextStyle(fontSize: 22,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2),),
+                    Text("Unit   ",style: textFieldStyle,),
                     getListOfUnit(context)
                   ],
                 ),
@@ -132,7 +143,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    child: Text('Save',style: TextStyle(fontSize: 20,color: Colors.purple,fontWeight: FontWeight.bold,letterSpacing: 1.2)),
+                    child: Text('Save Ingredient',style: textFieldStyle.copyWith(fontSize: 30)),
                   ),
                 ),
               ),
@@ -170,7 +181,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
           .map<DropdownMenuItem<String>>((Unit value) {
         return DropdownMenuItem<String>(
           value: value.acronym,
-          child: Text(value.acronym,style: TextStyle(fontSize: 26),),
+          child: Text(value.acronym,style: TextStyle(fontSize: 26)),
         );
       }).toList(),
     );
@@ -178,37 +189,19 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
 
   void saveIngredient() {
     Cookbook cookbook=new Cookbook();
+    Recipe recipe=cookbook.getRecipe(this.recipeName);
     this.simple.setName(this.newName);
     this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
     if(this.comp==null){
-      //salvare nella ricetta
-      if(!cookbook.getRecipe(this.recipeName).containsByName(this.newName)){
-        this.simple.setName(this.newName);
-        this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
-        cookbook.getRecipe(this.recipeName).add(this.simple);
-      }
-      else{
-        this.simple.setName(this.newName);
-        this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
-      }
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => RecipePage(cookbook.getRecipe(this.recipeName))));
+      //salvare l'ingrediente semplice nella ricetta
+      if(!recipe.containsByName(this.newName)) recipe.add(this.simple);
+
+      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => RecipePage(recipe)));
     }
     else{
-      //salvare nel composto
-      if(this.comp.contains(this.simple.getName())){
-        //modificare
-        this.simple.setName(this.newName);
-        this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
-      }else{
-        //salvare nuovo
-        this.comp.add(this.simple);
-      }
-      //this.comp.add(this.simple);
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipeName,this.comp)));
+      //salvare l'ingrediente semplice nel composto
+      if(!this.comp.contains(this.simple.getName())) this.comp.add(this.simple);
+      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipeName,this.comp)));
     }
 
   }

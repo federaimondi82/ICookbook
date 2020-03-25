@@ -25,7 +25,6 @@ class RecipeAdapter extends Target{
 
   @override
   Map<String, dynamic> toJson() {
-    print(this.recipe.executionTime);
     return {
       "name": this.recipe.name,
       "description": this.recipe.description,

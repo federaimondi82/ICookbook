@@ -67,20 +67,23 @@ class RecipePageState extends State<RecipePage>{
   /// se si sta agendo su una ricetta già presente nel ricettario questa viene modificata
   ///
   void saveRecipe()async {
-    if(!cookbook.containsByName(this.recipe.getName())){
+    /*if(!cookbook.containsByName(this.recipe.getName())){
       cookbook.addRecipe(this.recipe.getName());
     }
    await cookbook.getRecipe(this.recipe.getName())
         .setDescription(this.recipe.getDescription())
         .setDifficult(this.recipe.getDifficult())
-        .setExecutionTime(this.time);//TODO
+        .setExecutionTime(this.time);//TODO*/
+    saveState();
 
-    print(cookbook.getRecipe(this.recipe.getName()).toString());
-    await CookbookLoader().saveAllRecipes();
-    //await c.save();
+   // print("recipePage saveRecipe: "+cookbook.getRecipe(this.recipe.getName()).toString());
+    CookbookLoader c=new CookbookLoader();
+    await c.saveAllRecipes();
 
-    Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
 
+    //Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
+    Navigator.pop(context,MaterialPageRoute(builder: (_) => CookbookPage()));
+    //await c.myReading();
   }
 
   void saveState() {
@@ -88,6 +91,14 @@ class RecipePageState extends State<RecipePage>{
         .setDescription(recipeDescription.text)
         .setDifficult(this.difficult)
         .setExecutionTime(this.time);
+    if(!cookbook.containsByName(this.recipe.getName())){
+      cookbook.addRecipe(this.recipe.getName());
+    }
+    cookbook.getRecipe(this.recipe.getName())
+        .setDescription(this.recipe.getDescription())
+        .setDifficult(this.recipe.getDifficult())
+        .setExecutionTime(this.time);
+
   }
 
   //#endregion metodi
@@ -143,7 +154,7 @@ class RecipePageState extends State<RecipePage>{
                     child: RaisedButton(
                       onPressed: (){
                         if(_formKey.currentState.validate()){
-                          saveState();
+                          //saveState();
                           saveRecipe();
                         }
                       },
@@ -186,11 +197,12 @@ class RecipePageState extends State<RecipePage>{
               onTap: () {
                 saveState();
                 //saveRecipe();
-                Navigator.push(
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipe.getName(),null)));
+                /*Navigator.push(
                   context,
                   MaterialPageRoute(
                   builder: (context) => CompositeIngredientPage(this.recipe.getName(),null)),
-                );
+                );*/
               }
           ),
           SpeedDialChild(
@@ -201,11 +213,12 @@ class RecipePageState extends State<RecipePage>{
             onTap: (){
               saveState();
               //saveRecipe();
-              Navigator.push(
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => SimpleIngredientPage(this.recipe.getName(),null,null)));
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context)=>SimpleIngredientPage(this.recipe.getName(),null,null)),
-                );
+                );*/
             }
           ),
         ],
@@ -338,7 +351,6 @@ class RecipePageState extends State<RecipePage>{
 
   String addTime(double time) {
     this.time.addMinute(time);
-    print(this.time.toString());
   }
 }
 

@@ -2,7 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ricettario/studionotturno/cookbook/ui/pages/searchPage.dart';
+import 'package:ricettario/studionotturno/cookbook/ui/pages/searchInLocalPage.dart';
 
 class SearchDialogBlock extends StatelessWidget{
 
@@ -21,7 +21,7 @@ class SearchDialogBlock extends StatelessWidget{
             title: Text("Search in local...",style: textStyle),
             leading: const Icon(Icons.search, size: iconsSize, color: iconsColor),
             onTap: (){
-              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SearchPage(0)),);
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SearchInLocalPage(0)),);
             },
           ),
         ),
@@ -30,7 +30,7 @@ class SearchDialogBlock extends StatelessWidget{
             title: Text("Search in cloud...",style: textStyle),
             leading: const Icon(Icons.search, size: iconsSize, color: iconsColor),
             onTap: (){
-              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SearchPage(0)),);
+              Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SearchInLocalPage(1)),);
             },
           ),
         ),

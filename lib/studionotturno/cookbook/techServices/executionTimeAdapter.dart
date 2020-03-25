@@ -13,7 +13,6 @@ class ExecutionTimeAdapter extends Target{
   }
 
   ExecutionTimeAdapter setTime(ExecutionTime time){
-    //TODO
     this.exec=time;
     return this;
   }

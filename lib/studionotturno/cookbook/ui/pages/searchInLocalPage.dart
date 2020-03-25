@@ -4,41 +4,47 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorCloud.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorLocal.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipeIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
 
-class SearchPage extends StatefulWidget{
+class SearchInLocalPage extends StatefulWidget{
 
   int value;
-  SearchPage(this.value);
+  SearchInLocalPage(this.value);
 
   @override
-  State<StatefulWidget> createState()=>SearchPageState(this.value);
+  State<StatefulWidget> createState()=>SearchInLocalPageState(this.value);
 
 }
 
-class SearchPageState extends State<SearchPage>{
+class SearchInLocalPageState extends State<SearchInLocalPage>{
+
+  //#region parametri di classe
 
   int value;
   final List<String> _tagsName=[],_tagsIngredients=[],_tagsExecutionTime=[];
   var inputNameTags,inputIngredientTags,inputExecutionTimeTags;
   int _tags=0;//qt di tag totale
-  RecipeIterator searcher;
+  RecipesIterator searcher;
 
-  SearchPageState(this.value){
-    if(this.value==0){
-      this.searcher=new ConcreteIteratorLocal();
-    }
-    else if(this.value==1){
-      this.searcher=new ConcreteIteratorCloud();
+  //#endregion parametri di classe
 
-    }
-    this.searcher.clear();
+
+  static TextStyle textRecipe = TextStyle(fontWeight: FontWeight.bold, fontSize: 20, fontStyle: FontStyle.italic,color: Colors.black);
+
+  SearchInLocalPageState(this.value){
+     // this.searcher=new CookbookIterator();
+      this.searcher.reset();
   }
 
   @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+
+  /*@override
   Widget build(BuildContext context) {
 
     return new Scaffold(
@@ -94,6 +100,7 @@ class SearchPageState extends State<SearchPage>{
                     setState(() {
                       if(_tags==0){
                         _tagsName.add(value.toString());
+                        print("tag: "+value);
                         this.searcher.searchByRecipeName(value.toString());
                       }else{
                         _tagsName.add(value.toString());
@@ -216,6 +223,7 @@ class SearchPageState extends State<SearchPage>{
   }
 
   Widget _recipesWidget(BuildContext context){
+
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
@@ -223,13 +231,9 @@ class SearchPageState extends State<SearchPage>{
         addSemanticIndexes: true,
         itemBuilder: (context, index) {
           Recipe r = this.searcher.getRecipes().toList().elementAt(index);
+          print("si aggiorna");
           return ListTile(
-            title: Text(r.getName().toUpperCase(),
-                style: TextStyle(fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    fontStyle: FontStyle.italic,
-                    color: Colors.black)
-            ),
+            title: Text(r.getName().toUpperCase(),style:textRecipe),
             onTap: () {
               Navigator.pushReplacement(
                 context,
@@ -243,13 +247,13 @@ class SearchPageState extends State<SearchPage>{
                 r.getExecutionTime().toMinutes().toString() + " minutes"),
           );
         });
-  }
+  }*/
 
 
   ///In seguito di una cancellazione di un tag viene rifatta la ricerca in base
   ///prima del nome,poi degli ingredienti,poi della difficoltà,poi del tempo di esecuzione
-  research(){
-    this.searcher.clear();
+  /*research(){
+    this.searcher.reset();
     if(_tagsName.length>0) {
       this.searcher.searchByRecipeName(_tagsName.elementAt(0));
       if(_tagsName.length>1) researchByName();
@@ -289,5 +293,7 @@ class SearchPageState extends State<SearchPage>{
       this.searcher..thenByExecutionTime(int.parse(el));
     }
   }
+*/
+
 }
 

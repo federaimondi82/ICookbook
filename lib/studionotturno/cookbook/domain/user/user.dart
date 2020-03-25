@@ -68,7 +68,8 @@ class User{
     return this.gender;
   }
   String getEmail(){
-    return this.email;
+    return "federaimondi82@gmail.com";
+    //return this.email;
   }
   String getPassword() {
     return this.password;
