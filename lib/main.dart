@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
+import 'package:ricettario/studionotturno/cookbook/foundation/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/splash.dart';
 
 void main()=>runApp(MyApp2());
@@ -14,12 +13,12 @@ class MyApp2 extends StatefulWidget{
 
 class MyApp extends State<MyApp2> {
 //roomservice restaurant fastfood free_breakfast cake kitcken
-  //Cookbook cookBook=new Cookbook();
 
   @override
   void dispose() {
-    CookbookLoader c=new CookbookLoader();
-    c.saveAllRecipes();
+    //todo Mediator salva tutte le ricette
+    /*FileManager c=new FileManager();
+    c.saveAllRecipes();*/
     super.dispose();
   }
 

@@ -2,11 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/proxyPersonalFirestore.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/serviceToBackend.dart';
+import 'package:ricettario/studionotturno/cookbook/foundation/serviceFirestore.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/mediator.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/proxyFirestore/proxyPersonalFirestore.dart';
 
 class SendRecipeDialogComponent extends StatefulWidget{
 
@@ -55,7 +55,7 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async{//
-                ServiceFireStone service=new ServiceFireStone();
+                ServiceFirestore service=new ServiceFirestore();
                 service.setRecipeName(recipeName);
                 await service.shareRecipe();
                 await setState(() {
@@ -75,7 +75,7 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async {
-                ServiceFireStone service=new ServiceFireStone();
+              ServiceFirestore service=new ServiceFirestore();
                 service.setRecipeName(recipeName);
                 //await service.getAllRecipeOnCloud();
                 await service.remove(proxy.getRecipeDocument(this.recipeName));
@@ -99,8 +99,10 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
               setState(() {
                 Recipe r=_cookBook.getRecipe(recipeName);
                 _cookBook.remove(r);
-                CookbookLoader loader=new CookbookLoader();
-                loader.saveAllRecipes();
+                /*FileManager loader=new FileManager();
+                loader.saveAllRecipes();*/
+                Mediator m=new Mediator();
+                m.uploadAllRecipes();
                 Navigator.of(context).pop();
               });
             },

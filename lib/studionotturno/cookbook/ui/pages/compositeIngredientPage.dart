@@ -2,12 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/simpleIngredientPage.dart';
@@ -53,7 +52,6 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
   @override
   Widget build(BuildContext context) {
 
-    //dropdownValue=unitRegister.getUnits().elementAt(0).getAcronym();
     //#region Controllers
 
     ingredientName= new TextEditingController(
@@ -65,8 +63,6 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
     );
 
     //#endregion Controllers
-
-
 
     return Scaffold(
       appBar: AppBar(
@@ -86,7 +82,8 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                   labelStyle: textFieldStyle,
                 ),
                 validator: (value) {
-                  if (value.isEmpty) return 'Please enter the name';
+                  if (value.isEmpty) showDialog(context: context, builder: (context) {return new AlertDialog(title: Text("Enter the name"));
+                  });
                   this._name=value;
                   return null;
                 },
@@ -103,7 +100,7 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
                   labelStyle: textFieldStyle,
                 ),
                 validator: (value) {
-                  if (value.isEmpty) return 'Please enter the name';
+                  //if (value.isEmpty) return 'Please enter the name';
                   this._quantity=value;
                   return null;
                 },
@@ -171,14 +168,24 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
   void saveIngredient(){
 
     Recipe r=Cookbook().getRecipe(this.recipe);
-    if(r.containsByName(this.compositeIngredient.getName())){
-      //ingrediente già presente->modificarlo
+    if(this.compositeIngredient.getName()=="" || this.compositeIngredient.getName()=="New ingredient"){
+      showDialog(context: context, builder: (context) {
+        return new AlertDialog(title: Text("Enter the name"));
+      });
     }
-    else  r.add(this.compositeIngredient);
+    else{
+      if(r.containsByName(this.compositeIngredient.getName())){
+        //ingrediente già presente->modificarlo
+      }
+      else  r.add(this.compositeIngredient);
 
-    Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => RecipePage(r)));
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => RecipePage(r)));
+    }
+
 
   }
+
+  //#region widget
 
   Widget getListOfUnit(BuildContext context) {
 
@@ -276,5 +283,6 @@ class CompositeIngredientState extends State<CompositeIngredientPage>{
     );
   }
 
+  //#endregion widget
 
 }

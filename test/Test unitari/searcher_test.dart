@@ -1,8 +1,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
@@ -104,28 +104,30 @@ void main() {
 
   test("Ricerca ricetta per nome,ingrediente e difficoltà",(){
 
-    Cookbook cookbook=new Cookbook();
+    Cookbook cookbook=new Cookbook();cookbook.clear();
     caricaRicette2();
-    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    RecipesIterator iterator;
     Set<Recipe> set=new Set<Recipe>();
+
+    iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
     while(iterator.hasNext()) set.add(iterator.next());
     expect(set.length,equals(6));
 
-    RecipesIterator iterator1 = cookbook.createIteratorByIngredient(set,'farina');
-    Set<Recipe> set1=new Set<Recipe>();
-    while(iterator1.hasNext()) set1.add(iterator1.next());
-    expect(set1.length,equals(6));
+    iterator = cookbook.createIteratorByIngredient(set,'farina');
+    set.clear();
+    while(iterator.hasNext()) set.add(iterator.next());
+    expect(set.length,equals(6));
 
-    RecipesIterator iterator2= cookbook.createIteratorByDifficult(set1,5);
-    Set<Recipe> set2=new Set<Recipe>();
-    while(iterator2.hasNext()) set2.add(iterator2.next());
-    expect(set2.length,equals(1));
+    iterator= cookbook.createIteratorByDifficult(set,5);
+    set.clear();
+    while(iterator.hasNext()) set.add(iterator.next());
+    expect(set.length,equals(1));
 
 
-    RecipesIterator iterator3= cookbook.createIteratorByTime(set2,35);
-    Set<Recipe> set3=new Set<Recipe>();
-    while(iterator3.hasNext()) set3.add(iterator3.next());
-    expect(set3.length,equals(1));
+    iterator= cookbook.createIteratorByTime(set,35);
+    set.clear();
+    while(iterator.hasNext()) set.add(iterator.next());
+    expect(set.length,equals(1));
 
 
   });

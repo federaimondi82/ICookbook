@@ -6,7 +6,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIn
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 
 void main() {
 
@@ -174,7 +174,7 @@ void main() {
   });
 
   test("USE CASE cancella ingrediente",(){
-    Cookbook cookBook=new Cookbook();
+    Cookbook cookBook=new Cookbook();cookBook.clear();
     //nuova ricetta
     cookBook.addRecipe("pizza margherita");
     //aggiunta di una ingrediente composto

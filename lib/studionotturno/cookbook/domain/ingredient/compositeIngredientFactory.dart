@@ -3,11 +3,11 @@
 
 
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredientFactory.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
+import 'compositeIngredient.dart';
+import 'ingredientFactory.dart';
+import 'ingredient.dart';
+import 'quantity.dart';
+import 'unitRegister.dart';
 
 class CompositeIngredientFactory implements IngredientFactory{
 

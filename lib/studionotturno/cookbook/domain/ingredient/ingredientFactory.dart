@@ -19,5 +19,5 @@ abstract class IngredientFactory{
   /// amount : un numero in virgola doppia per identificare la quantità
   /// unit : l'unità di misura per questo ingrediente (se non trovato o errato sarà in grammi (gr))
   ///
-  Ingredient createIngredient(String name,double amount,String unit){}
+  Ingredient createIngredient(String name,double amount,String unit);
 }

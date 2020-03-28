@@ -1,12 +1,13 @@
 
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+import 'firestoreDataIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/proxyFirestore/resource.dart';
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione riceracre
 ///elementi al di sotto di un determinata difficoltà
 
 ///Fa parte del patter Iterator ( concrete iterator )
-class ConcreteIteratorAscending implements RecipesIterator{
+class ConcreteIteratorAscendingCloud implements FirestoreDataIterator{
 
   Set<Recipe> set;
   int currentPosition=0;
@@ -21,7 +22,7 @@ class ConcreteIteratorAscending implements RecipesIterator{
   }
 
   @override
-  Recipe next() {
+  Resource next() {
     if(hasNext()) return this.set.elementAt(this.currentPosition++);
     return null;
   }

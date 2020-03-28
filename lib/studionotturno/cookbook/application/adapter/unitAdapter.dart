@@ -1,9 +1,7 @@
 
 
-import 'dart:collection';
-
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
+import 'target.dart';
 
 ///Implementa Target e è quindi la classe Adattatore di una Unità di misura.
 ///Adatta i dati tra client e server, cioè tra i dati in locale e quilli in cloud.
@@ -12,7 +10,7 @@ class UnitAdapter extends Target{
   Unit unit;
 
   UnitAdapter(){
-    this.unit=new Unit("ciao");
+    this.unit=new Unit("a");
   }
 
   UnitAdapter setUnit(Unit unit){

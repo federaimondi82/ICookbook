@@ -1,15 +1,15 @@
 
 import 'dart:collection';
 
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorAscending.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorByIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorByName.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorByTime.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/iterableCollection.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
-import 'concreteIteratorByDifficult.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/local/concreteIteratorAscending.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/local/concreteIteratorByDifficult.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/local/concreteIteratorByIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/local/concreteIteratorByName.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/local/concreteIteratorByTime.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/iterableCollection.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
 
 ///Un Singleton e unico accesso alla creazioni di ricette e ingredienti da inserire nelle ricette.

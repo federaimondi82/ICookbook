@@ -2,9 +2,9 @@
 import 'dart:convert';
 
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/executionTimeAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
 
+import 'target.dart';
+import 'executionTimeAdapter.dart';
 import 'ingredientAdapter.dart';
 
 ///Implementa Target e è quindi la classe Adattatore di una Ricetta.

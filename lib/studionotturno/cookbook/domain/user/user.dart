@@ -10,12 +10,8 @@ import 'package:ricettario/studionotturno/cookbook/domain/user/birthday.dart';
 ///
 class User{
 
-  String name;
-  String surname;
+  String name,surname,gender,email,password;
   Birthday birthday;
-  String gender;
-  String email;
-  String password;
 
   static final User _user=User._internal();
 
@@ -35,7 +31,6 @@ class User{
     return this;
   }
   User setBirthday(Birthday birthday){
-    //TODO controlla da UserChecker
     this.birthday=birthday;
     return this;
   }
@@ -44,12 +39,10 @@ class User{
     return this;
   }
   User setEmail(String email){
-    //TODO controlla da UserChecker
     this.email=email;
     return this;
   }
   User setPassword(String pass){
-    //TODO controlla da UserChecker
     this.password=pass;
     return this;
   }

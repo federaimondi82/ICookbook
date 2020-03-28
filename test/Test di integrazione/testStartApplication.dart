@@ -1,39 +1,24 @@
 import 'dart:convert';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/mediator.dart';
 
 void main() {
- // WidgetsFlutterBinding.ensureInitialized();
-  //TestWidgetsFlutterBinding.ensureInitialized();
 
-  test("parser Recipe to json",()
+  test("Load recipes",()
   {
-    //TestWidgetsFlutterBinding.ensureInitialized();
-    //WidgetsFlutterBinding.ensureInitialized();
+    Mediator mediator=new Mediator();
+    mediator.loadDataFromFile();
 
-    caricaRicette2();
-    Cookbook cookbook = new Cookbook();
-
-    Recipe recipe = cookbook.getRecipe("pizza margherita2");
-    String recipeEncoded = json.encode(
-        recipe); //da oggetto a json per il server
-    var recipeVar = json.decode(recipeEncoded);
-
-    Firestore.instance
-        .collection('Federico Raimondi')
-        .document('pizza margherita').get().then((DocumentSnapshot ds) {
-     // print(Recipe.fromJson(ds.data).toString());
-    });
+    expect(new Cookbook().getRecipes(),isNotEmpty);
   });
+
   
 }
 
+/*
 void caricaRicette() {
   Cookbook cookBook=new Cookbook();
   //nuova ricetta
@@ -145,3 +130,4 @@ void caricaRicette2() {
 
 
 }
+*/

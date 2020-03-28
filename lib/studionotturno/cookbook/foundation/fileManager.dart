@@ -2,81 +2,77 @@
 
 import 'dart:io';
 import 'dart:convert';
+import 'package:path_provider/path_provider.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 
-import 'package:path_provider/path_provider.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/recipeAdapter.dart';
+///Permette la lettua e scrittura dei dati su un file.
+class FileManager{
 
-class CookbookLoader{
+  ///La struttura dati che consente di memorizzare i dati provenienti dal file
+  List<Map<String,dynamic>> data;
 
-  Cookbook cookBook;
+  Cookbook cookBook=new Cookbook();
 
-  CookbookLoader(){
-    this.cookBook=new Cookbook();
+  FileManager(){
+   // this.cookBook=new Cookbook();
+    this.data=new List<Map<String,dynamic>>();
   }
 
-  /*void myReading() async{
-    try {
+  void deleteFile()async {
+    try{
       final directory = await getApplicationDocumentsDirectory();
+      File('${directory.path}/recipes.txt').create();
       final file = File('${directory.path}/recipes.txt');
 
-      Future<List<String>> future= file.readAsLines();
-      future.then((list)=>list.forEach((ele) async{
-        Map<String,dynamic> s2=await JsonDecoder().convert(ele);
-        Recipe r=await RecipeAdapter().toObject(s2);
-
-      }));
-    } catch (e) {
-      print("Couldn't read file"+ e.toString());
+      file.delete();
+    }catch(e){
+      print(e);
     }
-  }*/
 
-  void read() async {
+  }
+
+  ///Consente di leggere i dati sul file e costruire una struttura dati contenente le ricette
+  Future<List<Map<String,dynamic>>> readDataIntoFile() async {
     try {
       final directory = await getApplicationDocumentsDirectory();
-
       File('${directory.path}/recipes.txt').create();
       final file = File('${directory.path}/recipes.txt');
 
       //file.delete();
       Future<List<String>> future= file.readAsLines();
-      future.then((list)=>list.forEach((ele){
+      await future.then((list)=>list.forEach((ele){
         Map<String,dynamic> s2=JsonDecoder().convert(ele);
-        Recipe r=RecipeAdapter().toObject(s2);
-
-       cookBook.addRecipeObject(r);
+        this.data.add(s2);
       }));
+      return Future.value(this.data);
+
     } catch (e) {
       print("Couldn't read file"+ e.toString());
     }
   }
 
-  void saveRecipe(Recipe r) async{
+  ///Salva i dati di una ricetta sul file di storage
+  void saveRecipe(String s) async{
     try{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/recipes.txt');
-
-      Map<String,dynamic> s1=await RecipeAdapter().setRecipe(r).toJson();
-      String s2=await JsonEncoder().convert(s1);
-      await file.writeAsStringSync(s2+"\n",flush: true,mode:FileMode.append,encoding: Encoding.getByName("UTF-8"));
+      file.writeAsStringSync(s+"\n",flush: true,mode:FileMode.append,encoding: Encoding.getByName("UTF-8"));
     }catch(e){
       print("non si legge"+e);
     }
   }
 
-  void saveAllRecipes() async {
+  void saveAllRecipes(List<String> recipes) async {
     try{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/recipes.txt');
-      file.delete();
-      file.create();
+      await file.delete();
+      await file.create();
 
-      this.cookBook.getRecipes().forEach((recipe) async {
-        await saveRecipe(recipe);
-      });
+      await recipes.forEach((recipe)=>saveRecipe(recipe));
+
     }catch(e){
       print("non si legge"+e);
     }

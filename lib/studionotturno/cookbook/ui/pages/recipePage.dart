@@ -4,18 +4,15 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/cookbookLoader.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/components/recipePage/compositeIngredientExpansion.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/components/recipePage/simpleIngredientsListView.dart';
+import 'package:ricettario/studionotturno/cookbook/ui/pages/compositeIngredientPage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/cookbookPage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/simpleIngredientPage.dart';
-
-import 'compositeIngredientPage.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/mediator.dart';
 
 
 class RecipePage extends StatefulWidget{
@@ -34,7 +31,7 @@ class RecipePage extends StatefulWidget{
 class RecipePageState extends State<RecipePage>{
 
   //#region parametri di classe
-  var _name,_description,_difficult;int difficult=0;//key per i componenti grafici
+  var _name,_description,_difficult;int difficult=0,_alert;//key per i componenti grafici
   static TextEditingController recipeName,recipeDescription;//componeneti grafici
   Recipe recipe;
   Cookbook cookbook;
@@ -67,23 +64,17 @@ class RecipePageState extends State<RecipePage>{
   /// se si sta agendo su una ricetta già presente nel ricettario questa viene modificata
   ///
   void saveRecipe()async {
-    /*if(!cookbook.containsByName(this.recipe.getName())){
-      cookbook.addRecipe(this.recipe.getName());
+    try{
+      saveState();
+      Mediator mediator=new Mediator();
+      mediator.uploadAllRecipes();
+      Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
+    }catch(e){
+      showDialog(context: context, builder: (context) {
+        return new AlertDialog(title:Text("Enter the name of the recipe"));
+      });
+
     }
-   await cookbook.getRecipe(this.recipe.getName())
-        .setDescription(this.recipe.getDescription())
-        .setDifficult(this.recipe.getDifficult())
-        .setExecutionTime(this.time);//TODO*/
-    saveState();
-
-   // print("recipePage saveRecipe: "+cookbook.getRecipe(this.recipe.getName()).toString());
-    CookbookLoader c=new CookbookLoader();
-    await c.saveAllRecipes();
-
-
-    //Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
-    Navigator.pop(context,MaterialPageRoute(builder: (_) => CookbookPage()));
-    //await c.myReading();
   }
 
   void saveState() {
@@ -101,6 +92,9 @@ class RecipePageState extends State<RecipePage>{
 
   }
 
+  String addTime(double time) {
+    this.time.addMinute(time);
+  }
   //#endregion metodi
 
   @override
@@ -154,7 +148,6 @@ class RecipePageState extends State<RecipePage>{
                     child: RaisedButton(
                       onPressed: (){
                         if(_formKey.currentState.validate()){
-                          //saveState();
                           saveRecipe();
                         }
                       },
@@ -198,11 +191,6 @@ class RecipePageState extends State<RecipePage>{
                 saveState();
                 //saveRecipe();
                 Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipe.getName(),null)));
-                /*Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                  builder: (context) => CompositeIngredientPage(this.recipe.getName(),null)),
-                );*/
               }
           ),
           SpeedDialChild(
@@ -214,11 +202,6 @@ class RecipePageState extends State<RecipePage>{
               saveState();
               //saveRecipe();
               Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => SimpleIngredientPage(this.recipe.getName(),null,null)));
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context)=>SimpleIngredientPage(this.recipe.getName(),null,null)),
-                );*/
             }
           ),
         ],
@@ -349,8 +332,5 @@ class RecipePageState extends State<RecipePage>{
     );
   }
 
-  String addTime(double time) {
-    this.time.addMinute(time);
-  }
 }
 

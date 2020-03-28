@@ -1,9 +1,9 @@
 
 import 'dart:collection';
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredientFactory.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredientFactory.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredientFactory.dart';
+import 'compositeIngredientFactory.dart';
+import 'ingredientFactory.dart';
+import 'simpleIngredientFactory.dart';
 
 ///Questa classe è rappresentata come Singleton  ma anche un Facade (design patterns GOF)
 /// permettendo l'accesso univoco agli ingredienti; Nasconde tutte le classi del pattern
@@ -14,8 +14,6 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngre
 ///E' un informetion exper degli IngredientFactory perchè sono questi ultimi i Creator effettivi degli ingredienti
 class IngredientRegister{
 
-  //static Map<String,SimpleIngredientFactory> simpleIngredients;
-  //static Map<String,CompositeIngredientFactory> compositeIngredients;
   static HashMap<String,IngredientFactory> register;
   static final IngredientRegister _register=IngredientRegister._internal();
 
@@ -31,6 +29,8 @@ class IngredientRegister{
     if(register.isEmpty) loadFactories();
   }
 
+  ///Consente di aggiungeredei factories al registro. Se un factory è già presente una eccezione viene sollevata;
+  ///Se il nome o il factory sono nulli viene sollevata una eccezione;
   void addFactory(String s, IngredientFactory simple) {
     if(s=="" || s==null) throw new Exception("Nome non valido");
     else if(simple==null) throw new Exception("Factory non valido");

@@ -1,6 +1,4 @@
 
-import 'dart:collection';
-
 ///Interfaccia che definisce le operazioni per adattare gli oggetti in locale con quelli in cloud.
 ///E' una classe del desing pattern Adapter
 ///

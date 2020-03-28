@@ -3,7 +3,8 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientR
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/proxyFirestore/resource.dart';
+import 'executionTime.dart';
 
 
 ///una ricetta è formata sia da ingredienti semplici (sale,olio ecc...) ma anche
@@ -11,7 +12,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.d
 ///Dovendo utilizzare istanze di Ingredient è anche il Creator di Ingredient,
 ///userà un registro di Factory o un Factory per gli ingredienti.
 /// Dovendo memorizzare gli ingredienti è anche Information expert (grasp) degli ingredient
-class Recipe {
+class Recipe implements Resource{
 
   String name,description;
   int difficult;
@@ -24,8 +25,7 @@ class Recipe {
     ingredientRegister=new IngredientRegister();
   }
 
-  //#region getter & setter
-
+  //#region getter
   String getName(){
     return this.name;
   }
@@ -41,6 +41,16 @@ class Recipe {
   ExecutionTime getExecutionTime(){
     return this.executionTime;
   }
+  CompositeIngredient getIngredient(String name) {
+    if(name==null || name=="") throw new Exception("Nome non valido");
+    if(!containsByName(name)) throw new Exception("Ingrediente non presente");
+    return ingredients.firstWhere((el)=>el.getName()==name);
+  }
+
+  //#endregion getter
+
+  //#region setter
+
   Recipe setName(String name){
     this.name=name;
     return this;
@@ -58,13 +68,7 @@ class Recipe {
     return this;
   }
 
-  CompositeIngredient getIngredient(String name) {
-    if(name==null || name=="") throw new Exception("Nome non valido");
-    if(!containsByName(name)) throw new Exception("Ingrediente non presente");
-    return ingredients.firstWhere((el)=>el.getName()==name);
-  }
-
-  //#endregion getter & setter
+  //#endregion setter
 
   Recipe add(Ingredient ingredient){
     if(ingredient==null) throw new Exception("Ingrediente null");
@@ -91,35 +95,46 @@ class Recipe {
 
   /// Viene controllato se l'ingrediente è presente in questa ricetta
   /// Nel caso in cui l'ingrediente cercato sia un componente di un ingrediente composto
-  /// non verrà trovato; verrà trovato se è effettivamente un ingrediente composto o un ingrediente semplice isolato
+  ///  verrà trovato;
   /// Ritorna true se è stato trovato, false altrimenti
   bool contains(Ingredient ingredient) {
     if(ingredient==null) throw new Exception("Ingrediente null");
     bool trovato=false;
-    for(Ingredient ingRecipe in this.ingredients){
-      if(ingRecipe is SimpleIngredient && ingredient is SimpleIngredient){
-        if(ingRecipe.getName()==ingredient.getName()) trovato=true;
+    this.ingredients.forEach((ing){
+      if(ing is SimpleIngredient) if(ing.equals(ingredient))trovato=true;
+      
+      try{
+        if(ing is CompositeIngredient){
+          print("qui recipe");
+          if(ing.equals(ingredient))trovato=true;
+          ing.getIngredients().forEach((simple){
+            if((simple as SimpleIngredient).equals(ingredient))trovato=true;
+          });
+        }
+      }catch(e){
+        print(e.toString());
       }
-      else if(ingRecipe is CompositeIngredient && ingredient is SimpleIngredient){
-        if((ingRecipe as CompositeIngredient).contains(ingredient.getName()))trovato=true;
-      }
-      else if(ingRecipe is CompositeIngredient && ingredient is CompositeIngredient){
-        if(ingRecipe.equals(ingredient))trovato=true;
-      }
-    }
+    });
     return trovato;
   }
 
   /// Viene controllato se l'ingrediente è presente in questa ricetta
   /// Nel caso in cui l'ingrediente cercato sia un componente di un ingrediente composto
-  /// non verrà trovato; verrà trovato se è effettivamente un ingrediente composto o un ingrediente semplice isolato
+  /// verrà trovato;
   /// Ritorna true se è stato trovato, false altrimenti
   bool containsByName(String name) {
     if(name==null || name=="") throw new Exception("Ingrediente null");
     bool trovato=false;
-    for (Ingredient el in this.ingredients) {
-      if(el.getName()==name)trovato=true;
-    }
+    this.ingredients.forEach((ing){
+      if(ing is SimpleIngredient) if(ing.getName()==name)trovato=true;
+
+      if(ing is CompositeIngredient){
+        if(ing.getName()==name)trovato=true;
+        ing.getIngredients().forEach((simple){
+          if(simple.getName()==name)trovato=true;
+        });
+      }
+    });
     return trovato;
   }
 
@@ -134,6 +149,7 @@ class Recipe {
       }
       if(ingredient is CompositeIngredient){
         this.ingredients.removeWhere((el)=>ingredient.equals(el));
+        ingredient.getIngredients().removeWhere((simple)=>ingredient.equals(simple));
       }
   }
 
@@ -159,6 +175,11 @@ class Recipe {
   @override
   String toString() {
     return 'name:$name,description:$description,difficult:$difficult,executionTime:$executionTime,ingredients:$ingredients';
+  }
+
+  @override
+  getResource() {
+    return this;
   }
 
 }

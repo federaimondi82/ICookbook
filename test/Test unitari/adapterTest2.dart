@@ -3,7 +3,13 @@
 import 'dart:collection';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/compositeIngredientAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/executionTimeAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/quantityAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/recipeAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/simpleIngredientAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/unitAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
@@ -12,12 +18,6 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/compositeIngredientAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/executionTimeAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/quantityAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/recipeAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/simpleIngredientAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/unitAdapter.dart';
 
 void main() {
 
@@ -99,7 +99,7 @@ void main() {
 
   test("parser Recipe to json",(){
     Cookbook cookbook =new Cookbook();
-
+    cookbook.clear();caricaRicette();
     Recipe recipe=cookbook.getRecipe("pizza margherita");
 
     expect(recipe,isNotNull);

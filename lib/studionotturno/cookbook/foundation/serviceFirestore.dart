@@ -1,24 +1,23 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/documentAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/proxyPersonalFirestore.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/proxyFirestore/proxyPersonalFirestore.dart';
 
-import 'documentAdapter.dart';
 
 ///Classe per metter in collegamento i servizi di firebase; serve per inviare,
 ///modificicare,reperire,cancellare ricette in cloud
-class ServiceFireStone{
+class ServiceFirestore{
 
   final firestore=Firestore.instance;
-  String userEmail;
-  String recipeName;
+  String userEmail, recipeName;
   Recipe recipe;
   //Map<String,String> list;
   ProxyPersonalFirestore proxy;
 
-  ServiceFireStone(){
+  ServiceFirestore(){
     //this.list=new Map<String,String>();
     this.userEmail="federaimondi82@gmail.com";
     proxy=new ProxyPersonalFirestore();
@@ -36,7 +35,7 @@ class ServiceFireStone{
 
     if(proxy.getMapper().values.contains(this.recipeName)) await remove(proxy.getRecipeDocument(this.recipeName));
     await firestore.collection('recipes').document().setData(DocumentAdapter(this.recipe).toJson());
-    print("saved");
+    //print("saved");
   }
 
 
@@ -47,6 +46,8 @@ class ServiceFireStone{
       .getDocuments().then(((docs)=>docs.documents.forEach((doc){
         list.putIfAbsent(doc.documentID, ()=>doc['recipeName'].toString());
     })));
+
+    //list.values.forEach((el)=>print("fire: "+el.toString()));
 
     return Future.value(list);
 
@@ -66,5 +67,6 @@ class ServiceFireStone{
     proxy.remove(recipeName);
     print("removed");
   }
+
 
 }

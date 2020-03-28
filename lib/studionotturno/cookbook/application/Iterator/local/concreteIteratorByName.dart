@@ -1,8 +1,7 @@
 
-import 'dart:collection';
-
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+
+import '../recipesIterator.dart';
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione e selezionare
 /// quelle che hanno un nome simile a quello richiesto.

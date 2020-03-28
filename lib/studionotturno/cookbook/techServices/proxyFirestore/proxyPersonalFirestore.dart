@@ -1,11 +1,12 @@
 
 
-import 'package:ricettario/studionotturno/cookbook/techServices/serviceToBackend.dart';
+
+import 'package:ricettario/studionotturno/cookbook/foundation/serviceFirestore.dart';
 
 class ProxyPersonalFirestore{
 
   static final ProxyPersonalFirestore _proxy= ProxyPersonalFirestore._internal();
-  static ServiceFireStone s;
+  static ServiceFirestore s;
   static Map<String,String> documentsName;
 
   ProxyPersonalFirestore._internal();
@@ -13,7 +14,7 @@ class ProxyPersonalFirestore{
   factory ProxyPersonalFirestore(){
     if(documentsName==null) {
       documentsName = new Map<String,String>();
-      s=new ServiceFireStone();
+      s=new ServiceFirestore();
       Future<Map<String,String>> list=s.getAllRecipeOnCloud();
       list.then((value)=>documentsName=value);
     }
@@ -27,7 +28,6 @@ class ProxyPersonalFirestore{
 
 
   Map<String,String> getMapper(){
-    documentsName.entries.forEach((ele)=>print(ele.key+" "+ele.value));
     return documentsName;
   }
 
@@ -39,9 +39,5 @@ class ProxyPersonalFirestore{
   void remove(String recipeName) {
     documentsName.remove(getRecipeDocument(recipeName));
   }
-
-  /*void addRecipe(StringString name){
-    documentsName.add(name);
-  }*/
 
 }

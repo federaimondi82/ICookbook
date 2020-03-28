@@ -1,5 +1,5 @@
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
+import 'quantity.dart';
 
 ///
 /// Gli ingredienti sono stati realizzati applicando il design pattern Composite,
@@ -10,25 +10,25 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.da
 /// L'interfaccia IngredientInterface si implementa in SimpleIngredient o CompositeIngredient
 ///
 ///
-class Ingredient{
+abstract class Ingredient{
 
   /// Metodo modificatore per la quantità di un ingrediente
   /// amount : la quantità da usare di questo ingrediente
   ///
-  void setAmount(Quantity amount){}
+  void setAmount(Quantity amount);
   ///
   /// Metodo accessore per la quantità di un ingrediente
   ///
-  Quantity getAmount(){}
+  Quantity getAmount();
   ///
   /// Metodo modificatore per il nome di un ingrediente
   /// name : il nome dell'ingredient
   ///
-  void setName(String name){}
+  void setName(String name);
   ///
   /// Metodo accessore per la quantità di un ingrediente
   ///
-  String getName(){}
+  String getName();
 
   @override
   bool operator ==(Object other) =>

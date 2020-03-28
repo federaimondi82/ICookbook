@@ -1,12 +1,9 @@
 
 
-
-import 'dart:collection';
-
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/quantityAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
+import 'quantityAdapter.dart';
+import 'target.dart';
 
 ///Implementa Target e è quindi la classe Adattatore di un simpleIngreginet.
 ///Adatta i dati tra client e server, cioè tra i dati in locale e quilli in cloud.

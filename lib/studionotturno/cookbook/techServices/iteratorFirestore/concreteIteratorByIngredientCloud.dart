@@ -1,14 +1,15 @@
 
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
+
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione  e ricercare
 ///le ricette che hanno un determinato ingrediente
 ///Fa parte del patter Iterator ( concrete iterator )
 ///Responsabilità di cercare in una collezione di ricette tutte le ricette con un certo ingrediente
-class ConcreteIteratorByIngredient implements RecipesIterator{
+class ConcreteIteratorByIngredientCloud implements RecipesIterator{
 
   Set<Recipe> set;
   int currentPosition=0;

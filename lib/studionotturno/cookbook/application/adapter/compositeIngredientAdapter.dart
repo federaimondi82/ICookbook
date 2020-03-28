@@ -1,12 +1,12 @@
 
 
-import 'dart:collection';
 
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/quantityAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/simpleIngredientAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
+import 'simpleIngredientAdapter.dart';
+import 'quantityAdapter.dart';
+import 'target.dart';
+
 
 class CompositeIngredientAdapter extends Target{
 

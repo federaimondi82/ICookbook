@@ -3,8 +3,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorCloud.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
 
@@ -24,9 +24,12 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
 
   int value;
   final List<String> _tagsName=[],_tagsIngredients=[],_tagsExecutionTime=[];
+  Map<String,List<String>> totalTags;
   var inputNameTags,inputIngredientTags,inputExecutionTimeTags;
   int _tags=0;//qt di tag totale
-  RecipesIterator searcher;
+  RecipesIterator iterator;
+  Cookbook cookbook;
+  Set<Recipe> recipesFinded;
 
   //#endregion parametri di classe
 
@@ -34,17 +37,16 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
   static TextStyle textRecipe = TextStyle(fontWeight: FontWeight.bold, fontSize: 20, fontStyle: FontStyle.italic,color: Colors.black);
 
   SearchInLocalPageState(this.value){
-     // this.searcher=new CookbookIterator();
-      this.searcher.reset();
+      this.cookbook=new Cookbook();
+      this.recipesFinded=new Set<Recipe>();
+      this.totalTags=new Map<String,List<String>>();
+      this.totalTags.putIfAbsent("name", ()=>_tagsName);
+      this.totalTags.putIfAbsent("ing", ()=>_tagsIngredients);
+      this.totalTags.putIfAbsent("time", ()=>_tagsExecutionTime);
+
   }
 
   @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    return null;
-  }
-
-  /*@override
   Widget build(BuildContext context) {
 
     return new Scaffold(
@@ -81,7 +83,8 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                       setState(() {
                         _tagsName.removeAt(index);
                         _tags--;
-                        research();
+                        //TODO
+                        researchAfterRemoval();
                       });
                       //required
                       return true;
@@ -100,11 +103,12 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                     setState(() {
                       if(_tags==0){
                         _tagsName.add(value.toString());
-                        print("tag: "+value);
-                        this.searcher.searchByRecipeName(value.toString());
+                        this.iterator=cookbook.createIteratorByName(this.cookbook.getRecipes(), value.toString());
+                        refresh();
                       }else{
                         _tagsName.add(value.toString());
-                        this.searcher.thenByRecipeName(value.toString());
+                        this.iterator=cookbook.createIteratorByName(recipesFinded, value.toString());
+                        refresh();
                       }
                       _tags++;
                     });
@@ -133,9 +137,9 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                       setState(() {
                         _tagsIngredients.removeAt(index);
                         _tags--;
-                        research();
+                        //TODO
+                        researchAfterRemoval();
                       });
-                      //required
                       return true;
                     },
                   ),
@@ -152,10 +156,12 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                     setState(() {
                       if(_tags==0){
                         _tagsIngredients.add(value.toString());
-                        this.searcher.searchByIngredientName(value.toString());
+                        this.iterator=cookbook.createIteratorByIngredient(this.cookbook.getRecipes(), value.toString());
+                        refresh();
                       }else{
                         _tagsIngredients.add(value.toString());
-                        this.searcher.thenByIngrendientName(value.toString());
+                        this.iterator=cookbook.createIteratorByIngredient(this.recipesFinded, value.toString());
+                        refresh();
                       }
                       _tags++;
                     });
@@ -183,7 +189,8 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                       setState(() {
                         _tagsExecutionTime.removeAt(index);
                         _tags--;
-                        research();
+                        //TODO
+                        researchAfterRemoval();
                       });
                       //required
                       return true;
@@ -202,13 +209,15 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                     setState(() {
                       if(_tags==0){
                         _tagsExecutionTime.add(value);
-                        this.searcher.searchByExecutionTime(int.parse(value));
+                        this.iterator=cookbook.createIteratorByTime(this.cookbook.getRecipes(), int.parse(value));
+                        refresh();
                       }else{
                         if(_tagsExecutionTime.length>0){
                           _tagsExecutionTime.remove(value);
                         }
                         _tagsExecutionTime.add(value);
-                        this.searcher.thenByExecutionTime(int.parse(value));
+                        this.iterator=cookbook.createIteratorByTime(this.recipesFinded, int.parse(value));
+                        refresh();
                       }
                       _tags++;
 
@@ -223,15 +232,16 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
   }
 
   Widget _recipesWidget(BuildContext context){
+    print("si aggiorna");
 
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: this.searcher.getRecipes().length,
+        itemCount: this.recipesFinded.length,
         addSemanticIndexes: true,
         itemBuilder: (context, index) {
-          Recipe r = this.searcher.getRecipes().toList().elementAt(index);
-          print("si aggiorna");
+          Recipe r = this.recipesFinded.toList().elementAt(index);
+
           return ListTile(
             title: Text(r.getName().toUpperCase(),style:textRecipe),
             onTap: () {
@@ -247,53 +257,52 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
                 r.getExecutionTime().toMinutes().toString() + " minutes"),
           );
         });
-  }*/
+  }
 
+  void refresh() {
+    this.recipesFinded.clear();
+    while(iterator.hasNext()) recipesFinded.add(iterator.next());
+    this.iterator.reset();
+  }
 
-  ///In seguito di una cancellazione di un tag viene rifatta la ricerca in base
-  ///prima del nome,poi degli ingredienti,poi della difficoltà,poi del tempo di esecuzione
-  /*research(){
-    this.searcher.reset();
-    if(_tagsName.length>0) {
-      this.searcher.searchByRecipeName(_tagsName.elementAt(0));
-      if(_tagsName.length>1) researchByName();
-    }
-    if(_tagsIngredients.length>0){
-      if(this.searcher.getRecipes().length>0){
-        researchByIngredients();
-      }else{
-        this.searcher.searchByIngredientName(_tagsIngredients.elementAt(0));
-        researchByIngredients();
-      }
-    }
-    if(_tagsExecutionTime.length>0){
-      if(this.searcher.getRecipes().length>0){
-        researchByTime();
-      }else{
-        this.searcher.searchByExecutionTime(int.parse(_tagsExecutionTime.elementAt(0)));
-        researchByTime();
-      }
+  void researchAfterRemoval() {
+    int i=0;
+    if(_tags==0)this.recipesFinded.clear();
+    else {
+      this.totalTags.entries.forEach((map) {
+        if (map.key == "name" && map.value.length!=0) {
+          map.value.forEach((value) {
+            i==0 ? this.iterator = cookbook.createIteratorByName(this.cookbook.getRecipes(), map.value.elementAt(0).toString())
+            : this.iterator = cookbook.createIteratorByName(this.recipesFinded, value.toString());
+            i++;
+            refresh();
+          });
+        }
+
+        if (map.key == "ing" && map.value.length!=0) {
+          map.value.forEach((value) {
+            i==0 ? this.iterator = cookbook.createIteratorByIngredient(this.cookbook.getRecipes(), map.value.elementAt(0).toString())
+                : this.iterator = cookbook.createIteratorByIngredient(this.recipesFinded, value.toString());
+            i++;
+            refresh();
+          });
+        }
+
+        if (map.key == "time" && map.value.length!=0) {
+          map.value.forEach((value) {
+            i==0 ? this.iterator = cookbook.createIteratorByTime(this.cookbook.getRecipes(), int.parse(map.value.elementAt(0).toString()))
+                : this.iterator = cookbook.createIteratorByTime(this.recipesFinded, int.parse(value.toString()));
+            i++;
+            refresh();
+          });
+        }
+        
+        
+      });
+      if(i==0)this.recipesFinded.clear();
     }
   }
 
-  void researchByName() {
-    for (String el in _tagsName){
-      this.searcher.thenByRecipeName(el);
-    }
-  }
-
-  void researchByIngredients() {
-    for(String el in _tagsIngredients){
-      this.searcher.thenByIngrendientName(el);
-    }
-  }
-
-  void researchByTime() {
-    for(String el in _tagsExecutionTime){
-      this.searcher..thenByExecutionTime(int.parse(el));
-    }
-  }
-*/
 
 }
 

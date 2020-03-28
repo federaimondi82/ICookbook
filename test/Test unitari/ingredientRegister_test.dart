@@ -20,10 +20,6 @@ void main() {
     IngredientRegister reg2=new IngredientRegister();
 
     expect(reg1==reg2, equals(true));
-    SimpleIngredientFactory simple=new SimpleIngredientFactory();
-    CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    /*reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);*/
 
     expect(reg2.size(),equals(2));
   });
@@ -31,37 +27,15 @@ void main() {
   test("IngredientRegister remove Factory",(){
     IngredientRegister reg3=new IngredientRegister();
 
-    SimpleIngredientFactory simple=new SimpleIngredientFactory();
-    CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    /*reg3.addFactory("simple",simple);
-    reg3.addFactory("composite",composite);*/
-
     reg3.removeFactory("simple");
     expect(reg3.size(),equals(1));
   });
-
-  /*test("IngredientRegister add exception",(){
-    IngredientRegister reg1=new IngredientRegister();
-
-    SimpleIngredientFactory simple=new SimpleIngredientFactory();
-
-    expect(()=>reg1.addFactory("", simple),throwsException);
-    expect(()=>reg1.addFactory(null, simple),throwsException);
-    expect(()=>reg1.addFactory("simple", null),throwsException);
-
-    //reg1.addFactory("simple", simple);
-    expect(()=>reg1.addFactory("simple", simple),throwsException);
-
-    expect(reg1.size(),equals(1));
-  });*/
 
   test("IngredientRegister remove exceptions",(){
     IngredientRegister reg1=new IngredientRegister();
 
     SimpleIngredientFactory simple=new SimpleIngredientFactory();
     CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    /*reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);*/
 
     expect(()=>reg1.removeFactory(""),throwsException);
     expect(()=>reg1.removeFactory(null),throwsException);
@@ -75,10 +49,6 @@ void main() {
   test("new recipe by Register",(){
     IngredientRegister reg1=new IngredientRegister();
 
-    SimpleIngredientFactory simple=new SimpleIngredientFactory();
-    CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    /*reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);*/
     expect(reg1.size(),equals(2));
 
     Recipe rep1=new Recipe("pizza margherita");
@@ -102,11 +72,6 @@ void main() {
 
   test("new Reciper By factory Exceptions",(){
     IngredientRegister reg1=new IngredientRegister();
-
-    SimpleIngredientFactory simple=new SimpleIngredientFactory();
-    CompositeIngredientFactory composite=new CompositeIngredientFactory();
-    /*reg1.addFactory("simple",simple);
-    reg1.addFactory("composite",composite);*/
 
     Ingredient ing1=reg1.getFactory("composite").createIngredient("impasto per pizza", 500, "gr");
     if(ing1 is CompositeIngredient){

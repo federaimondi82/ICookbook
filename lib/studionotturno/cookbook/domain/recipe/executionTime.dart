@@ -1,12 +1,10 @@
 
-import 'dart:collection';
 
 ///Il tempo di esecuzione di una ricetta non è un dato primitivo, quindi è sorta
 /// l'esigenza di creare una classe apposita.
 class ExecutionTime {
 
-  double minutes;
-  double houres;
+  double minutes, houres;
 
   ExecutionTime(double houres,double minutes){
     if(houres==null || minutes==null || houres>24 || houres<0 ||minutes>59||minutes<0) throw new Exception(" tempo non valido");

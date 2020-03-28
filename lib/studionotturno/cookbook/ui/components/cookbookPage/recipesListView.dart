@@ -2,11 +2,11 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/proxyPersonalFirestore.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/components/cookbookPage/sendRecipeDialogComponent.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/proxyFirestore/proxyPersonalFirestore.dart';
 
 class RecipesListView extends StatefulWidget{
 
@@ -19,11 +19,11 @@ class RecipesListView extends StatefulWidget{
 }
 class RecipesListViewState extends State<RecipesListView>{
 
-  Cookbook _cookBook;
+  Cookbook cookbook;
   BuildContext context;
 
   RecipesListViewState(this.context){
-    _cookBook=new Cookbook();
+    this.cookbook=new Cookbook();
   }
 
   @override
@@ -37,11 +37,10 @@ class RecipesListViewState extends State<RecipesListView>{
     //map.entries.forEach((el)=>print(el.key+"-"+el.value));
 
     return ListView.builder(
-        itemCount: _cookBook.getRecipes().length,
+        itemCount: this.cookbook.getRecipes().length,
         addSemanticIndexes: true,
         itemBuilder: (context, index) {
-          Recipe r = _cookBook.getRecipes().elementAt(index);
-          print(map.values.contains(r.getName()));
+          Recipe r = this.cookbook.getRecipes().elementAt(index);
           return ListTile(
             title: Text(r.getName().toUpperCase(),
                 style: TextStyle(fontWeight: FontWeight.bold,

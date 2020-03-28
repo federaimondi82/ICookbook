@@ -2,8 +2,8 @@
 
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/user/user.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/recipeAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
+import 'target.dart';
+import 'recipeAdapter.dart';
 
 class DocumentAdapter extends Target{
 

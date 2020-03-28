@@ -8,7 +8,7 @@ import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.da
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/simpleIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unit.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/unitRegister.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/compositeIngredientPage.dart';
 import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
@@ -67,21 +67,54 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
     this.register=new IngredientRegister();
   }
 
+  //#region methods
+
+
+  void saveState(){
+    if(this.newName=="" || this.newName=="new simple"){
+      showDialog(context: context, builder: (context) {
+        return new AlertDialog(title: Text("Enter the name"));
+      });
+    }
+    else{
+      this.simple.setName(this.newName);
+      this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
+      saveIngredient();
+    }
+  }
+
+  void saveIngredient() {
+    Cookbook cookbook=new Cookbook();
+    Recipe recipe=cookbook.getRecipe(this.recipeName);
+    if(this.comp==null){
+      //salvare l'ingrediente semplice nella ricetta
+      if(!recipe.containsByName(this.newName)) recipe.add(this.simple);
+      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => RecipePage(recipe)));
+    }
+    else{
+      //salvare l'ingrediente semplice nel composto
+      if(!this.comp.contains(this.simple.getName())) this.comp.add(this.simple);
+      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipeName,this.comp)));
+    }
+
+    }
+
+  //#endregion methods
+
   @override
   Widget build(BuildContext context) {
 
-    //#region conteollers
+    //#region controllers
 
     ingredientName= new TextEditingController(
         text: this.simple.getName()=="new simple"?"":this.simple.getName(),
     );
     ingredientQuantity= new TextEditingController(
-      text: this.simple.getAmount().getAmount().toString()=="0.0"?"0":this.simple.getAmount().getAmount().toString()
+      //text: this.simple.getAmount().getAmount().toString()=="0.0"?"0":this.simple.getAmount().getAmount().toString()
+      text:this.simple.getAmount().getAmount().toString()
     );
 
-    //#endregion conteollers
-
-
+    //#endregion controllers
 
     return Scaffold(
       appBar: AppBar(
@@ -104,6 +137,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 onChanged: (value){
                   this.newName=value;
                   this.simple.setName(this.newName);
+                  //this.simple.setName(value.toString());
                 },
               ),
               TextFormField(
@@ -116,6 +150,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 onChanged: (value){
                   this.newValue=double.parse(value);
                   this.simple.getAmount().setAmout(this.newValue);
+                  this.simple.getAmount().setAmout(double.parse(value));
                 },
                 controller:ingredientQuantity,
               ),
@@ -136,7 +171,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                   minWidth: 200,
                   child: RaisedButton(
                     onPressed: (){
-                      saveIngredient();
+                      saveState();
                     },
                     color: Colors.blueGrey[900],
                     highlightColor: Colors.lightGreenAccent,
@@ -155,7 +190,6 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
   }
 
   Widget getListOfUnit(BuildContext context) {
-
     return DropdownButton<String>(
       hint: this.simple.getAmount().getUnit().getAcronym()!=null?Text(this.simple.getAmount().getUnit().getAcronym()):Text("Unit"),
       isDense: true,
@@ -171,10 +205,10 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
       onChanged: (String newValue) {
         setState(() {
           _dropdownValue = newValue;
-          String ac=_dropdownValue.toString();
           this.newUnit=_dropdownValue.toString();
-          this.simple.setAmount(new Quantity().setAmout(this.simple.getAmount().getAmount()).setUnit(unitRegister.getUnit(ac)));
-
+          this.newValue=this.simple.getAmount().getAmount();
+          this.newName=this.simple.getName();
+          this.simple.setAmount(new Quantity().setAmout(this.simple.getAmount().getAmount()).setUnit(unitRegister.getUnit(this.newUnit)));
         });
       },
       items: unitRegister.getUnits()
@@ -185,25 +219,6 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
         );
       }).toList(),
     );
-  }
-
-  void saveIngredient() {
-    Cookbook cookbook=new Cookbook();
-    Recipe recipe=cookbook.getRecipe(this.recipeName);
-    this.simple.setName(this.newName);
-    this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
-    if(this.comp==null){
-      //salvare l'ingrediente semplice nella ricetta
-      if(!recipe.containsByName(this.newName)) recipe.add(this.simple);
-
-      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => RecipePage(recipe)));
-    }
-    else{
-      //salvare l'ingrediente semplice nel composto
-      if(!this.comp.contains(this.simple.getName())) this.comp.add(this.simple);
-      Navigator.pushReplacement( context,MaterialPageRoute(builder: (_) => CompositeIngredientPage(this.recipeName,this.comp)));
-    }
-
   }
 
 }

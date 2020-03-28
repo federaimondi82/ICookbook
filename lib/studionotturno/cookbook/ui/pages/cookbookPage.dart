@@ -16,7 +16,7 @@ class CookbookPageState extends State<CookbookPage>{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:Text('My Cookbook'),
+        title:Text('ICookbook'),
         actions: <Widget>[
           //_searchDialog2(),
           new SearchDialogBlock(),

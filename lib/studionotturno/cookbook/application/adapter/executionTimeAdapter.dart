@@ -1,8 +1,7 @@
 
-import 'dart:collection';
 
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
-import 'package:ricettario/studionotturno/cookbook/techServices/target.dart';
+import 'target.dart';
 
 class ExecutionTimeAdapter extends Target{
 

@@ -1,9 +1,8 @@
 
 
-import 'dart:collection';
 
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/ingredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/quantity.dart';
+import 'ingredient.dart';
+import 'quantity.dart';
 
 ///un ingrediente semplice, non composto da altri ingredienti
 ///Implementa l'interfaccia comune, IngredientInterface, sia per gli ingredienti semplici
@@ -48,17 +47,6 @@ class SimpleIngredient implements Ingredient{
   String toString() {
     return "name:$name,$amount";
   }
-
- /* Map<String,dynamic> toJson(){
-    return {
-      "name": this.name,
-      "amount": this.amount
-    };
-  }*/
-
-  /*SimpleIngredient.fromJson(LinkedHashMap<dynamic, dynamic> json)
-      : name = json['name'],
-        amount = Quantity.fromJson(json['amount']);*/
 
   @override
   bool equals(Object obj) {

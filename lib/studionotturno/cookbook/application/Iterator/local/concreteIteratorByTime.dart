@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipesIterator.dart';
+import '../recipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione e

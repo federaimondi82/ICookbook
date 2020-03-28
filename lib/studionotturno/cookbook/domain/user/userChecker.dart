@@ -38,6 +38,7 @@ class UserChecker{
     return md5.convert(utf8.encode(pass)).toString();
   }
 
+  ///Viene controllato se la data di nasciata è valida.
   bool controlBirthday(Birthday birthday){
     var now=new DateTime.now();
 

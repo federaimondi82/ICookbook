@@ -2,11 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tags/flutter_tags.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/concreteIteratorCloud.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/Iterator/recipeIteratorCloud.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/ui/pages/recipePage.dart';
+import 'package:ricettario/studionotturno/cookbook/techServices/iteratorFirestore/firestoreDataIterator.dart';
 
 class SearchInCloudPage extends StatefulWidget{
 
@@ -23,10 +19,11 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
   //#region parametri di classe
 
   int value;
+
   final List<String> _tagsName=[],_tagsIngredients=[],_tagsExecutionTime=[];
   var inputNameTags,inputIngredientTags,inputExecutionTimeTags;
   int _tags=0;//qt di tag totale
-  RecipeIteratorCloud searcher;
+  FirestoreDataIterator searcher;
 
   //#endregion parametri di classe
 
@@ -34,11 +31,17 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
   static TextStyle textRecipe = TextStyle(fontWeight: FontWeight.bold, fontSize: 20, fontStyle: FontStyle.italic,color: Colors.black);
 
   SearchInCloudPageState(this.value){
-      this.searcher=new ConcreteIteratorCloud();
-      this.searcher.clear();
+      /*this.searcher=new ConcreteIteratorCloud();
+      this.searcher.clear();*/
   }
 
   @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return null;
+  }
+
+ /* @override
   Widget build(BuildContext context) {
 
     return new Scaffold(
@@ -287,5 +290,7 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
       this.searcher..thenByExecutionTime(int.parse(el));
     }
   }
+*/
+
 }
 
