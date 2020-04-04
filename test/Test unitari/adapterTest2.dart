@@ -8,7 +8,7 @@ import 'package:ricettario/studionotturno/cookbook/application/adapter/execution
 import 'package:ricettario/studionotturno/cookbook/application/adapter/quantityAdapter.dart';
 import 'package:ricettario/studionotturno/cookbook/application/adapter/recipeAdapter.dart';
 import 'package:ricettario/studionotturno/cookbook/application/adapter/simpleIngredientAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/application/adapter/unitAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/application/adapter/imageManager.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/IngredientRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';

@@ -1,6 +1,6 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/application/Iterator/recipesIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/application/Iterator/irecipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
@@ -13,7 +13,7 @@ void main() {
 
     Cookbook cookbook=new Cookbook();
     caricaRicette2();
-    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    RecipesIterator iterator = cookbook.getFutureByName(cookbook.getRecipes(),'pizza');
 
     expect(iterator,isNotNull);
     expect(iterator.hasNext(),equals(true));
@@ -32,17 +32,17 @@ void main() {
     Cookbook cookbook=new Cookbook();
     cookbook.clear();
     caricaRicette2();
-    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    RecipesIterator iterator = cookbook.getFutureByName(cookbook.getRecipes(),'pizza');
 
     Set<Recipe> set2=new Set<Recipe>();
     while(iterator.hasNext()) set2.add(iterator.next());
 
-    RecipesIterator iterator2=cookbook.createIteratorByName(set2, 'margherita');
+    RecipesIterator iterator2=cookbook.getFutureByName(set2, 'margherita');
     Set<Recipe> set3=new Set<Recipe>();
     while(iterator2.hasNext()) set3.add(iterator2.next());
     expect(set3.length,equals(3));
 
-    RecipesIterator iterator3=cookbook.createIteratorByName(set3, 'marinara');
+    RecipesIterator iterator3=cookbook.getFutureByName(set3, 'marinara');
     Set<Recipe> set4=new Set<Recipe>();
     while(iterator3.hasNext()) set4.add(iterator3.next());
     expect(set4.length,equals(0));
@@ -56,7 +56,7 @@ void main() {
     Cookbook cookbook=new Cookbook();
     cookbook.clear();
     caricaRicette2();
-    RecipesIterator iterator = cookbook.createIteratorByIngredient(cookbook.getRecipes(),'alici');
+    RecipesIterator iterator = cookbook.getFutureByIngredient(cookbook.getRecipes(),'alici');
 
     expect(iterator,isNotNull);
     expect(iterator.hasNext(),equals(true));
@@ -78,13 +78,13 @@ void main() {
     caricaRicette2();
 
     //riceca ingrediente con nome pizza
-    RecipesIterator iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    RecipesIterator iterator = cookbook.getFutureByName(cookbook.getRecipes(),'pizza');
     Set<Recipe> set=new Set<Recipe>();
     while(iterator.hasNext()) set.add(iterator.next());
     expect(set.length,equals(6));
 
     //riceca ingrediente con nome pizza & margherita
-    RecipesIterator iterator2 = cookbook.createIteratorByName(set,'marinara');
+    RecipesIterator iterator2 = cookbook.getFutureByName(set,'marinara');
     Set<Recipe> set2=new Set<Recipe>();
     while(iterator2.hasNext()){
       //Recipe r=iterator2.next();
@@ -93,7 +93,7 @@ void main() {
     expect(set2.length,equals(3));
 
     //riceca ingrediente con nome pizza & margherita
-    RecipesIterator iterator3 = cookbook.createIteratorByIngredient(set2,'alici');
+    RecipesIterator iterator3 = cookbook.getFutureByIngredient(set2,'alici');
     Set<Recipe> set3=new Set<Recipe>();
     while(iterator3.hasNext()){
       set3.add(iterator3.next());
@@ -109,11 +109,11 @@ void main() {
     RecipesIterator iterator;
     Set<Recipe> set=new Set<Recipe>();
 
-    iterator = cookbook.createIteratorByName(cookbook.getRecipes(),'pizza');
+    iterator = cookbook.getFutureByName(cookbook.getRecipes(),'pizza');
     while(iterator.hasNext()) set.add(iterator.next());
     expect(set.length,equals(6));
 
-    iterator = cookbook.createIteratorByIngredient(set,'farina');
+    iterator = cookbook.getFutureByIngredient(set,'farina');
     set.clear();
     while(iterator.hasNext()) set.add(iterator.next());
     expect(set.length,equals(6));
@@ -124,7 +124,7 @@ void main() {
     expect(set.length,equals(1));
 
 
-    iterator= cookbook.createIteratorByTime(set,35);
+    iterator= cookbook.getFutureByTime(set,35);
     set.clear();
     while(iterator.hasNext()) set.add(iterator.next());
     expect(set.length,equals(1));
