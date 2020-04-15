@@ -1,14 +1,15 @@
 
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/lazyResource.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resource.dart';
-import 'iFirestoreIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/resource.dart';
+
+import '../../../myIterator.dart';
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione e
 ///ricercare una ricetta con tempo di esecuzione al di sotto di quella impostata nel costruttore
 ///Fa parte del patter Iterator ( concrete iterator )
-class ConcreteIteratorByTimeFirebase implements IFirestoreIterator{
+class ConcreteIteratorByTimeFirebase implements MyIterator{
 
   Future<Set<Resource>> future;
   Set<Resource> set;
@@ -39,7 +40,7 @@ class ConcreteIteratorByTimeFirebase implements IFirestoreIterator{
     Future<Set<Resource>> future=Future.delayed(Duration(milliseconds: 100),(){
       q.documents.where((docs)=>docs.data['recipe']['executionTime'].toString().contains(this.time.toString()))
           .forEach((el){
-        set1.add(new LazyResource().toObject(el.documentID, el.data['recipe']));
+        set1.add(new LazyResource().toObject(el.data));
       });
       return Future.value(set1);
     });

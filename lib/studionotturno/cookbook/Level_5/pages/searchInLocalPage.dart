@@ -279,8 +279,6 @@ class SearchInLocalPageState extends State<SearchInLocalPage>{
   }
 
   Widget _recipesWidget(BuildContext context){
-    print("si aggiorna");
-
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,

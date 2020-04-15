@@ -48,15 +48,15 @@ class SimpleIngredient implements Ingredient{
     return "name:$name,$amount";
   }
 
-  @override
   bool equals(Object obj) {
     if(obj==null) return false;
     if(!(obj is SimpleIngredient))return false;
     SimpleIngredient simple=(obj as SimpleIngredient);
     if(simple.getName()==null) return false;
     if(simple.getAmount()==null) return false;
-    if(simple.getAmount().equals(this.amount)
-        && simple.getName()==this.name)
+    if(simple.getAmount().getAmount()==this.amount.getAmount() &&
+      simple.getAmount().getUnit().getAcronym()==this.amount.getUnit().getAcronym() && simple.getName()==this.name)
+    //if(simple.getAmount().equals(this.amount) && simple.getName()==this.name)
       return true;
   }
 

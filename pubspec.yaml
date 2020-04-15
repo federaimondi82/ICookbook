@@ -17,11 +17,15 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  http: ^0.12.0+4
   google_sign_in: ^4.4.0
   firebase_dynamic_links: ^0.3.0
   path_provider: ^1.6.5
+  checkbox_grouped: ^0.4.1
   flutter_tags: "^0.4.8"
   image_picker: ^0.6.4
+  datetime_picker_formfield: ^1.0.0
+  intl: ^0.16.1
   flutter:
     sdk: flutter
   firebase_core: ^0.4.0+9

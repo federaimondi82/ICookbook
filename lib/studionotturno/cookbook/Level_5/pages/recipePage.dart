@@ -5,13 +5,15 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/imageElement.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/imageManager.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/ImageMagagerLocal.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/imageElement.dart';
+
 import 'package:ricettario/studionotturno/cookbook/Level_2/mediator.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/components/recipePage/listViewImages.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_5/pages/searchByIngredientPage.dart';
 
 import '../components/recipePage/compositeIngredientExpansion.dart';
 import '../components/recipePage/simpleIngredientsListView.dart';
@@ -126,15 +128,15 @@ class RecipePageState extends State<RecipePage>{
             padding: EdgeInsets.fromLTRB(0, 0, 20, 0),
             icon: Icon(Icons.photo_camera,color: Colors.blueGrey,size: 40,),
             onPressed: ()async {
-                  print("1");
                   File img = await ImagePicker.pickImage(source: ImageSource.camera,maxWidth: 300,maxHeight: 500);
                   ImageElement image=new ImageElement().setFile(img).setRecipeName(this.recipe.getName());
-                  ImageManager imgManager=new ImageManager();
+                  ImageManagerLocal manager =new ImageManagerLocal();
+                  manager.setImage(image);
+                  await manager.saveInLocal();
+                  /*ImageManagerFirebase imgManager=new ImageManagerFirebase();
                   imgManager.setImage(image);
-                  await imgManager.saveInLocal();
-                  print("2");
+                  await imgManager.saveInLocal();*/
               setState(() {
-                print("3");
                 //return Future.value();
               });
             }
@@ -161,7 +163,7 @@ class RecipePageState extends State<RecipePage>{
                       padding: EdgeInsets.all(10),
                       child: Text("Ingredients",style: labelStyle),
                     ),
-                    new CompositeIngredientExpansion(recipe),
+                    new CompositeIngredientExpansion(recipe,null),
                     new SimpleIngredientsListView(context,recipe),//Lista ingredienti
                   ],
                 ),
@@ -231,6 +233,17 @@ class RecipePageState extends State<RecipePage>{
               //saveRecipe();
               Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => SimpleIngredientPage(this.recipe.getName(),null,null)));
             }
+          ),
+          SpeedDialChild(
+              child: Icon(Icons.kitchen,color: Colors.purple),
+              backgroundColor: Colors.blueGrey[900],
+              label: 'Search by ingredient',
+              labelStyle: TextStyle(fontSize: 18.0),
+              onTap: () {
+                saveState();
+                //saveRecipe();
+                Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => SearchByIngredientPage(this.recipe)));
+              }
           ),
         ],
       ),

@@ -3,12 +3,13 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/imageElement.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/imageManager.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/serviceFirestore.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/ImageMagagerLocal.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/imageElement.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/firebase/imageManagerFirebase.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/recipePage.dart';
 
+///Componente per mostrare le immagini di una ricetta nella pagona della stessa
 class ListViewImages extends StatefulWidget{
 
   String recipeName;
@@ -21,7 +22,7 @@ class ListViewImages extends StatefulWidget{
 class ListViewImagesState extends State<ListViewImages>{
 
   String recipeName;
-  ImageManager imageManager;
+  ImageManagerLocal imageManager;
   Future<List<ImageElement>> fut;
   BuildContext context;
   Cookbook cookbook;
@@ -34,7 +35,7 @@ class ListViewImagesState extends State<ListViewImages>{
   ///nel costruttore avvio la ricerca delle immagini con un future e costruisce
   ///una lista di widget per costruire poi la griglia
   ListViewImagesState(this.context,this.recipeName) {
-    this.imageManager = new ImageManager().setRecipeName(this.recipeName);
+    this.imageManager = new ImageManagerLocal().setRecipeName(this.recipeName);
     this.cookbook=new Cookbook();
   }
 
@@ -110,7 +111,7 @@ class ListViewImagesState extends State<ListViewImages>{
                                   child: RaisedButton(
                                     onPressed:() async {
                                       //TODO salva immagine in cloud
-                                      ImageManager().setRecipeName(this.recipeName)
+                                      ImageManagerFirebase().setRecipeName(this.recipeName)
                                           .setImage(snapshot.data.elementAt(index))
                                       .uploadFile();
 

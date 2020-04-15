@@ -1,6 +1,7 @@
 
 import 'dart:io';
 
+/// classe modellata per gestire una immagine fatta dal dispositivo
 class ImageElement{
 
   String ref;//il riferimento al file su cloud storage

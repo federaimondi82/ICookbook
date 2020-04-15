@@ -1,5 +1,5 @@
 
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resource.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/resource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/IngredientRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/compositeIngredient.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/ingredient.dart';
@@ -109,11 +109,12 @@ class Recipe implements Resource{
     if(ingredient==null) throw new Exception("Ingrediente null");
     bool trovato=false;
     this.ingredients.forEach((ing){
-      if(ing is SimpleIngredient) if(ing.equals(ingredient))trovato=true;
-      
+      print(ing.toString());
+      print(ingredient.toString());
+      print("********");
+      if(ing is SimpleIngredient) if(ing==ingredient) trovato=true;//if(ing.equals(ingredient))trovato=true;
       try{
         if(ing is CompositeIngredient){
-          print("qui recipe");
           if(ing.equals(ingredient))trovato=true;
           ing.getIngredients().forEach((simple){
             if((simple as SimpleIngredient).equals(ingredient))trovato=true;

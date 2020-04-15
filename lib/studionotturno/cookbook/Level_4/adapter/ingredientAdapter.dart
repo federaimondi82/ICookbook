@@ -37,12 +37,6 @@ class IngredientAdapter extends Target {
     else{
       this.ingredient=CompositeIngredientAdapter().toObject(data);
     }
-    /*try{
-      this.ingredient=CompositeIngredientAdapter().toObject(data);
-
-    }catch(Exception){
-      this.ingredient=SimpleIngredientAdapter().toObject(data);
-    }*/
     return this.ingredient;
   }
 }

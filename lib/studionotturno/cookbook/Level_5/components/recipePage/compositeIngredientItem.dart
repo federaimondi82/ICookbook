@@ -14,15 +14,13 @@ import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/simpleIngr
 class CompositeIngredientItem extends StatefulWidget{
 
   CompositeIngredient ingredient;
-  String recipeName;
 
-  CompositeIngredientItem(String recipeName,CompositeIngredient ingredient){
+  CompositeIngredientItem(CompositeIngredient ingredient){
     this.ingredient=ingredient;
-    this.recipeName=recipeName;
   }
 
   @override
-  State<StatefulWidget> createState() =>CompositeIngredientItemState(recipeName,ingredient);
+  State<StatefulWidget> createState() =>CompositeIngredientItemState(ingredient);
 
 
 }
@@ -30,12 +28,10 @@ class CompositeIngredientItem extends StatefulWidget{
 class CompositeIngredientItemState extends State<CompositeIngredientItem> {
 
   CompositeIngredient ingredient;
-  String recipeName;
 
-  CompositeIngredientItemState(String recipeName,
+  CompositeIngredientItemState(
       CompositeIngredient ingredient) {
     this.ingredient = ingredient;
-    this.recipeName = recipeName;
   }
 
   @override
@@ -44,16 +40,14 @@ class CompositeIngredientItemState extends State<CompositeIngredientItem> {
       child: showSimpleIngredient(context),
     );
   }
-
   static const TextStyle textStyle = TextStyle(fontSize: 20, fontStyle: FontStyle.italic, color: Colors.blueGrey);
+
   Widget showSimpleIngredient(BuildContext context) {
     List<Widget> list = new List<Widget>();
-
     for (SimpleIngredient simple in this.ingredient.getIngredients()) {
       String name = simple.getName();
       String subtitel = simple.getAmount().getAmount().toString() + " " +
           simple.getAmount().getUnit().getAcronym();
-
 
       list.add(new ListTile(
         title: Text(name+"  "+subtitel, style: textStyle),

@@ -1,10 +1,9 @@
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/ingredient/compositeIngredient.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/cookbook.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/executionTime.dart';
-import 'package:ricettario/studionotturno/cookbook/domain/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/foundation/fileManager.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/compositeIngredient.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/executionTime.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 
 void main() {
 

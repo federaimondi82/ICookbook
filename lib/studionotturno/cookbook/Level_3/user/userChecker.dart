@@ -35,8 +35,9 @@ class UserChecker{
   ///
   String criptPassword(String pass){
     if(pass==null) throw new Exception('pass nulla');
-    else if(pass.isEmpty) throw new Exception('pass vuota');
-    return md5.convert(utf8.encode(pass)).toString();
+    if(pass.isEmpty) throw new Exception('pass vuota');
+    String m=pass+""+"68!8wd&i?sCiTk";
+    return md5.convert(utf8.encode(m)).toString();
   }
 
   ///Viene controllato se la data di nasciata è valida.

@@ -1,14 +1,16 @@
 
 
-import 'package:ricettario/studionotturno/cookbook/Level_1/firestore/concreteIteratorAscendingFirebase.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/firestore/concreteIteratorByDifficultFirebase.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/firestore/concreteIteratorByIngredientFirebase.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/firestore/concreteIteratorByNameFirebase.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/firestore/concreteIteratorByTimeFirebase.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resource.dart';
+import 'concreteIteratorAscendingFirebase.dart';
+import 'concreteIteratorByDifficultFirebase.dart';
+import 'concreteIteratorByIngredientFirebase.dart';
+import 'concreteIteratorByNameFirebase.dart';
+import 'concreteIteratorByTimeFirebase.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/resource.dart';
+
 
 ///Questa classe implementa comportamenti associabili al patter gof Iterator(concreteCollection)
-/// e ad un proxy dei dati su database Firebase
+/// e ad un proxy dei dati su database Firestore;
+/// Proxy perchè è un sostituto del devo database in cloud
 ///
 ///E' creator(patter grasp) degli iteratori (implementano iFirestoreIterator) e i
 ///suoi metodi restituiscono Future; i Futures sono necessari per ritornare i dati dal backend.
@@ -16,13 +18,14 @@ import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resour
 ///
 ///L'utente cercando dei dati sul backend passa prima per ProxyClient che a sua volta utilizza
 /// gli "iteratori" ( classi che implementano IFiresoreIterator )
-class ProxyClient{
+class ConcreteCollection_ProxyFirestore{
 
   ///permette la creazione di un iteratore per nome sulla collezione di ricette
   ///e ritorna un future dei dati filtrati sul database Firestore
   Future<Set<Resource>> getFutureByName(String name) async{
      return await new ConcreteIteratorByNameFirebase(name).get();
   }
+
   Set<Resource> getByName(Set<Resource> set,String name) {
     return new ConcreteIteratorByNameFirebase(name).setTheSet(set).getSet();
   }

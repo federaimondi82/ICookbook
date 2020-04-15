@@ -1,11 +1,13 @@
 
+
+
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/concreteIteratorProxy.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/lazyResource.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/proxyClient.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resource.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/serviceCloud.dart';
+
 
 class SearchInCloudPage extends StatefulWidget{
 
@@ -26,9 +28,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
   var inputNameTags,inputIngredientTags,inputExecutionTimeTags;
   Map<String,List<String>> totalTags;
   int _tags=0;//qt di tag totale
-  ConcreteIteratorProxy iterator;
-  ProxyClient proxyClient;
-  Set<Resource> resourceFinded;
+  ServiceCloud serviceCloud;
+  List<LazyResource> resourceFinded;
 
   //#endregion parametri di classe
 
@@ -36,8 +37,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
   static TextStyle textRecipe = TextStyle(fontWeight: FontWeight.bold, fontSize: 20, fontStyle: FontStyle.italic,color: Colors.black);
 
   SearchInCloudPageState(){
-    this.resourceFinded=new Set<Resource>();
-    this.proxyClient=new ProxyClient();
+    this.resourceFinded= new List<LazyResource>();
+    //this.serviceCloud=new ServiceSpringboot();//todo
     this.totalTags=new Map<String,List<String>>();
     this.totalTags.putIfAbsent("name", ()=>_tagsName);
     this.totalTags.putIfAbsent("ing", ()=>_tagsIngredients);
@@ -46,59 +47,37 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
 
   //#region methods
 
-  Future<void> refresh(Set<Resource> collection) async {
-    this.iterator=new ConcreteIteratorProxy(collection);
-    this.resourceFinded.clear();
-    while(iterator.hasNext()) resourceFinded.add(iterator.next());
-    this.iterator.reset();
-    return Future.delayed(new Duration(milliseconds: 500),(){
-      return Future.value();
+  void refresh(String value, int i) async{
+    List<LazyResource> list=new List<LazyResource>();//si inizia con la lista vuota
+    if(_tags!=0){
+      list.addAll(this.resourceFinded);
+      this.resourceFinded.clear();
+    }
+    await this.serviceCloud.findRecipes(list, value.toString(), i).then((el){
+      el.forEach((lazy)=>this.resourceFinded.add(lazy));//la lista viene riempita con i risultati del backend
     });
   }
 
-  void researchAfterRemoval() {
-    int i=0;
-    if(_tags==0)this.resourceFinded.clear();
-    else {
-      Set<Resource> mySet;
-      this.totalTags.entries.forEach((map) {
-        if (map.key == "name" && map.value.length!=0) {
-          map.value.forEach((value) async {
-            if(i==0){
-              this.proxyClient.getFutureByName(map.value.elementAt(0).toString())
-                  .then((el)=>mySet=el).whenComplete(()=>refresh(mySet).whenComplete(()=>setState((){i++;})));
-            }else{
-              //this.proxyClient.getByName(this.resourceFinded,value.toString());
-              mySet=this.proxyClient.getByName(this.resourceFinded,value.toString());
-              await this.refresh(mySet).whenComplete(()=>setState(() {i++;}));
-            }
-          });
-        }
-/*
+  void researchAfterRemoval() async{
+    Map<String,List<String>> totalTags=new Map<String,List<String>>();
+    List<String> listOfName = new List<String>();
+    List<String> listOfIngredient = new List<String>();
+    List<String> listOfTime= new List<String>();
+    totalTags.putIfAbsent("\"name\"", ()=>listOfName);
+    totalTags.putIfAbsent("\"ing\"", ()=>listOfIngredient);
+    totalTags.putIfAbsent("\"time\"", ()=>listOfTime);
+    // ignore: missing_return
+    this.totalTags.forEach((key,values){
+      if(key.toString()=="name") values.forEach((el){listOfName.add("\""+el+"\"");});
+      if(key.toString()=="ing") values.forEach((el)=>listOfIngredient.add("\""+el+"\""));
+      if(key.toString()=="time") values.forEach((el)=>listOfTime.add("\""+el+"\""));
+    });
 
-        if (map.key == "ing" && map.value.length!=0) {
-          map.value.forEach((value) {
-            i==0 ? this.iterator = cookbook.createIteratorByIngredient(this.cookbook.getRecipes(), map.value.elementAt(0).toString())
-                : this.iterator = cookbook.createIteratorByIngredient(this.recipesFinded, value.toString());
-            i++;
-            refresh();
-          });
-        }
 
-        if (map.key == "time" && map.value.length!=0) {
-          map.value.forEach((value) {
-            i==0 ? this.iterator = cookbook.createIteratorByTime(this.cookbook.getRecipes(), int.parse(map.value.elementAt(0).toString()))
-                : this.iterator = cookbook.createIteratorByTime(this.recipesFinded, int.parse(value.toString()));
-            i++;
-            refresh();
-          });
-        }
-
-*/
-
-      });
-      if(i==0)this.resourceFinded.clear();
-    }
+    await this.serviceCloud.findRecipes( this.resourceFinded, totalTags.toString(), 4).then((el){
+      this.resourceFinded.clear();
+      el.forEach((lazy)=>this.resourceFinded.add(lazy));//la lista viene riempita con i risultati del backend
+    });
   }
 
   //#endregion methods
@@ -136,14 +115,16 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                       icon: Icons.room_service,
                     ),
                     removeButton: ItemTagsRemoveButton(
+                      // ignore: missing_return
                       onRemoved: (){
-                        setState(() {
-                          _tagsName.removeAt(index);
-                          _tags--;
-                          //TODO
-                          researchAfterRemoval();
+                        _tagsName.removeAt(index);
+                        _tags--;
+                        researchAfterRemoval();
+                        Future.delayed(new Duration(milliseconds: 300),(){
+                          setState(() {
+                            return true;
+                          });
                         });
-                        //required
                         return true;
                       },
                     ),
@@ -157,22 +138,14 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
-                      Set<Resource> mySet;
-                      if(_tags==0){
-                        _tagsName.add(value.toString());
-                        mySet=await this.proxyClient.getFutureByName(value.toString())
-                            .whenComplete((){
-                          Future.delayed(new Duration(milliseconds: 500),(){
-                            this.refresh(mySet).whenComplete(()=>setState(()=>_tags++));
-                          });
+                      refresh(value.toString(),0);
+                      Future.delayed(new Duration(milliseconds: 300),(){
+                        setState(() {
+                          _tagsName.add(value);
+                          _tags++;
                         });
-
-                      }else{
-                        _tagsName.add(value.toString());
-                        mySet=this.proxyClient.getByName(this.resourceFinded,value.toString());
-                        this.refresh(mySet).whenComplete(()=>setState(()=>_tags++));
-                      }
-                      }
+                      });
+                    }
                 ),
               ),
               Tags(
@@ -193,11 +166,13 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     ),
                     removeButton: ItemTagsRemoveButton(
                       onRemoved: (){
-                        setState(() {
-                          _tagsIngredients.removeAt(index);
-                          _tags--;
-                          //TODO
-                          //researchAfterRemoval();
+                        _tagsIngredients.removeAt(index);
+                        _tags--;
+                        researchAfterRemoval();
+                        Future.delayed(new Duration(milliseconds: 200),(){
+                          setState(() {
+
+                          });
                         });
                         return true;
                       },
@@ -212,13 +187,11 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
-                      await this.proxyClient.getFutureByIngredient(new Set<Resource>(),value.toString())
-                          .then((el){
-                        this.refresh(el).whenComplete((){
-                          this.setState(() {
-                              _tagsIngredients.add(value.toString());
-                              _tags++;
-                          });
+                      refresh(value.toString(),1);
+                      Future.delayed(new Duration(milliseconds: 200),(){
+                        setState(() {
+                          _tagsIngredients.add(value);
+                          _tags++;
                         });
                       });
                     }
@@ -242,13 +215,12 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     ),
                     removeButton: ItemTagsRemoveButton(
                       onRemoved: (){
+                        _tagsExecutionTime.removeAt(index);
+                        _tags--;
+                        researchAfterRemoval();
                         setState(() {
-                          _tagsExecutionTime.removeAt(index);
-                          _tags--;
-                          //TODO
-                          //researchAfterRemoval();
+                          //return "";
                         });
-                        //required
                         return true;
                       },
                     ),
@@ -262,18 +234,11 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
-                      await this.proxyClient.getFutureByTime(new Set<Resource>(),int.parse(value))
-                          .then((el){
-                        this.refresh(el).whenComplete((){
-                          setState(() {
-                            if(_tags==0) _tagsExecutionTime.add(value);
-                            else{
-                              if(_tagsExecutionTime.length>0) _tagsExecutionTime.remove(value);
-                              _tagsExecutionTime.add(value);
-                            }
-                            _tags++;
-
-                          });
+                      refresh(value.toString(),2);
+                      Future.delayed(new Duration(milliseconds: 300),(){
+                        setState(() {
+                          _tagsExecutionTime.add(value);
+                          _tags++;
                         });
                       });
                     }
@@ -287,13 +252,15 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
 
   Widget _recipesWidget(BuildContext context){
 
+    /*List<LazyResource> list=[];
+    this.resourceFinded.then((el)=>list.addAll(el));*/
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: this.resourceFinded.length,
+        itemCount: resourceFinded.length,
         addSemanticIndexes: true,
         itemBuilder: (context, index) {
-          LazyResource r = this.resourceFinded.toList().elementAt(index);
+          LazyResource r = resourceFinded.elementAt(index);
 
           return ListTile(
             title: Text(r.getRecipeName().toUpperCase(),style:textRecipe),
@@ -311,7 +278,5 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
           );
         });
   }
-
-
 }
 

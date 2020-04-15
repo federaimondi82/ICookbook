@@ -80,7 +80,8 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
     }
     else{
       this.simple.setName(this.newName);
-      this.simple.setAmount(new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit)));
+      Quantity q=new Quantity().setAmout(this.newValue).setUnit(unitRegister.getUnit(this.newUnit));
+      this.simple.setAmount(q);
       saveIngredient();
     }
   }
@@ -152,7 +153,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                 onChanged: (value){
                   this.newValue=double.parse(value);
                   this.simple.getAmount().setAmout(this.newValue);
-                  this.simple.getAmount().setAmout(double.parse(value));
+                  //this.simple.getAmount().setAmout(double.parse(value));
                 },
                 controller:ingredientQuantity,
               ),
@@ -180,7 +181,7 @@ class SimpleIngredientPageState extends State<SimpleIngredientPage>{
                     elevation: 5,
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10)),
-                    child: Text('Save Ingredient',style: textFieldStyle.copyWith(fontSize: 30)),
+                    child: Text('Save Ingredient',style: textFieldStyle.copyWith(fontSize: 20)),
                   ),
                 ),
               ),

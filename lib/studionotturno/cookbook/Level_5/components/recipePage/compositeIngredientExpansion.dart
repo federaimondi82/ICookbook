@@ -15,32 +15,51 @@ import 'ingredientItem.dart';
 class CompositeIngredientExpansion extends StatefulWidget{
 
   Recipe recipe;
+  Set<Ingredient> set;
 
-  CompositeIngredientExpansion(Recipe recipe){
+  CompositeIngredientExpansion(Recipe recipe,Set<Ingredient> set){
     this.recipe=recipe;
+    this.set=set;
   }
 
   @override
-  State<StatefulWidget> createState() => CompositeIngredientExpansionState(this.recipe);
+  State<StatefulWidget> createState() => CompositeIngredientExpansionState(this.recipe,this.set);
 
 }
 
 class CompositeIngredientExpansionState extends State<CompositeIngredientExpansion>{
 
   Recipe recipe;
+  Set<Ingredient> set;
   List<IngredientItem> _data;
 
-  CompositeIngredientExpansionState(Recipe recipe){
+  CompositeIngredientExpansionState(Recipe recipe,Set<Ingredient> set){
     this.recipe=recipe;
+    this.set=set;
     this._data=List<IngredientItem>();
-    for(Ingredient ing in recipe.getIngredients()){
-      if(ing is CompositeIngredient){
-        _data.add(
-            new IngredientItem(
-                ingredient:ing,
-                type:ing is SimpleIngredient ?true:false,headerValue: ing.getName().toUpperCase(),
-                expandedValue: ing.getAmount().toString().toUpperCase()
-            ));
+
+    if(recipe==null){
+      for(Ingredient ing in set){
+        if(ing is CompositeIngredient){
+          _data.add(
+              new IngredientItem(
+                  ingredient:ing,
+                  type:ing is SimpleIngredient ?true:false,headerValue: ing.getName().toUpperCase(),
+                  expandedValue: ing.getAmount().toString().toUpperCase()
+              ));
+        }
+      }
+    }
+    else{
+      for(Ingredient ing in recipe.getIngredients()){
+        if(ing is CompositeIngredient){
+          _data.add(
+              new IngredientItem(
+                  ingredient:ing,
+                  type:ing is SimpleIngredient ?true:false,headerValue: ing.getName().toUpperCase(),
+                  expandedValue: ing.getAmount().toString().toUpperCase()
+              ));
+        }
       }
     }
   }
@@ -87,7 +106,7 @@ class CompositeIngredientExpansionState extends State<CompositeIngredientExpansi
                 Center(
                   child: Container(
                     alignment: Alignment(0.0, 0.0),
-                    child: CompositeIngredientItem(this.recipe.getName(),item.ingredient),
+                    child: new CompositeIngredientItem(item.ingredient),
                   ),
                 ),
                 isExpanded: item.isExpanded,
@@ -98,5 +117,4 @@ class CompositeIngredientExpansionState extends State<CompositeIngredientExpansi
         ),
     );
   }
-
 }

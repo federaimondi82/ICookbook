@@ -1,12 +1,13 @@
 
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/resource.dart';
-import 'iFirestoreIterator.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/resource.dart';
+
+import '../../../myIterator.dart';
 
 ///Un concrete iterator per gestire l'attraversamento di una collezione riceracre
 ///elementi al di sotto di un determinata difficoltà
 
 ///Fa parte del patter Iterator ( concrete iterator )
-class ConcreteIteratorAscendingFirebase implements IFirestoreIterator{
+class ConcreteIteratorAscendingFirebase implements MyIterator{
 
   Set<Resource> set;
   int currentPosition=0;

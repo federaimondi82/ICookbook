@@ -62,11 +62,19 @@ class User{
     return this.gender;
   }
   String getEmail(){
-    return "federaimondi82@gmail.com";
-    //return this.email;
+    //return "federaimondi27033@gmail.com";
+    return this.email;
   }
   String getPassword() {
     return this.password;
   }
 
+  @override
+  String toString() {
+    return 'User{name: $name, surname: $surname, gender: $gender, email: $email, password: $password, birthday: $birthday}';
+  }
+
+  void deleteAll() {
+    this.setName(null).setSurname(null).setBirthday(null).setEmail(null).setPassword(null).setGender(null);
+  }
 }

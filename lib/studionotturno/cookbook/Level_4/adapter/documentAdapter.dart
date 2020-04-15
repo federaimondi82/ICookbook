@@ -1,6 +1,6 @@
 
 
-import 'package:ricettario/studionotturno/cookbook/Level_1/imageManager.dart';
+//import 'package:ricettario/studionotturno/cookbook/Level_1/imageManagerFirebase.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
 import 'executionTimeAdapter.dart';
@@ -8,19 +8,21 @@ import 'ingredientAdapter.dart';
 import 'target.dart';
 import 'recipeAdapter.dart';
 
+
+///fa parte del design pattern gof Adaper per i dati delle ricette sa salvare su un database NOSQL
 class DocumentAdapter extends Target{
 
   Recipe recipe;
   User user;
-  ImageManager imageManager;
+ // ImageManager imageManager;
 
   DocumentAdapter(){
-    this.imageManager=new ImageManager();
+    //this.imageManager=new ImageManager();
   }
 
   DocumentAdapter setRecipe(Recipe recipe){
     this.recipe=recipe;
-    this.imageManager.setRecipeName(this.recipe.getName());
+    //this.imageManager.setRecipeName(this.recipe.getName());
     return this;
   }
 
@@ -28,7 +30,6 @@ class DocumentAdapter extends Target{
     this.user=new User();
     return this;
   }
-
 
   @override
   Map<String,dynamic > toJson() {
@@ -42,6 +43,7 @@ class DocumentAdapter extends Target{
       "photos":[]
     };
   }
+
 
   @override
   Recipe toObject(Map<dynamic,dynamic> data) {

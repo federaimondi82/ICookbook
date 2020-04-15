@@ -1,10 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/proxyFirestore/proxyPersonalFirestore.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_2/mokeStarter.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/documentAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_5/pages/signinPage.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/splash.dart';
 
 void main()=>runApp(MyApp2());
@@ -31,14 +31,6 @@ class MyApp extends State<MyApp2> {
   void initState() {
     super.initState();
 
-    /*//tutte le ricette di un utente
-    Future<List<DocumentSnapshot>> firstLevel= Firestore.instance.collection('recipes').where('userName',isEqualTo: 'federaimondi82@gmail.com')
-        .getDocuments().then(((docs)=>docs.documents));
-    //firstLevel.then((value)=>value.forEach((el)=>print(el.data.toString())));
-    firstLevel.then((value)=>value.forEach((el){
-      Recipe r=DocumentAdapter().toObject(el.data);
-      print(r.toString());
-    }));*/
   }
 
   @override
@@ -56,17 +48,18 @@ class MyApp extends State<MyApp2> {
     moke.saveAllRecipes();//le salva nel file*/
 
 
-    //TODO proxy
-    ProxyPersonalFirestore proxy=new ProxyPersonalFirestore();
-    Map<String,String> map=proxy.getMapper();
+    //Carca le lezyResources dal cloud versio il client
+    //RecipeMapperSpringboot().getMapper();
 
     //#endregion init
+
 
     return MaterialApp(
       title: 'Cookbook',
       debugShowCheckedModeBanner: false,
       theme:ThemeData(primaryColor: Colors.blueGrey[900]),
       home: Splash(2000),//CookbookPage(),
+      //home:SigninPage(),
     );
   }
 
