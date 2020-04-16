@@ -75,8 +75,8 @@ class RecipePageState extends State<RecipePage>{
     try{
       saveState();
       Mediator mediator=new Mediator();
-      mediator.uploadAllRecipes();
-      Navigator.pushReplacement(context,MaterialPageRoute(builder: (_) => CookbookPage()));
+      mediator.saveAllRecipes();
+      Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
     }catch(e){
       showDialog(context: context, builder: (context) {
         return new AlertDialog(title:Text("Enter the name of the recipe"));
@@ -121,6 +121,15 @@ class RecipePageState extends State<RecipePage>{
 
     //#endregion controllers
 
+    //#endregion load images
+
+    ImageManagerLocal imageManager;
+    Future<List<ImageElement>> fut;
+    imageManager = new ImageManagerLocal().setRecipeName(this.recipe.getName());
+    fut=imageManager.getImages();
+
+    //#endregion load images
+
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
@@ -132,13 +141,11 @@ class RecipePageState extends State<RecipePage>{
                   ImageElement image=new ImageElement().setFile(img).setRecipeName(this.recipe.getName());
                   ImageManagerLocal manager =new ImageManagerLocal();
                   manager.setImage(image);
-                  await manager.saveInLocal();
-                  /*ImageManagerFirebase imgManager=new ImageManagerFirebase();
-                  imgManager.setImage(image);
-                  await imgManager.saveInLocal();*/
-              setState(() {
-                //return Future.value();
-              });
+                  await manager.saveInLocal().whenComplete((){
+                    setState(() {
+                      //return Future.value();
+                    });
+                  });
             }
           ),
         ],
@@ -188,7 +195,7 @@ class RecipePageState extends State<RecipePage>{
                   ),
                 ),
                 Container(
-                  child: new ListViewImages(context,this.recipe.getName()),
+                  child: new ListViewImages(context,this.recipe.getName(),fut),
                 ),
               ],
             ),

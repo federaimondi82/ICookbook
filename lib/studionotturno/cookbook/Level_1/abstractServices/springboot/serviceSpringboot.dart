@@ -19,8 +19,8 @@ class ServiceSpringboot implements ServiceCloud{
   User user;
 
   ServiceSpringboot(){
-    this.url="http://10.0.2.2:8080";
-    //this.url="http://localhost:8080";
+    //this.url="http://10.0.2.2:8080";
+    this.url="http://localhost:8080";
     this.user=new User();
   }
 
@@ -40,9 +40,11 @@ class ServiceSpringboot implements ServiceCloud{
     Map<String,dynamic> docu=DocumentAdapter().setUserName().setRecipe(this.recipe).toJson();
     Response response = await post(this.url+"/docu/post_documents/", body: jsonEncode(docu));
     if(response.statusCode==200){
-      bool result=response.body.toString() as bool;
-      return Future.value(result);
-    }else return Future.value(null);
+      String result=response.body.toString();
+      bool resultBool=false;
+      if(result=="true") resultBool=true;
+      return Future.value(resultBool);
+    }else return Future.value(false);
   }
 
   @override
@@ -63,9 +65,11 @@ class ServiceSpringboot implements ServiceCloud{
   Future<bool> remove(String docToRemove)async {
     Response response =await delete(this.url+"/docu/delete_documents/"+this.user.getEmail()+"/"+docToRemove);
     if(response.statusCode==200){
-      bool result=response.body.toString() as bool;
-      return Future.value(result);
-    }else return Future.value(null);
+      String result=response.body.toString();
+      bool resultBool=false;
+      if(result=="true") resultBool=true;
+      return Future.value(resultBool);
+    }else return Future.value(false);
   }
 
   @override
@@ -119,6 +123,7 @@ class ServiceSpringboot implements ServiceCloud{
     }else return Future.value(null);
   }
 
+  ///Consente di recuperare i dati dell'utente nella fase di login/registrazione
   Future<User> retrieveData(Object object,String url)async{
     Response response =await post(this.url+url,body: jsonEncode(<String,dynamic>{"data":object,}));
     if(response.statusCode==200){

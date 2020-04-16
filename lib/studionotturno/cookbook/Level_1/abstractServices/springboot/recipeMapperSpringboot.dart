@@ -14,7 +14,6 @@ class RecipeMapperSpringboot implements RecipeMapper{
   RecipeMapperSpringboot._internal();
 
   factory RecipeMapperSpringboot() {
-    //TODO
     if(lazyResources==null) {
       lazyResources = new List<LazyResource>();
       s=new ServiceSpringboot();
@@ -25,27 +24,23 @@ class RecipeMapperSpringboot implements RecipeMapper{
   }
   @override
   void reloadProxy(){
-    //TODO
     Future<List<LazyResource>> list=s.getAllLazyRecipeOnCloud();
     list.then((value)=>lazyResources=value);
   }
 
   @override
   List<LazyResource> getMapper(){
-    //TODO
     return lazyResources;
   }
 
   @override
   String getRecipeDocument(String recipeName){
-    //TODO
     return lazyResources.firstWhere((doc)=>doc.getRecipeName()==recipeName).getDocumentID();
   }
 
   ///rimuove una Entry, della mappatura tra documenti e ricette, in base al nome della ricetta
   @override
   void remove(String recipeName) {
-    //TODO//TODO
     lazyResources.remove(getRecipeDocument(recipeName));
   }
 

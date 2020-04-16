@@ -170,17 +170,28 @@ class LoginPageState extends State<LoginPage>{
       bool result=await auth.signup(UserAdapter().setUser(this.user).toJson());
 
       if(result==true){
-        this.alert="Rigth data";
+        /*this.alert="Rigth data";
         auth.retrieveData(this.user.getEmail(),this.user.getPassword());
-        /*Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
+        *//*Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
         User u2=new User();
         future.then((value) => value.forEach((element) {
           print(element);
           u2=UserAdapter().setUser(u2).toObject(element);
           print(u2.toString());
-        }));*/
-        Future.delayed(new Duration(milliseconds: 3000),(){
+        }));*//*
+        Future.delayed(new Duration(milliseconds: 1000),(){
           Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+        });*/
+        setState(() {
+          this.alert="Rigth data";
+          auth.retrieveData(this.user.getEmail(),this.user.getPassword());
+          Future.delayed(new Duration(milliseconds: 1000),(){
+            Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+          });
+        });
+      }else{
+        setState(() {
+          this.alert="Wrong data";
         });
       }
     }

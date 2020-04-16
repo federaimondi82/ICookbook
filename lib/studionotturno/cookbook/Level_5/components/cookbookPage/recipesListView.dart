@@ -3,11 +3,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/recipeMapper.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/recipeMapperSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/localIterator/irecipesIterator.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/components/cookbookPage/sendRecipeDialogComponent.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/recipePage.dart';
 
@@ -35,13 +37,14 @@ class RecipesListViewState extends State<RecipesListView>{
   @override
   Widget build(context) {
 
-    ///per il controllo con i nomi memorizzati in cloud
-    /*RecipeMapperFirestore proxy=new RecipeMapperFirestore();
-    proxy.reloadProxy();
-    List<LazyResource> map=proxy.getMapper();*/
-    RecipeMapper proxy=new RecipeMapperSpringboot();
-    proxy.reloadProxy();
-    List<LazyResource> map=proxy.getMapper();
+    List<LazyResource> map=new List<LazyResource>();
+    User user=new User();
+    if(user.getName()!=null){
+      ///per il controllo con i nomi memorizzati in cloud
+      RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
+      mapper.reloadProxy();
+      map=mapper.getMapper();
+    }
 
 
     //this.orderedRecipes.clear();

@@ -13,7 +13,6 @@ class FileManager{
 
   ///La struttura dati che consente di memorizzare i dati provenienti dal file
   List<Map<String,dynamic>> data;
-
   Cookbook cookBook=new Cookbook();
 
   FileManager(){
@@ -38,6 +37,7 @@ class FileManager{
   ///e costruire una struttura dati contenente le ricette
   Future<List<Map<String,dynamic>>> readDataIntoFile() async {
     try {
+      print("load recipes from file");
       final directory = await getApplicationDocumentsDirectory();
       File('${directory.path}/recipes.txt').create();
       final file = File('${directory.path}/recipes.txt');
@@ -63,24 +63,27 @@ class FileManager{
       final file = File('${directory.path}/recipes.txt');
       file.writeAsStringSync(s+"\n",flush: true,mode:FileMode.append,encoding: Encoding.getByName("UTF-8"));
     }catch(e){
-      print("non si legge"+e);
+      print("non si legge 1: "+e);
     }
   }
 
   ///Salva tutte le ricette passate come parametro
   ///genralemente viene passato come parametro una lista generata
   ///da cookbook.getRecipes() e una codifica in json per ogni singola ricetta
-  void saveAllRecipes(List<String> recipes) async {
+  Future<bool> saveAllRecipes(List<String> recipes) async {
     try{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/recipes.txt');
       await file.delete();
       await file.create();
-
-      await recipes.forEach((recipe)=>saveRecipe(recipe));
-
+      recipes.forEach((element) async{
+        await file.writeAsStringSync(element+"\n",flush: true,mode:FileMode.append,encoding: Encoding.getByName("UTF-8"));
+      });
+      //recipes.forEach((recipe)=>saveRecipe(recipe));
+      return Future.value(true);
     }catch(e){
-      print("non si legge"+e);
+      print("non si legge 2: "+e.toString());
+      return Future.value(false);
     }
 
   }
@@ -91,6 +94,7 @@ class FileManager{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/cache.txt');
       file.delete();
+      file.create();
       Map<String,dynamic> s1=UserAdapter().setUser(user).toJson();
       String s=JsonEncoder().convert(s1);
       await file.writeAsStringSync(s,flush: true,mode:FileMode.write,encoding: Encoding.getByName("UTF-8"));
@@ -99,6 +103,7 @@ class FileManager{
     }
   }
 
+  ///Lettura del file di cache con i dati di registrazione dell'utente
   Future<List<Map<String,dynamic>>> readFileCache() async{
     try {
       List<Map<String,dynamic>> cache=new List<Map<String,dynamic>>();
@@ -119,6 +124,7 @@ class FileManager{
     }
   }
 
+  ///Cancellazione del file di cahce per i dati dell'utente
   Future<bool> deleteCache()async {
     try{
       final directory = await getApplicationDocumentsDirectory();

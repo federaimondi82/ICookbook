@@ -59,7 +59,6 @@ class MyApp extends State<MyApp2> {
       debugShowCheckedModeBanner: false,
       theme:ThemeData(primaryColor: Colors.blueGrey[900]),
       home: Splash(2000),//CookbookPage(),
-      //home:SigninPage(),
     );
   }
 

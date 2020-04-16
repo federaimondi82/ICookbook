@@ -40,7 +40,7 @@ class ImageManagerLocal{
           Directory(recipeDir).list().forEach((el) async {
             list.add(new ImageElement().setFile(new File(el.path)).setName(el.path));
           });
-        }else print('3-count=0');
+        }else {}//print('3-count=0');
       });
     });
     return await Future.value(list);

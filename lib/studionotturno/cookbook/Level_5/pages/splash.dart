@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/recipeMapper.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_2/mediator.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
@@ -37,7 +39,7 @@ class SplashState extends State<Splash>{
 
   startTimer() async{
     var d=Duration(milliseconds: this.timeMillisecond);
-    //await loadData();
+    await loadData();
     return Timer(d,route);
   }
 
@@ -45,24 +47,26 @@ class SplashState extends State<Splash>{
   loadData() async{
 
     Mediator mediator=new Mediator();
-    mediator.loadDataFromFile();
+    mediator.loadDataFromFile().whenComplete((){
+      print("2");
+      fileManager=new FileManager();
+      Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
+      User u2=new User();
+      future.then((value) => value.forEach((element) {
+        u2=UserAdapter().setUser(u2).toObject(element);
+      }));
 
-    fileManager=new FileManager();
-    Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
-    User u2=new User();
-    future.then((value) => value.forEach((element) {
-      u2=UserAdapter().setUser(u2).toObject(element);
-    }));
+      if(u2.getName()!=null){
+        RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
+        mapper.reloadProxy();
+      }
+    });
 
     /*MokeStarter moke=new MokeStarter();
     moke.deleteFile();//cancella il file
     moke.caricaRicette2();//carica le ricette nel ricettario
     moke.saveAllRecipes();//le salva nel file
-    moke.loadCookbook();//legge dal file e carica il ricettario
-
-    //TODO proxy
-    ProxyPersonalFirestore proxy=new ProxyPersonalFirestore();
-    Map<String,String> map=proxy.getMapper();*/
+    moke.loadCookbook();//legge dal file e carica il ricettario*/
 
   }
 

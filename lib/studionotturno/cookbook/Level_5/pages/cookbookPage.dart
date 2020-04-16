@@ -27,7 +27,7 @@ class CookbookPageState extends State<CookbookPage>{
             child: new RecipesListView(context),// _recipes(context),
             onRefresh: () async {
               await setState(() {
-                Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+                Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
               });
             },
         ),

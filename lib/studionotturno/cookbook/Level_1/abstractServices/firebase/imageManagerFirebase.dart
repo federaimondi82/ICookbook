@@ -13,28 +13,25 @@ class ImageManagerFirebase implements ImageManager{
   String recipeName,fileName,documentID;
   ImageManagerFirebase(){}
 
-  ///metodo modificatore per impostare l'immagine
+  @override
   ImageManagerFirebase setImage(ImageElement image){
     this.imageElement=image;
     return this;
   }
 
-  ///metodo modificatore per impostare la ricetta relativa all'immagine
+  @override
   ImageManagerFirebase setRecipeName(String recipeName) {
     this.recipeName=recipeName;
     return this;
   }
 
 
-  ///consente di reperire l'immagine dal cloud storageFirebase
+  @override
   Future<void> download()async{
     //TODO richiamare l'url e caricare l'immagine
   }
 
-  ///Consente di salvare una immagine con firebase storage;
-  ///url di ritorno verrà salvato insieme ai dati delle ricetta in firestore.
-  ///ogni immagine è salvata con il path documentIDRecipe/nomeImmagine
-  ///deve essere reperito prima il documentID e poi salvata l'immagine
+  @override
   Future<void> uploadFile() async {
 
     Future<String> docID=ServiceFirestore().setRecipeName(this.recipeName).retrieveDocumentID();
@@ -50,28 +47,7 @@ class ImageManagerFirebase implements ImageManager{
 
   }
 
-  /*///avendo precendetemente imposto il nome della ricetta viene cercato su firestore
-  ///il nome del documento relatico a questa ricetta
-  Future<String> getDocumentID(){
-    if(this.recipeName==null) throw new Exception("nome ricetta non presente");
-    User u=new User();
-    if(u.getEmail()==null) throw new Exception("utente non autenticato");
-    String fileName;
-
-    return firestore.collection('recipes').where('userName',isEqualTo: u.getEmail())
-        .where('recipeName',isEqualTo: this.recipeName).limit(1)
-        .getDocuments().then((docs){
-      docs.documents.forEach((doc)=>this.documentID=doc.documentID);
-    }).whenComplete((){
-      fileName=this.documentID+"/"+this.imageElement.getName();
-    }).whenComplete(()=>Future.delayed(new Duration(milliseconds: 50),(){
-      this.fileName=fileName;
-      Future.value(fileName);
-    }));
-  }*/
-
-  ///consente di aggiornare gli url delle immagini nel documento firestore
-  ///relativo a una specifica ricetta
+  @override
   void updateRecipe(String url) {
     Map<String,dynamic> map=new Map<String,dynamic>();
     List<String> list=new List<String>();
@@ -86,8 +62,6 @@ class ImageManagerFirebase implements ImageManager{
       if(!list.contains(url))list.add(url);
       map.putIfAbsent('photos', ()=>list);
     }).whenComplete(()=> firestore.collection('recipes').document(this.documentID).updateData(map));
-
-
   }
 
 }

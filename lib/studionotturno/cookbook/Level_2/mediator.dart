@@ -24,11 +24,15 @@ class Mediator{
   }
 
   ///Carica le ricette dal file in una struttura dati ( recipes )
-  void loadDataFromFile() async {
+  Future<bool> loadDataFromFile() async {
     await this.fileManager.readDataIntoFile().then((ele)=>ele.forEach((ele){
       this.recipes.add(RecipeAdapter().toObject(ele));
-    }));
-    this.recipes.toSet().forEach((recipe)=>cookbook.addRecipeObject(recipe));
+    })).then((value1){
+      this.recipes.toSet().forEach((recipe)=>cookbook.addRecipeObject(recipe));
+    });
+    print("1");
+    return await Future.value(true);
+
   }
 
   ///salvataggio di una singola ricetta nel file; usa FileManager
@@ -42,13 +46,15 @@ class Mediator{
   }
 
   ///Consente di memorizzare tutte le ricette in locale
-  void uploadAllRecipes() {
+  ///Le ricette a runtime vengono salvate su un file
+  Future<bool> saveAllRecipes() async{
     List<String> recipes=new List<String>();
     this.cookbook.getRecipes().forEach((recipe){
       Map<String,dynamic> s1=RecipeAdapter().setRecipe(recipe).toJson();
         recipes.add(JsonEncoder().convert(s1));
     });
-    this.fileManager.saveAllRecipes(recipes);
+    await this.fileManager.saveAllRecipes(recipes);
+    return Future.value(true);
   }
 
 

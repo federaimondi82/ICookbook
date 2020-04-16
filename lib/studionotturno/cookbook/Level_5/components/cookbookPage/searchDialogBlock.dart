@@ -21,7 +21,6 @@ class SearchDialogBlock extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
 
-    // TODO: implement build
     return PopupMenuButton<ListTile>(
       itemBuilder: (BuildContext context) => <PopupMenuEntry<ListTile>>[
         PopupMenuItem<ListTile>(
@@ -38,7 +37,7 @@ class SearchDialogBlock extends StatelessWidget{
             title: Text("Search in cloud",style: textStyle),
             leading: const Icon(Icons.search, size: iconsSize, color: iconsColor),
             onTap: (){
-              //TODO
+              //Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new SearchInCloudPage()),(Route<dynamic> route) => false,);
               Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SearchInCloudPage()),);
             },
           ),
@@ -58,6 +57,7 @@ class SearchDialogBlock extends StatelessWidget{
           title: Text("Setting",style: textStyle),
           leading: const Icon(Icons.settings, size: iconsSize, color: iconsColor),
           onTap: (){
+            //Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new SettingPage()),(Route<dynamic> route) => false,);
             Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SettingPage()),);
           },
         ),
@@ -72,7 +72,9 @@ class SearchDialogBlock extends StatelessWidget{
           title: Text("Registration",style: textStyle),
           leading: const Icon(Icons.settings, size: iconsSize, color: iconsColor),
           onTap: (){
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  SigninPage()),);
+
+            //Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new SigninPage()),(Route<dynamic> route) => false,);
+            Navigator.push(context,MaterialPageRoute(builder: (context) =>  SigninPage()),);
           },
         ),
       );
@@ -86,7 +88,8 @@ class SearchDialogBlock extends StatelessWidget{
           title: Text("Login",style: textStyle),
           leading: const Icon(Icons.settings, size: iconsSize, color: iconsColor),
           onTap: (){
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  LoginPage()),);
+            //Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new LoginPage()),(Route<dynamic> route) => false,);
+            Navigator.push(context,MaterialPageRoute(builder: (context) =>  LoginPage()),);
           },
         ),
       );
@@ -104,7 +107,8 @@ class SearchDialogBlock extends StatelessWidget{
             Future<bool> result=fileManager.deleteCache();
             User user=new User();
             user.deleteAll();
-            Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  CookbookPage()),);
+            Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
+            //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  CookbookPage()),);
           },
         ),
       );

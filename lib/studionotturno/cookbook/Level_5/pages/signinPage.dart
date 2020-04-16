@@ -34,7 +34,7 @@ class SigninPage extends StatefulWidget{
 
 class SigninPageState extends State<SigninPage>{
 
-  ServicesRegister services;
+  //ServicesRegister services;
   AuthServiceSpringboot auth;
   User user;
   var _name,_surname,_email,_password;
@@ -158,23 +158,16 @@ class SigninPageState extends State<SigninPage>{
       checker.controlBirthday(this.user.getBirthday());
       checker.controlEmail(this.user.getEmail());
       this.user.setPassword(checker.criptPassword(this.user.getPassword()));
-      print(this.user.toString());
-      services=new ServicesRegister();
-      auth=services.getService("springboot").createServiceRegistration();
+      auth=ServicesRegister().getService("springboot").createServiceRegistration();
       bool result = await auth.signin(UserAdapter().setUser(user).toJson());
       if(result==true){
         this.alert="Registrato";
         FileManager fileManager=new FileManager();
         await fileManager.saveCacheFile(this.user);
-        /*Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
-        User u2=new User();
-        future.then((value) => value.forEach((element) {
-          print(element);
-          u2=UserAdapter().setUser(u2).toObject(element);
-          print(u2.toString());
-        }));*/
-        Future.delayed(new Duration(milliseconds: 3000),(){
-          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+
+        Future.delayed(new Duration(milliseconds: 1000),(){
+          Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
+          //Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
         });
       }
     }
@@ -193,7 +186,6 @@ class SigninPageState extends State<SigninPage>{
             value: Gender.M,
             groupValue: _gender,
             onChanged: (Gender value) {
-              print(value);
               this.user.setGender("M");
               setState(() {
                 _gender=Gender.M;
@@ -207,7 +199,6 @@ class SigninPageState extends State<SigninPage>{
             value: Gender.F,
             groupValue: _gender,
             onChanged: (Gender value) {
-              print(value);
               this.user.setGender("F");
               setState(() {
                 _gender=Gender.F;

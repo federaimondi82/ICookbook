@@ -14,34 +14,31 @@ class ListViewImages extends StatefulWidget{
 
   String recipeName;
   BuildContext context;
-  ListViewImages(this.context,this.recipeName);
+  Future<List<ImageElement>> fut;
+
+  ListViewImages(this.context,this.recipeName,this.fut);
 
   @override
-  State<StatefulWidget> createState()=>ListViewImagesState(this.context,this.recipeName);
+  State<StatefulWidget> createState()=>ListViewImagesState(this.context,this.recipeName,this.fut);
 }
 class ListViewImagesState extends State<ListViewImages>{
 
   String recipeName;
-  ImageManagerLocal imageManager;
-  Future<List<ImageElement>> fut;
   BuildContext context;
   Cookbook cookbook;
-
-  @override
-  void initState(){
-    this.fut=this.imageManager.getImages();
-  }
+  Future<List<ImageElement>> fut;
+  ImageManagerLocal imageManager;
 
   ///nel costruttore avvio la ricerca delle immagini con un future e costruisce
   ///una lista di widget per costruire poi la griglia
-  ListViewImagesState(this.context,this.recipeName) {
-    this.imageManager = new ImageManagerLocal().setRecipeName(this.recipeName);
+  ListViewImagesState(this.context,this.recipeName,this.fut) {
     this.cookbook=new Cookbook();
   }
 
   @override
   Widget build(BuildContext context) {
 
+    this.imageManager = new ImageManagerLocal().setRecipeName(this.recipeName);
     return FutureBuilder<List<ImageElement>> (
       future: this.fut,
       builder:(context,snapshot) {

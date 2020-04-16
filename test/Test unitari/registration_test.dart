@@ -51,8 +51,8 @@ void main() {
 
   test("user login right all", () async {
     User u=new User();
-    u.setEmail("federaimondi27033@gmail.com");
-    u.setPassword("asd");
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
     UserChecker checker=new UserChecker();
     checker.controlEmail(u.getEmail());
     u.setPassword(checker.criptPassword(u.getPassword()));
@@ -65,8 +65,8 @@ void main() {
 
   test("user login wrongPass", () async {
     User u=new User();
-    u.setEmail("federaimondi31413@gmail.com");
-    u.setPassword("asdadfdf");
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marco");
     UserChecker checker=new UserChecker();
     checker.controlEmail(u.getEmail());
     u.setPassword(checker.criptPassword(u.getPassword()));
@@ -80,16 +80,17 @@ void main() {
 
   test("retrieve data from Backend",() async {
     User u=new User();
-    u.setEmail("MarioRossi48775@gmail.com");
-    u.setPassword("asd");
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
     UserChecker checker=new UserChecker();
     u.setPassword(checker.criptPassword(u.getPassword()));
 
     ServicesRegister services=new ServicesRegister();
     AuthServiceSpringboot auth=services.getService("springboot").createServiceRegistration();
-    User user=await auth.retrieveData(u.getEmail(),u.getPassword());
+
     FileManager fileManager=new FileManager();
-    fileManager.saveCacheFile(user);
+    await auth.retrieveData(u.getEmail(),u.getPassword()).then((User user) async => await fileManager.saveCacheFile(user));
+
   });
 
 }

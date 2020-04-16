@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/serviceSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
@@ -48,11 +49,12 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
   @override
   Widget build(BuildContext context) {
 
-    /*RecipeMapperFirestore proxy=new RecipeMapperFirestore();
-    List<LazyResource> map=proxy.getMapper();*/
-
-    RecipeMapperSpringboot proxy=new RecipeMapperSpringboot();
-    List<LazyResource> map=proxy.getMapper();
+    User user=new User();
+    List<LazyResource> map=new List<LazyResource>();
+    if(user.getName()!=null){
+      RecipeMapperSpringboot proxy=new RecipeMapperSpringboot();
+      map=proxy.getMapper();
+    }
 
     return SimpleDialog(
       title: Text("SHARE or DELETE",textAlign: TextAlign.center),
@@ -71,30 +73,17 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async{
-              //TODO con ServiceCloud
-              if(user.getName()=="" || user.getName()==""){
+              if(user.getName()=="" || user.getName()==null){
                 Navigator.push(context,MaterialPageRoute(builder:(context)=>SigninPage()));
               }
               else{
-                service=new ServiceSpringboot();
+                service=ServicesRegister().getService("springboot").createServiceCloud();
                 service.setRecipeName(recipeName);
                 await service.shareRecipe();
                 setState(() {
                   Navigator.of(context).pop();
                 });
               }
-                /*ServiceFirestore service=new ServiceFirestore();
-                service.setRecipeName(recipeName);
-                await service.shareRecipe();
-                await setState(() {
-                  Navigator.of(context).pop();
-                });*/
-               /* service=new ServiceSpringboot();
-                service.setRecipeName(recipeName);
-                service.shareRecipe();
-                setState(() {
-                  Navigator.of(context).pop();
-                });*/
             },
             color: Colors.blueGrey[900],
             highlightColor: Colors.lightGreenAccent,
@@ -108,7 +97,18 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async {
-              //TODO con abstract factory
+              //TODO con ServiceCloud
+              if(user.getName()=="" || user.getName()==null){
+                Navigator.push(context,MaterialPageRoute(builder:(context)=>SigninPage()));
+              }
+              else{
+                service=ServicesRegister().getService("springboot").createServiceCloud();
+                service.setRecipeName(recipeName);
+                await service.remove(recipeName);
+                setState(() {
+                  Navigator.of(context).pop();
+                });
+              }
               /*service=new ServiceSpringboot();
               service.setRecipeName(recipeName);
               await service.remove(recipeName);
@@ -132,11 +132,15 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
                 Recipe r=_cookBook.getRecipe(recipeName);
                 _cookBook.remove(r);
                 Mediator m=new Mediator();
-                m.uploadAllRecipes();
-                  //Navigator.push(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
-                this.deactivate();
+                m.saveAllRecipes().whenComplete((){
+                  this.deactivate();
+                  //Navigator.of(context).pop();
+                  Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
+                });
 
-              });
+                //this.deactivate();
+
+             });
             },
             color: Colors.blueGrey[900],
             highlightColor: Colors.lightGreenAccent,

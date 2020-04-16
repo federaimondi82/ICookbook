@@ -5,6 +5,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/serviceCloud.dart';
 
@@ -38,7 +39,7 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
 
   SearchInCloudPageState(){
     this.resourceFinded= new List<LazyResource>();
-    //this.serviceCloud=new ServiceSpringboot();//todo
+    this.serviceCloud=ServicesRegister().getService("springboot").createServiceCloud();
     this.totalTags=new Map<String,List<String>>();
     this.totalTags.putIfAbsent("name", ()=>_tagsName);
     this.totalTags.putIfAbsent("ing", ()=>_tagsIngredients);
@@ -264,12 +265,11 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
 
           return ListTile(
             title: Text(r.getRecipeName().toUpperCase(),style:textRecipe),
+            onLongPress: (){
+              //TODO showdialog con tasto copia ricetta da backend a client
+            },
             onTap: () {
-              /*Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => RecipePage(r)),
-              );*/
+              //todo richiamare la ricetta e visionarla sena copiarla
             },
             leading: const Icon(
                 Icons.room_service, size: 20.0, color: Colors.blueGrey),
