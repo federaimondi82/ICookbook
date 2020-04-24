@@ -19,8 +19,9 @@ class ServiceSpringboot implements ServiceCloud{
   User user;
 
   ServiceSpringboot(){
-    //this.url="http://10.0.2.2:8080";
-    this.url="http://localhost:8080";
+    //this.url="http://10.0.2.149:8080";//IP rete LAN
+    this.url="http://10.0.2.2:8080";//per emulatore
+    //this.url="http://localhost:8080";//per cellulare
     this.user=new User();
   }
 
@@ -49,13 +50,15 @@ class ServiceSpringboot implements ServiceCloud{
 
   @override
   Future<List<LazyResource>> getAllLazyRecipeOnCloud() async {
-    Response response = await get(this.url+"/docu/get_documents/"+this.user.getEmail());
+    //print(this.url+"/docu/get_documents/"+this.user.getEmail()+"/"+this.user.getPassword());
+    Response response = await get(this.url+"/docu/get_documents/"+this.user.getEmail()+"/"+this.user.getPassword());
     if(response.statusCode==200){
       List<dynamic> json = jsonDecode(response.body);
       List<LazyResource> list=new List<LazyResource>();
       json.forEach((doc){
         list.add(new LazyResource().setDocumentID(doc["_id"]).setRecipeName(doc['recipeName'].toString()).setExecutionTime(doc['executionTime']));
       });
+      //list.forEach((element) {print(element);});
       return Future.value(list);
     }else return Future.value(null);
 
@@ -63,7 +66,7 @@ class ServiceSpringboot implements ServiceCloud{
 
   @override
   Future<bool> remove(String docToRemove)async {
-    Response response =await delete(this.url+"/docu/delete_documents/"+this.user.getEmail()+"/"+docToRemove);
+    Response response =await delete(this.url+"/docu/delete_documents/"+this.user.getEmail()+"/"+this.user.getPassword()+"/"+docToRemove);
     if(response.statusCode==200){
       String result=response.body.toString();
       bool resultBool=false;
@@ -74,7 +77,7 @@ class ServiceSpringboot implements ServiceCloud{
 
   @override
   Future<List<Recipe>> getAllRecipeOnCloud() async {
-    Response response = await get(this.url+"/docu/get_documents/"+this.user.getEmail());
+    Response response = await get(this.url+"/docu/get_documents/"+this.user.getEmail()+"/"+this.user.getPassword());
     if(response.statusCode==200){
       List<dynamic> json = jsonDecode(response.body);
       List<Recipe> list=new List<Recipe>();
@@ -87,7 +90,7 @@ class ServiceSpringboot implements ServiceCloud{
 
   @override
   Future<String> retrieveDocumentID()async{
-    Response response =await get(this.url+"/docu/get_documents/recipes/"+this.user.getEmail()+"/"+this.recipeName);
+    Response response =await get(this.url+"/docu/get_documents/recipes/"+this.user.getEmail()+"/"+this.user.getPassword()+"/"+this.recipeName);
     if(response.statusCode==200){
       return Future.value(response.body.toString());
     }else return Future.value(null);
@@ -131,7 +134,7 @@ class ServiceSpringboot implements ServiceCloud{
       User u=new User();
       return Future.value(UserAdapter().setUser(u).toObject(json));
     }else{
-      print("errore");
+      //print("errore");
       return Future.value(null);
     }
   }

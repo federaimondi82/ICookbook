@@ -9,7 +9,7 @@ import '../lazyResource.dart';
 abstract class RecipeMapper{
 
   ///ricarica le LazyResources dal backend
-  void reloadProxy();
+  Future<List<LazyResource>> reloadProxy();
 
   ///Ritorna la mappatura di lezyResources tra front e backend<br>
   ///Utile per evidenzire le ricette già memorizzate in cloud dall'utente

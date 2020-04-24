@@ -161,6 +161,7 @@ class SigninPageState extends State<SigninPage>{
       auth=ServicesRegister().getService("springboot").createServiceRegistration();
       bool result = await auth.signin(UserAdapter().setUser(user).toJson());
       if(result==true){
+
         this.alert="Registrato";
         FileManager fileManager=new FileManager();
         await fileManager.saveCacheFile(this.user);
@@ -172,6 +173,7 @@ class SigninPageState extends State<SigninPage>{
       }
     }
     catch(e){
+      print(e);
       this.alert="Errore";
     }
 

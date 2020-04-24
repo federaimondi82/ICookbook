@@ -32,8 +32,9 @@ class ConcreteIteratorAscending implements IRecipesIterator{
   }
 
   Set<Recipe> reorderAscending(Set<Recipe> set){
-    set.toList().sort((a,b)=>a.getName().compareTo(b.getName()));
-    return set.toSet();
+    List<Recipe> l=set.toList();
+    l.sort((a,b)=>a.getName().compareTo(b.getName()));
+    return l.toSet();
   }
 
 }

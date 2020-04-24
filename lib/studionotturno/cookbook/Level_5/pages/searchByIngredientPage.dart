@@ -66,11 +66,11 @@ class SearchByIngredientState extends State<SearchByIngredientPage>{
 
   List<Ingredient> searchIngredient(){
     this.list.clear();
-    print("1.1");
+    //print("1.1");
     _tagsIngredient.forEach((el){
       for(Recipe recipe in cookbook.getRecipes()) contains(recipe,el);
     });
-    print("1.2");
+    //print("1.2");
     return this.list;
   }
 
@@ -110,12 +110,12 @@ class SearchByIngredientState extends State<SearchByIngredientPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value){
-                      print("1");
+                      //print("1");
                       setState(() {
                         _tagsIngredient.add(value);
                         _tags++;
                         this.listOfIngredient=searchIngredient();
-                        print("2");
+                        //print("2");
                       });
                     }
                 ),
@@ -183,7 +183,7 @@ class SearchByIngredientState extends State<SearchByIngredientPage>{
   }
 
   Widget _recipesWidget(BuildContext context){
-    print("3");
+    //print("3");
     return ListView.builder(
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
@@ -191,10 +191,10 @@ class SearchByIngredientState extends State<SearchByIngredientPage>{
         addSemanticIndexes: false,
         itemBuilder: (context, index) {
           //SIMPLE INGREDIENT
-          print('qui');
+          //print('qui');
           var rng = new Random();
             if(this.listOfIngredient[index] is SimpleIngredient){
-              print("simple");
+              //print("simple");
               return Padding(
                 key: new ObjectKey(rng.nextInt(1000)),
                 padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
@@ -215,7 +215,7 @@ class SearchByIngredientState extends State<SearchByIngredientPage>{
               );
             }
             else { //COMPOSITE INGREDIENT
-              print("comp");
+              //print("comp");
               //return Text("comp");
               return new SimpleGroupedCheckbox<Ingredient>(
                 key: new ObjectKey(rng.nextInt(1000)),

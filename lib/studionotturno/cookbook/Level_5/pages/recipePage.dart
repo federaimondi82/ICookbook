@@ -121,7 +121,7 @@ class RecipePageState extends State<RecipePage>{
 
     //#endregion controllers
 
-    //#endregion load images
+    //#region load images
 
     ImageManagerLocal imageManager;
     Future<List<ImageElement>> fut;
@@ -160,8 +160,8 @@ class RecipePageState extends State<RecipePage>{
             key: _formKey,
             child:Column(
               children: <Widget>[
-                myTextField(_name,"Name",(value)=>this.recipe.setName(value),recipeName),
-                myTextField(_description,"Description",(value)=>saveState(),recipeDescription),
+                myTextField(_name,"Name",(value)=>this.recipe.setName(value),recipeName,false),
+                myTextField(_description,"Description",(value)=>saveState(),recipeDescription,true),
                 difficultWidgetColumn(context),
                 executionTimeColumn(context),
                 Column(
@@ -257,7 +257,7 @@ class RecipePageState extends State<RecipePage>{
     );
   }
 
-  Widget myTextField(Key key,String labelName,Function(String) function,TextEditingController controller){
+  Widget myTextField(Key key,String labelName,Function(String) function,TextEditingController controller,bool multiLine){
     return TextFormField(
       key: key,
       style: textStyle,
@@ -267,6 +267,7 @@ class RecipePageState extends State<RecipePage>{
       ),
       onChanged: function,
       controller: controller,
+      maxLines: multiLine==true?5:1,
     );
   }
 

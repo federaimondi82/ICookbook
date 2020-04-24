@@ -52,20 +52,6 @@ void main() {
   });
 
 
-  test("parser time to json",(){
-    ExecutionTime executionTime=new ExecutionTime(10, 10);
-
-    Map<String,dynamic> map=ExecutionTimeAdapter().setTime(executionTime).toJson();
-
-    print(executionTime.toString());   print(map);
-
-    expect(map, isNotNull);
-
-    ExecutionTime exe2=ExecutionTimeAdapter().toObject(map);
-    print(exe2.toString());
-
-  });
-
   test("parser SimpleIngredient to json",(){
     UnitRegister u1=new UnitRegister();
 

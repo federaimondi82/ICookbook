@@ -9,6 +9,8 @@ import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/compositeI
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/executionTime.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/userChecker.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/documentAdapter.dart';
 
 void main() {
@@ -65,7 +67,13 @@ void main() {
   });
 
   test("GET all recipe",() async {
-    Response response = await get("http://localhost:8080/docu/get_documents/federaimondi82@gmail.com");
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+    Response response = await get("http://localhost:8080/docu/get_documents/"+u.getEmail()+"/"+u.getPassword());
     List<dynamic> json = jsonDecode(response.body);
     List<Recipe> list=new List<Recipe>();
     json.forEach((doc){
@@ -75,7 +83,14 @@ void main() {
   });
 
   test("test get all lazy recipe",() async {
-    Response response = await get("http://localhost:8080/docu/get_documents/federaimondi82@gmail.com");
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+
+    Response response = await get("http://localhost:8080/docu/get_documents/"+u.getEmail()+"/"+u.getPassword());
     List<dynamic> json = jsonDecode(response.body);
 
     List<LazyResource> list=new List<LazyResource>();
@@ -88,34 +103,60 @@ void main() {
     list.forEach((el)=>print(el.toString()));
   });
 
-  test("GET one recipe",() async {
-    Response response = await get("http://localhost:8080/docu/get_documents/federaimondi82@gmail.com/pizza margherita");
+  test("GET single recipe",() async {
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+
+    Response response = await get("http://localhost:8080/docu/get_documents/"+u.getEmail()+"/"+u.getPassword()+"/"+"pizza margherita");
     Map<String,dynamic> json = jsonDecode(response.body);
     Recipe r=DocumentAdapter().toObject(json);
-    print(r.toString());
+    expect(r,isNotEmpty);
 
   });
 
   test("remove one recipe",() async{
-    Response response =await delete("http://localhost:8080/docu/delete_documents/federaimondi82@gmail.com/pizza margherita");
-    print(response.body.toString());
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+    Response response =await delete("http://localhost:8080/docu/delete_documents/"+u.getEmail()+"/"+u.getPassword()+"/"+"pizza margherita");
+    expect(response.body.toString(),equals("true"));
   });
 
 
   test("retrieve documentid",() async{
-    Response response =await get("http://localhost:8080/docu/get_documents/recipes/federaimondi82@gmail.com/pizza margherita");
-    print(response.body.toString());
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+    Response response =await delete("http://localhost:8080/docu/recipes/"+u.getEmail()+"/"+u.getPassword()+"/"+"pizza margerita");
+
+    //Response response =await get("http://localhost:8080/docu/get_documents/recipes/marconeri@gmail.com/pizza margherita");
+
   });
 
 
   test("post",() async {
     caricaRicette2();
-    Recipe r=Cookbook().getRecipe("spachetti allo scoglio");
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    u.setPassword(checker.criptPassword(u.getPassword()));
+    Recipe r=Cookbook().getRecipe("pizza margherita");
     Map<String,dynamic> docu=DocumentAdapter().setUserName().setRecipe(r).toJson();
 
     Response response = await post("http://localhost:8080/docu/post_documents/", body: jsonEncode(docu));
 
-    print(await response.body.toString());
+    expect(await response.body.toString(), equals("true"));
 
   });
 
@@ -127,14 +168,14 @@ void main() {
       el.forEach((lazy)=>list.add(lazy));//la lista viene riempita con i risultati del backend
     });
     //altra ricerca
-    expect(list.length, 2);
+    expect(list.length, 1);
     list.forEach((el)=>print(el.toString()));
     //list.clear();
     await s.findRecipes(list, "spaghetti", 0).then((el){
       list.clear();
       el.forEach((lazy)=>list.add(lazy));//la lista viene riempita con i risultati del backend
     });
-    expect(list.length, 1);
+    expect(list.length, 0);
     print("**************");
     list.forEach((el)=>print(el.toString()));
   });

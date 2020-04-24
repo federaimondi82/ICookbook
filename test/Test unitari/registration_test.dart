@@ -51,8 +51,8 @@ void main() {
 
   test("user login right all", () async {
     User u=new User();
-    u.setEmail("marconeri@gmail.com");
-    u.setPassword("marconeri");
+    u.setEmail("marioverdi@gmail.com");
+    u.setPassword("marioverdi");
     UserChecker checker=new UserChecker();
     checker.controlEmail(u.getEmail());
     u.setPassword(checker.criptPassword(u.getPassword()));

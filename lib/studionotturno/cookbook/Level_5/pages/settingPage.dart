@@ -154,7 +154,7 @@ class SettingPageState extends State<SettingPage>{
             value: Gender.M,
             groupValue: _gender,
             onChanged: (Gender value) {
-              print(value);
+              //print(value);
               this.user.setGender("M");
               setState(() {
                 _gender=Gender.M;
@@ -168,7 +168,7 @@ class SettingPageState extends State<SettingPage>{
             value: Gender.F,
             groupValue: _gender,
             onChanged: (Gender value) {
-              print(value);
+              //print(value);
               this.user.setGender("F");
               setState(() {
                 _gender=Gender.F;

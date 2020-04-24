@@ -27,6 +27,8 @@ class SplashState extends State<Splash>{
 
   int timeMillisecond;
   FileManager fileManager;
+  User user;
+
   @override
   void initState(){
     super.initState();
@@ -47,27 +49,25 @@ class SplashState extends State<Splash>{
   loadData() async{
 
     Mediator mediator=new Mediator();
-    mediator.loadDataFromFile().whenComplete((){
-      print("2");
+    await mediator.loadDataFromFile().whenComplete(() async{
       fileManager=new FileManager();
       Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
-      User u2=new User();
-      future.then((value) => value.forEach((element) {
-        u2=UserAdapter().setUser(u2).toObject(element);
+
+      future.then((value) => value.forEach((element) async{
+        await loadCacheFile(element).then((value) async {
+          if(value.getName()!=null){
+            RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
+            await mapper.reloadProxy();
+          }
+        });
       }));
-
-      if(u2.getName()!=null){
-        RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
-        mapper.reloadProxy();
-      }
     });
+  }
 
-    /*MokeStarter moke=new MokeStarter();
-    moke.deleteFile();//cancella il file
-    moke.caricaRicette2();//carica le ricette nel ricettario
-    moke.saveAllRecipes();//le salva nel file
-    moke.loadCookbook();//legge dal file e carica il ricettario*/
-
+  Future<User> loadCacheFile(Map<String,dynamic> element)async{
+    user=new User();
+    user=UserAdapter().setUser(user).toObject(element);
+    return user;
   }
 
   route(){

@@ -18,12 +18,12 @@ class UserAdapter implements Target{
   @override
   Map<String, dynamic> toJson() {
     return {
-      "name": this.user.getName(),
-      "surname": this.user.getSurname(),
-      "gender": this.user.getGender(),
-      "email": this.user.getEmail(),
-      "password":this.user.getPassword(),
-      "birthday":this.user.getBirthday().toString()
+      "name": this.user.getName()==null?"":this.user.getName(),
+      "surname": this.user.getSurname()==null?"":this.user.getSurname(),
+      "gender": this.user.getGender()==null?"":this.user.getGender(),
+      "email": this.user.getEmail()==null?"":this.user.getEmail(),
+      "password":this.user.getPassword()==null?"":this.user.getPassword(),
+      "birthday":this.user.getBirthday().toString()==null?"":this.user.getBirthday().toString()
     };
   }
 

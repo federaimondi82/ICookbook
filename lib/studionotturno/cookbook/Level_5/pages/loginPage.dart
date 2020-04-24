@@ -87,9 +87,9 @@ class LoginPageState extends State<LoginPage>{
                   height: 50,
                   minWidth: 200,
                   child: RaisedButton(
-                    onPressed: (){
+                    onPressed: ()async {
                       if(_formKey.currentState.validate()){
-                        login();
+                        await login();
                       }
                     },
                     color: Colors.blueGrey[900],
@@ -123,68 +123,23 @@ class LoginPageState extends State<LoginPage>{
     );
   }
 
-  /*void registration() async {
-    try{
-      User u=new User();
-      u.setName("Hamza");    u.setSurname("Dima");
-      u.setBirthday(new Birthday(10, 10, 2000));
-      u.setGender("F");    u.setEmail("HamzaGay"+Random().nextInt(90000).toString()+"@gmail.com");
-      u.setPassword("HamzascopaconDima");
-      UserChecker checker=new UserChecker();
-      checker.controlBirthday(u.getBirthday());
-      checker.controlEmail(u.getEmail());
-      u.setPassword(checker.criptPassword(u.getPassword()));
-
-      services=new ServicesRegister();
-      auth=services.getService("springboot").createServiceRegistration();
-      bool result = await auth.signin(UserAdapter().setUser(u).toJson());
-      if(result==true){
-        this.alert="Registrato";
-        FileManager fileManager=new FileManager();
-        await fileManager.saveCacheFile(u);
-        Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
-        User u2=new User();
-        future.then((value) => value.forEach((element) {
-          print(element);
-          u2=UserAdapter().setUser(u2).toObject(element);
-          print(u2.toString());
-        }));
-
-        Future.delayed(new Duration(milliseconds: 3000),(){
-          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
-        });
-      }
-    }
-    catch(e){
-      this.alert="Errore";
-    }*/
-
   void login() async {
     try{
       UserChecker checker=new UserChecker();
       checker.controlEmail(this.user.getEmail());
       this.user.setPassword(checker.criptPassword(this.user.getPassword()));
-
+      //print(user.toString());
       ServicesRegister services=new ServicesRegister();
       AuthServiceSpringboot auth=services.getService("springboot").createServiceRegistration();
       bool result=await auth.signup(UserAdapter().setUser(this.user).toJson());
 
-      if(result==true){
-        /*this.alert="Rigth data";
-        auth.retrieveData(this.user.getEmail(),this.user.getPassword());
-        *//*Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
-        User u2=new User();
-        future.then((value) => value.forEach((element) {
-          print(element);
-          u2=UserAdapter().setUser(u2).toObject(element);
-          print(u2.toString());
-        }));*//*
-        Future.delayed(new Duration(milliseconds: 1000),(){
-          Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
-        });*/
-        setState(() {
+     // print(result);
+      if(result==true){//utente autenticato
+        setState(() async {
           this.alert="Rigth data";
-          auth.retrieveData(this.user.getEmail(),this.user.getPassword());
+          FileManager fileManager=new FileManager();
+          await auth.retrieveData(this.user.getEmail(),this.user.getPassword())
+              .then((User user) async => await fileManager.saveCacheFile(user));
           Future.delayed(new Duration(milliseconds: 1000),(){
             Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
           });

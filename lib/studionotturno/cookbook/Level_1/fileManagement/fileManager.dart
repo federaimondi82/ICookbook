@@ -28,7 +28,7 @@ class FileManager{
 
       file.delete();
     }catch(e){
-      print(e);
+      //print(e);
     }
 
   }
@@ -93,13 +93,16 @@ class FileManager{
     try{
       final directory = await getApplicationDocumentsDirectory();
       final file = File('${directory.path}/cache.txt');
-      file.delete();
-      file.create();
+      await file.create();
+      //await file.delete().whenComplete(() async => await file.create());
+
       Map<String,dynamic> s1=UserAdapter().setUser(user).toJson();
       String s=JsonEncoder().convert(s1);
+      //print(s);
       await file.writeAsStringSync(s,flush: true,mode:FileMode.write,encoding: Encoding.getByName("UTF-8"));
+      print("write");
     }catch(e){
-      print("non si legge"+e);
+      print("non si legge"+e.toString());
     }
   }
 

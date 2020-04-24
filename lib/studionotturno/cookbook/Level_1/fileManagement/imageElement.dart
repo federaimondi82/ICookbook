@@ -33,7 +33,7 @@ class ImageElement{
   ImageElement setName(String name){
     List<String> s=name.split('/');
     String s1=s.last;
-    print(s1);
+    //print(s1);
     this.name=s1;
     return this;
   }

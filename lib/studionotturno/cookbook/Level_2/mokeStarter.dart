@@ -88,7 +88,7 @@ class MokeStarter{
   }
 
   void caricaRicette2() {
-    print("caricamento ricette");
+    //print("caricamento ricette");
     //Cookbook cookBook=new Cookbook();
     cookBook.clear();
 

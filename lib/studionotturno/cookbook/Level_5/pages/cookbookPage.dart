@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import '../components/cookbookPage/recipesListView.dart';
 import '../components/cookbookPage/searchDialogBlock.dart';
 
@@ -19,7 +20,6 @@ class CookbookPageState extends State<CookbookPage>{
       appBar: AppBar(
         title:Text('ICookbook'),
         actions: <Widget>[
-          //_searchDialog2(),
           new SearchDialogBlock(),
         ],),
       body: Center(

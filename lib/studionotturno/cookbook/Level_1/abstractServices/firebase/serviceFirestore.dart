@@ -63,7 +63,7 @@ class ServiceFirestore implements ServiceCloud{
     //TODO controllare con la nuova implementazione del future
     await this.firestore.collection('recipes').document(docToRemove).delete();
     proxy.remove(recipeName);
-    print("removed");
+    //print("removed");
   }
 
   @override

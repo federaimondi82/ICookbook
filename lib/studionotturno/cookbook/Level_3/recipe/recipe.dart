@@ -109,9 +109,9 @@ class Recipe implements Resource{
     if(ingredient==null) throw new Exception("Ingrediente null");
     bool trovato=false;
     this.ingredients.forEach((ing){
-      print(ing.toString());
-      print(ingredient.toString());
-      print("********");
+     // print(ing.toString());
+      //print(ingredient.toString());
+      //print("********");
       if(ing is SimpleIngredient) if(ing==ingredient) trovato=true;//if(ing.equals(ingredient))trovato=true;
       try{
         if(ing is CompositeIngredient){

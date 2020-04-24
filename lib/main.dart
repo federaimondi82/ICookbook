@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_2/mokeStarter.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userAdapter.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_5/pages/signinPage.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/splash.dart';
 
 void main()=>runApp(MyApp2());
@@ -22,15 +17,12 @@ class MyApp extends State<MyApp2> {
   @override
   void dispose() {
     //todo Mediator salva tutte le ricette
-    /*FileManager c=new FileManager();
-    c.saveAllRecipes();*/
     super.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -45,7 +37,7 @@ class MyApp extends State<MyApp2> {
     /*MokeStarter moke=new MokeStarter();
     moke.deleteFile();//cancella il file
     moke.caricaRicette2();//carica le ricette nel ricettario
-    moke.saveAllRecipes();//le salva nel file*/
+    moke.saveAllRecipes();*///le salva nel file
 
 
     //Carca le lezyResources dal cloud versio il client

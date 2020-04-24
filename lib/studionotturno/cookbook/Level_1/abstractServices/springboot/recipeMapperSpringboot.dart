@@ -23,9 +23,10 @@ class RecipeMapperSpringboot implements RecipeMapper{
     return _proxy;
   }
   @override
-  void reloadProxy(){
+  Future<List<LazyResource>> reloadProxy() async{
     Future<List<LazyResource>> list=s.getAllLazyRecipeOnCloud();
     list.then((value)=>lazyResources=value);
+    return Future.value(lazyResources);
   }
 
   @override

@@ -66,7 +66,7 @@ class ImageManagerLocal{
 
       return Future.value(true);
     }catch(e){
-      print("non si legge"+e);
+      //print("non si legge"+e);
       return Future.value(false);
     }
   }
