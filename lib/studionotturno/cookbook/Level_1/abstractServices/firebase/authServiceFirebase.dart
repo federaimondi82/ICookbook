@@ -10,7 +10,7 @@ class AuthServiceFirebase implements AuthService{
   }
 
   @override
-  Future<bool> signup(Map<String, dynamic> userJson) {
+  Future<String> signup(Map<String, dynamic> userJson) {
     // TODO: implement signup
     throw UnimplementedError();
   }

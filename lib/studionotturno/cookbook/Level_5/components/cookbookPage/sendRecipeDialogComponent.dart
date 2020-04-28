@@ -3,7 +3,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/serviceSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/serviceCloud.dart';
@@ -12,8 +11,8 @@ import 'package:ricettario/studionotturno/cookbook/Level_2/mediator.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userAdapter.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/cookbookPage.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_5/pages/loginPage.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_5/pages/signinPage.dart';
 
 class SendRecipeDialogComponent extends StatefulWidget{
@@ -33,7 +32,7 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
   String recipeName;
   Cookbook _cookBook;
   ServiceCloud service;
-
+  FileManager fileManager;
   User user;
 
   static const EdgeInsetsGeometry btnPadding=EdgeInsets.symmetric(horizontal: 20, vertical: 20);
@@ -41,7 +40,7 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
   SendRecipeDialogState(this.context,this.recipeName){
     user=new User();
     _cookBook=new Cookbook();
-    //fileManager=new FileManager();
+    fileManager=new FileManager();
   }
 
 
@@ -49,12 +48,12 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
   @override
   Widget build(BuildContext context) {
 
-    User user=new User();
+    /*User user=new User();
     List<LazyResource> map=new List<LazyResource>();
     if(user.getName()!=null){
       RecipeMapperSpringboot proxy=new RecipeMapperSpringboot();
       map=proxy.getMapper();
-    }
+    }*/
 
     return SimpleDialog(
       title: Text("SHARE or DELETE",textAlign: TextAlign.center),
@@ -73,17 +72,20 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async{
-              if(user.getName()=="" || user.getName()==null){
-                Navigator.push(context,MaterialPageRoute(builder:(context)=>SigninPage()));
-              }
-              else{
-                service=ServicesRegister().getService("springboot").createServiceCloud();
-                service.setRecipeName(recipeName);
-                await service.shareRecipe();
-                setState(() {
-                  Navigator.of(context).pop();
-                });
-              }
+              Mediator med=new Mediator();
+              med.loadJWT().then((value) async {
+                if(value=={} || value==null){
+                  Navigator.push(context,MaterialPageRoute(builder:(context)=>LoginPage()));
+                }
+                else{
+                  service=ServicesRegister().getService("springboot").createServiceCloud();
+                  service.setRecipeName(recipeName);
+                  await service.shareRecipe();
+                  setState(() {
+                    Navigator.of(context).pop();
+                  });
+                }
+              });
             },
             color: Colors.blueGrey[900],
             highlightColor: Colors.lightGreenAccent,
@@ -97,24 +99,21 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
           padding: btnPadding,
           child: RaisedButton(
             onPressed:() async {
-              //TODO con ServiceCloud
-              if(user.getName()=="" || user.getName()==null){
-                Navigator.push(context,MaterialPageRoute(builder:(context)=>SigninPage()));
-              }
-              else{
-                service=ServicesRegister().getService("springboot").createServiceCloud();
-                service.setRecipeName(recipeName);
-                await service.remove(recipeName);
-                setState(() {
-                  Navigator.of(context).pop();
-                });
-              }
-              /*service=new ServiceSpringboot();
-              service.setRecipeName(recipeName);
-              await service.remove(recipeName);
-              setState(() {
-                Navigator.of(context).pop();
-              });*/
+              Mediator med=new Mediator();
+              med.loadJWT().then((value) async {//si cerca il token,se non c'è l'utente non si è autenticato
+                //quindi viene rimandato alla pagina di login
+                if(value=={} || value==null){
+                  Navigator.push(context,MaterialPageRoute(builder:(context)=>LoginPage()));
+                }
+                else{
+                  service=ServicesRegister().getService("springboot").createServiceCloud();
+                  service.setRecipeName(recipeName);
+                  await service.remove(recipeName);
+                  setState(() {
+                    Navigator.of(context).pop();
+                  });
+                }
+              });
             },
             color: Colors.blueGrey[900],
             highlightColor: Colors.lightGreenAccent,
@@ -134,12 +133,8 @@ class SendRecipeDialogState extends State<SendRecipeDialogComponent>{
                 Mediator m=new Mediator();
                 m.saveAllRecipes().whenComplete((){
                   this.deactivate();
-                  //Navigator.of(context).pop();
                   Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
                 });
-
-                //this.deactivate();
-
              });
             },
             color: Colors.blueGrey[900],

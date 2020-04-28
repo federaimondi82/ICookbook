@@ -65,6 +65,25 @@ class SearchDialogBlock extends StatelessWidget{
     }
   }
 
+  Widget showLogout(BuildContext context){
+    if(user.getName()!=null){
+      return PopupMenuItem<ListTile>(
+        child: ListTile(
+          title: Text("Logout",style: textStyle),
+          leading: const Icon(Icons.settings, size: iconsSize, color: iconsColor),
+          onTap: (){
+            FileManager fileManager=new FileManager();
+            Future<bool> result=fileManager.deleteCache();
+            User user=new User();
+            user.deleteAll();
+            Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
+            //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  CookbookPage()),);
+          },
+        ),
+      );
+    }
+  }
+
   Widget showRegistration(BuildContext context){
     if(user.getName()==null){
       return PopupMenuItem<ListTile>(
@@ -96,22 +115,4 @@ class SearchDialogBlock extends StatelessWidget{
     }
   }
 
-  Widget showLogout(BuildContext context){
-    if(user.getName()!=null){
-      return PopupMenuItem<ListTile>(
-        child: ListTile(
-          title: Text("Logout",style: textStyle),
-          leading: const Icon(Icons.settings, size: iconsSize, color: iconsColor),
-          onTap: (){
-            FileManager fileManager=new FileManager();
-            Future<bool> result=fileManager.deleteCache();
-            User user=new User();
-            user.deleteAll();
-            Navigator.pushAndRemoveUntil(context,new MaterialPageRoute(builder:(BuildContext context)=>new CookbookPage()),(Route<dynamic> route) => false,);
-            //Navigator.pushReplacement(context,MaterialPageRoute(builder: (context) =>  CookbookPage()),);
-          },
-        ),
-      );
-    }
-  }
 }

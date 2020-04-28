@@ -1,18 +1,15 @@
 
 
-import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:intl/intl.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/authServiceSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_3/user/birthday.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/jwtToken.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/userChecker.dart';
-import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userJwtDataAdapter.dart';
 
 import 'cookbookPage.dart';
 
@@ -55,8 +52,8 @@ class LoginPageState extends State<LoginPage>{
   @override
   Widget build(BuildContext context) {
 
-    txtEmail= new TextEditingController(text: this.user.getEmail()==null?"Email":this.user.getEmail());
-    txtPass= new TextEditingController(text: this.user.getPassword()==null?"Pass":this.user.getPassword());
+    txtEmail= new TextEditingController(text: this.user.getEmail()==""?"marconeri@gmail.com":this.user.getEmail());
+    txtPass= new TextEditingController(text: this.user.getPassword()==""?"marconeri":this.user.getPassword());
 
     final format = DateFormat("yyyy-MM-dd");
 
@@ -123,36 +120,39 @@ class LoginPageState extends State<LoginPage>{
     );
   }
 
+  ///Implementazione della procedur di autenticazione e ricezione del token JWT
+  ///memorizzato poi in locale e riusato ogni volta per le comunicazioni
   void login() async {
     try{
+      //preparazione dei dati utente da inviare per l'autenticazione
       UserChecker checker=new UserChecker();
       checker.controlEmail(this.user.getEmail());
       this.user.setPassword(checker.criptPassword(this.user.getPassword()));
-      //print(user.toString());
       ServicesRegister services=new ServicesRegister();
       AuthServiceSpringboot auth=services.getService("springboot").createServiceRegistration();
-      bool result=await auth.signup(UserAdapter().setUser(this.user).toJson());
-
-     // print(result);
-      if(result==true){//utente autenticato
-        setState(() async {
+      FileManager fileManager=new FileManager();
+      //se l'utente è stato utenticato il server ha risposto con un token JWT
+      await auth.signup(UserJwtDataAdapter().setUser(this.user).toJson()).then((result) async{
+        if(result!=""){
           this.alert="Rigth data";
-          FileManager fileManager=new FileManager();
-          await auth.retrieveData(this.user.getEmail(),this.user.getPassword())
-              .then((User user) async => await fileManager.saveCacheFile(user));
-          Future.delayed(new Duration(milliseconds: 1000),(){
-            Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+          //se il server ha risposto correttamente il token viene salvato in locale
+          await fileManager.saveToken(result).whenComplete(() async {
+            String t=await JwtToken().getToken();
+            print("t: "+t);
+            setState(() async {
+              Future.delayed(new Duration(milliseconds: 1500),(){
+                Navigator.pushReplacement(context,MaterialPageRoute(builder:(context)=>CookbookPage()));
+              });
+            });
           });
-        });
-      }else{
-        setState(() {
-          this.alert="Wrong data";
-        });
-      }
+        }
+        else setState(()=>this.alert="Wrong data");
+        await fileManager.saveToken(result);
+      });
     }
     catch(e){
       this.alert="Errore";
     }
-
   }
+
 }

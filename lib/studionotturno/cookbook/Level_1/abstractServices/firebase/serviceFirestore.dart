@@ -6,6 +6,7 @@ import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/serviceCloud.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/jwtToken.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/documentAdapter.dart';
 
@@ -103,6 +104,5 @@ class ServiceFirestore implements ServiceCloud{
     // TODO: implement sendData
     throw UnimplementedError();
   }
-
 
 }

@@ -46,25 +46,27 @@ class SplashState extends State<Splash>{
   }
 
   ///Caricmento delle ricette in locale e confronto con le ricette on cloud
+  ///Vengono caricate le ricette memorizzata in un file di testo in locale;
+  ///una volta completato il caricamento vengono caricate le informazioni eventualmente
+  ///memorizzate riguardo all'utente e al token jwt
   loadData() async{
-
     Mediator mediator=new Mediator();
-    await mediator.loadDataFromFile().whenComplete(() async{
-      fileManager=new FileManager();
-      Future<List<Map<String,dynamic>>> future= fileManager.readFileCache();
+    fileManager=new FileManager();
+    RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
 
-      future.then((value) => value.forEach((element) async{
-        await loadCacheFile(element).then((value) async {
-          if(value.getName()!=null){
-            RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
-            await mapper.reloadProxy();
-          }
+    await mediator.loadDataFromFile().whenComplete(() async{
+      await mediator.loadJWT().whenComplete(() async {
+        RecipeMapper mapper=ServicesRegister().getService("springboot").createMapper();
+        await mapper.reloadProxy().whenComplete((){
+          fileManager.readFileCache().then((value){
+            if(value.isNotEmpty)loadUserFromFile(value.first);
+          }).whenComplete(() async => await mapper.reloadProxy());
         });
-      }));
+      });
     });
   }
 
-  Future<User> loadCacheFile(Map<String,dynamic> element)async{
+  Future<User> loadUserFromFile(Map<String,dynamic> element)async{
     user=new User();
     user=UserAdapter().setUser(user).toObject(element);
     return user;

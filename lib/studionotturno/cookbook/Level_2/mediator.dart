@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:ricettario/studionotturno/cookbook/Level_1/fileManagement/fileManager.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/cookbook.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_3/user/jwtToken.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/recipeAdapter.dart';
 
 
@@ -17,6 +18,8 @@ class Mediator{
   FileManager fileManager;
   List<Recipe> recipes;
   Cookbook cookbook;
+  Map<String,String> header;
+
   Mediator(){
     this.fileManager=new FileManager();
     this.recipes=new List<Recipe>();
@@ -57,5 +60,11 @@ class Mediator{
     return Future.value(true);
   }
 
+  Future<Map<String,String>> loadJWT() async{
+    this.header=new Map<String,String>();
+    String jwt=await JwtToken().getToken();
+    this.header.putIfAbsent("header", ()  => jwt);
+    return Future.value(this.header);
+  }
 
 }

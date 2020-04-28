@@ -56,7 +56,6 @@ class RecipesListViewState extends State<RecipesListView>{
   @override
   Widget build(context) {
     if(this.user.getName()!=null){
-      //print("this.user.getName "+this.user.getName());
       print("SI mapper");
       return FutureBuilder<List<LazyResource>>(
         future: this.fut,
@@ -65,7 +64,6 @@ class RecipesListViewState extends State<RecipesListView>{
             return CircularProgressIndicator();
           }
           if(snapshot.connectionState==ConnectionState.done){
-            //this.map.forEach((element) {print(element.toString());});
             return listView();
           }
           else return null;

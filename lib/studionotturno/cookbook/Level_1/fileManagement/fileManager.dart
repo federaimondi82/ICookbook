@@ -101,15 +101,17 @@ class FileManager{
       //print(s);
       await file.writeAsStringSync(s,flush: true,mode:FileMode.write,encoding: Encoding.getByName("UTF-8"));
       print("write");
+      return Future.value(true);
     }catch(e){
       print("non si legge"+e.toString());
+      return Future.value(false);
     }
   }
 
   ///Lettura del file di cache con i dati di registrazione dell'utente
   Future<List<Map<String,dynamic>>> readFileCache() async{
+    List<Map<String,dynamic>> cache=new List<Map<String,dynamic>>();
     try {
-      List<Map<String,dynamic>> cache=new List<Map<String,dynamic>>();
       final directory = await getApplicationDocumentsDirectory();
       File('${directory.path}/cache.txt').create();
       final file = File('${directory.path}/cache.txt');
@@ -120,11 +122,10 @@ class FileManager{
         cache.add(s2);
       }));
       print("cache:"+cache.toString());
-      return Future.value(cache);
-
     } catch (e) {
       print("Couldn't read file"+ e.toString());
     }
+    return Future.value(cache);
   }
 
   ///Cancellazione del file di cahce per i dati dell'utente
@@ -140,5 +141,38 @@ class FileManager{
       return Future.value(false);
     }
   }
+
+  ///Consente di memorizzare il token JWt in local per essere riusato
+  ///Se presente il file esso viene caricato ad ogni avvio dell'applicazione
+  Future<bool> saveToken(String token) async{
+    try{
+      final directory = await getApplicationDocumentsDirectory();
+      final file = File('${directory.path}/token.txt');
+      await file.create();
+      file.writeAsStringSync(token,flush: true,mode:FileMode.write,encoding: Encoding.getByName("UTF-8"));
+      return Future.value(true);
+    }catch(e){
+      print("non salva il token: "+e.toString());
+      return Future.value(false);
+    }
+  }
+
+  ///Consente di reperire il toke memeorizzato in locale
+  Future<String> readJWT() async{
+    try {
+      String token="";
+      final directory = await getApplicationDocumentsDirectory();
+      File('${directory.path}/token.txt').create();
+      final file = File('${directory.path}/token.txt');
+
+      Future<List<String>> future= file.readAsLines(encoding: Encoding.getByName("UTF-8"));
+      await future.then((list)=>token=list.first);
+      return Future.value(token);
+
+    } catch (e) {
+      print("Couldn't read file"+ e.toString());
+    }
+  }
+
 
 }

@@ -54,9 +54,16 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
       list.addAll(this.resourceFinded);
       this.resourceFinded.clear();
     }
-    await this.serviceCloud.findRecipes(list, value.toString(), i).then((el){
-      el.forEach((lazy)=>this.resourceFinded.add(lazy));//la lista viene riempita con i risultati del backend
+
+    List<LazyResource> theList=await this.serviceCloud.findRecipes(list, value.toString(), i);
+    Future.delayed(new Duration(milliseconds: 500),()async{
+        if(theList!=null){
+          theList.forEach((lazy)=>this.resourceFinded.add(lazy));
+          //this.resourceFinded.forEach((element)=>print("2:"+element.toString()));
+          setState(() {});
+        }
     });
+
   }
 
   void researchAfterRemoval() async{
@@ -73,11 +80,15 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
       if(key.toString()=="ing") values.forEach((el)=>listOfIngredient.add("\""+el+"\""));
       if(key.toString()=="time") values.forEach((el)=>listOfTime.add("\""+el+"\""));
     });
+   // this.resourceFinded.forEach((element) {print("1:"+element.toString());});
 
-
-    await this.serviceCloud.findRecipes( this.resourceFinded, totalTags.toString(), 4).then((el){
+    List<LazyResource> theList=await this.serviceCloud.findRecipes( this.resourceFinded, totalTags.toString(), 4);
+    Future.delayed(new Duration(milliseconds: 500),(){
       this.resourceFinded.clear();
-      el.forEach((lazy)=>this.resourceFinded.add(lazy));//la lista viene riempita con i risultati del backend
+      if(theList!=null){
+        theList.forEach((lazy)=>this.resourceFinded.add(lazy));
+        setState(() {});
+      }//la lista viene riempita con i risultati del backend
     });
   }
 
@@ -118,14 +129,13 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     removeButton: ItemTagsRemoveButton(
                       // ignore: missing_return
                       onRemoved: (){
-                        _tagsName.removeAt(index);
-                        _tags--;
+                        _tags--;_tagsName.removeAt(index);
                         researchAfterRemoval();
-                        Future.delayed(new Duration(milliseconds: 300),(){
+                        /*Future.delayed(new Duration(milliseconds: 300),(){
                           setState(() {
                             return true;
                           });
-                        });
+                        });*/
                         return true;
                       },
                     ),
@@ -139,13 +149,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
-                      refresh(value.toString(),0);
-                      Future.delayed(new Duration(milliseconds: 300),(){
-                        setState(() {
-                          _tagsName.add(value);
-                          _tags++;
-                        });
-                      });
+                      _tags++;_tagsName.add(value);
+                      refresh(value.toString(), 0);
                     }
                 ),
               ),
@@ -167,14 +172,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     ),
                     removeButton: ItemTagsRemoveButton(
                       onRemoved: (){
-                        _tagsIngredients.removeAt(index);
-                        _tags--;
+                        _tags--;_tagsIngredients.removeAt(index);
                         researchAfterRemoval();
-                        Future.delayed(new Duration(milliseconds: 200),(){
-                          setState(() {
-
-                          });
-                        });
                         return true;
                       },
                     ),
@@ -188,13 +187,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
+                      _tagsIngredients.add(value);_tags++;
                       refresh(value.toString(),1);
-                      Future.delayed(new Duration(milliseconds: 200),(){
-                        setState(() {
-                          _tagsIngredients.add(value);
-                          _tags++;
-                        });
-                      });
                     }
                 ),
               ),
@@ -216,12 +210,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     ),
                     removeButton: ItemTagsRemoveButton(
                       onRemoved: (){
-                        _tagsExecutionTime.removeAt(index);
-                        _tags--;
+                        _tags--;_tagsExecutionTime.removeAt(index);
                         researchAfterRemoval();
-                        setState(() {
-                          //return "";
-                        });
                         return true;
                       },
                     ),
@@ -235,13 +225,8 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
                     hintTextColor: Colors.purple,
                     textStyle: TextStyle(fontSize: 20,color: Colors.purple),
                     onSubmitted: (value) async{
+                      _tagsExecutionTime.add(value);_tags++;
                       refresh(value.toString(),2);
-                      Future.delayed(new Duration(milliseconds: 300),(){
-                        setState(() {
-                          _tagsExecutionTime.add(value);
-                          _tags++;
-                        });
-                      });
                     }
                 ),
               ),
@@ -278,5 +263,7 @@ class SearchInCloudPageState extends State<SearchInCloudPage>{
           );
         });
   }
+
+
 }
 

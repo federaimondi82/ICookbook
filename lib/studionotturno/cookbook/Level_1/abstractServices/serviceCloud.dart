@@ -4,10 +4,11 @@ import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 
 import '../lazyResource.dart';
 
+///
+///Componente del design pattern Abstract Factory implementata nel sottopackege firebase e springboot
 ///Astrazione per mettere in collegamento i servizi di backend con l'applicazione;
-/// serve per condividere, modificicare, reperire, cancellare ricette in cloud firestore
-/// di firebase.
-/// Non gestisce le immagini delle ricette in storage firebase
+/// serve per condividere, modificicare, reperire, cancellare ricette in cloud
+///
 /// Questa astrazione consente di mantenere il SW aperto a nuove implementazioni
 /// secondo il principio di Open/Close SOLID, mantiene la singola responsabilità,
 /// Interface segregation è rispettata grazie all'astrazione e permette il Liskov substitution.
@@ -28,7 +29,7 @@ abstract class  ServiceCloud{
   Future<List<LazyResource>> getAllLazyRecipeOnCloud();
 
   ///cancella la ricetta indicata dall'identificativo del suo documento sul backend
-  Future<bool> remove(String docToRemove);
+  Future<bool> remove(String recipeName);
 
   ///dopo aver impostato il nome della ricetta è possibile reperire il suo documentID
   ///sul database in cloud; naturalmente la ricetta deve essere stata salvata
@@ -45,6 +46,7 @@ abstract class  ServiceCloud{
   ///--3 per difficoltà
   Future<List<LazyResource>> findRecipes(List<LazyResource> list,String element,int opt);
 
+  ///metodo generico per inviare i dati verso il backend
   Future<bool> sendData(Object object,String url);
 
 }

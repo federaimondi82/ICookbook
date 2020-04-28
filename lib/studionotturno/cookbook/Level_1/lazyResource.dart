@@ -20,7 +20,7 @@ class LazyResource implements Resource{
   Resource toObject(Map<dynamic, dynamic> data) {
     this.documentID=data['documentID'];
     this.recipeName=data['recipeName'];
-    this.minutes=double.parse(data['executionTime']);//this.minutes=jsonDecode(data['executionTime']);
+    this.minutes=data['executionTime'];//double.parse(data['executionTime']);//this.minutes=jsonDecode(data['executionTime']);
     return this;
   }
 

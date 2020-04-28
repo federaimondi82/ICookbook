@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/servicesRegister.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/authServiceSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/abstractServices/springboot/serviceSpringboot.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_1/lazyResource.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/ingredient/compositeIngredient.dart';
@@ -12,26 +14,52 @@ import 'package:ricettario/studionotturno/cookbook/Level_3/recipe/recipe.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/user.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_3/user/userChecker.dart';
 import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/documentAdapter.dart';
+import 'package:ricettario/studionotturno/cookbook/Level_4/adapter/userJwtDataAdapter.dart';
 
 void main() {
 
+
+  Future<Map<String,String>> getHeader() async{
+    //creazione dell'utente
+    User u=new User();
+    u.setEmail("marconeri@gmail.com");
+    u.setPassword("marconeri");
+    UserChecker checker=new UserChecker();
+    checker.controlEmail(u.getEmail());
+    u.setPassword(checker.criptPassword(u.getPassword()));
+    //richiesta del token
+    ServicesRegister services=new ServicesRegister();
+    AuthServiceSpringboot auth=services.getService("springboot").createServiceRegistration();
+    Object obj=UserJwtDataAdapter().setUser(u).toJson();
+    Response response = await post("http://localhost:8080/user/public/login/",
+        body: jsonEncode(<String,dynamic>{"data":obj}),
+        encoding: Encoding.getByName("utf-8"));
+
+    String token=response.headers.entries.firstWhere((element) => element.key=="token").value;
+    print("token: "+token);
+
+    //preparazione richiesta dell'header poi del body per la richiesta
+    Map<String,String> header=new Map<String,String>();
+    header.putIfAbsent("header", ()  => token);
+    return header;
+  }
+
   test("concrete iterator by name with empty set",()async{
 
-    //creo un json fake di ricette già attenute da una precedente ricerca
+    Map<String,String> header=await getHeader();//caricamento di un header con il token JWT
+    //creo un json fake di ricette già ottenute da una precedente ricerca
     List<LazyResource> list=[];
     String name="spaghetti";
-    Response response =await post(ServiceSpringboot().getUrl()+"/docu/iterator/byName/"+name,
+    Response response =await post(ServiceSpringboot().getUrl()+"/docu/iterator/byName/",
+        headers: header,
         body: jsonEncode(
-            <String,List<dynamic>>{
+            <String,dynamic>{
               "res":list,
+              "element":name
             }
         ));
     List<dynamic> json = jsonDecode(response.body);
-    List<LazyResource> lazyListResponse=new List<LazyResource>();
-    json.forEach((doc){
-      lazyListResponse.add(LazyResource().toObject(doc));
-    });
-    lazyListResponse.forEach((el)=>print(el.toString()));
+    print(json.toString());
   });
 
   test("concrete iterator by name with full set",()async{
@@ -49,21 +77,27 @@ void main() {
       //riempio in json da inviare
       list.add(l);
     });
-    //print("count: "+list.length.toString());
+    Map<String,String> header=await getHeader();//caricamento di un header con il token JWT
 
     String name="pizza";
-    Response response =await post(ServiceSpringboot().getUrl()+"/docu/iterator/byName/"+name,
+    Response response =await post(ServiceSpringboot().getUrl()+"/docu/iterator/byName/",
+        headers: header,
         body: jsonEncode(
-            <String,List<dynamic>>{
+            <String,dynamic>{
               "res":list,
+              "element":name
             }
         ));
+
     List<dynamic> json = jsonDecode(response.body);
+    print(json.toString());
+
+    /*List<dynamic> json = jsonDecode(response.body);
     List<LazyResource> lazyListResponse=new List<LazyResource>();
     json.forEach((doc){
       lazyListResponse.add(LazyResource().toObject(doc));
     });
-    lazyListResponse.forEach((el)=>print(el.toString()));
+    lazyListResponse.forEach((el)=>print(el.toString()));*/
   });
 
   test("GET all recipe",() async {
@@ -119,14 +153,35 @@ void main() {
   });
 
   test("remove one recipe",() async{
+    //creazione dell'utente
     User u=new User();
     u.setEmail("marconeri@gmail.com");
     u.setPassword("marconeri");
     UserChecker checker=new UserChecker();
     checker.controlEmail(u.getEmail());
     u.setPassword(checker.criptPassword(u.getPassword()));
-    Response response =await delete("http://localhost:8080/docu/delete_documents/"+u.getEmail()+"/"+u.getPassword()+"/"+"pizza margherita");
-    expect(response.body.toString(),equals("true"));
+    //richiesta del token
+    ServicesRegister services=new ServicesRegister();
+    AuthServiceSpringboot auth=services.getService("springboot").createServiceRegistration();
+    Object obj=UserJwtDataAdapter().setUser(u).toJson();
+    Response response = await post("http://localhost:8080/user/public/login/",
+        body: jsonEncode(<String,dynamic>{"data":obj}),
+        encoding: Encoding.getByName("utf-8"));
+
+    String token=response.headers.entries.firstWhere((element) => element.key=="token").value;
+    print("token: "+token);
+
+    //preparazione richiesta dell'header poi del body per la richiesta
+    Map<String,String> header=new Map<String,String>();
+    header.putIfAbsent("header", ()  => token);
+
+    Response responseDelete = await post("http://localhost:8080/docu/delete_documents/",
+        body: jsonEncode(<String,dynamic>{"recipeName":"pizza margherita"}),
+        encoding: Encoding.getByName("utf-8"),
+        headers: header );
+
+    print(responseDelete.headers.toString());
+    print(responseDelete.body.toString());
   });
 
 
@@ -139,7 +194,7 @@ void main() {
     u.setPassword(checker.criptPassword(u.getPassword()));
     Response response =await delete("http://localhost:8080/docu/recipes/"+u.getEmail()+"/"+u.getPassword()+"/"+"pizza margerita");
 
-    //Response response =await get("http://localhost:8080/docu/get_documents/recipes/marconeri@gmail.com/pizza margherita");
+    print(response.body.toString());
 
   });
 
