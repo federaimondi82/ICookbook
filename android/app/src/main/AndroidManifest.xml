@@ -7,7 +7,7 @@
          FlutterApplication and put your custom class here. -->
     <!--android:name=".Application"-->
     <application
-        android:name="io.flutter.app.FlutterApplication"
+        android:name="io.flutter.embedding.android.FlutterActivity"
         android:label="Cookbook"
         android:icon="@mipmap/ic_launcher">
         <activity

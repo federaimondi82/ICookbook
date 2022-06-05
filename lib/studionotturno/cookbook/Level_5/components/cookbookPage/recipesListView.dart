@@ -97,8 +97,11 @@ class RecipesListViewState extends State<RecipesListView>{
               );
             },
             onLongPress: () {
-              showDialog(context: context,
-                  child: new SendRecipeDialogComponent(context, r.getName()));//_sendRecipeDialog(context, r.getName()));
+              showDialog(
+                  context: context,
+                  builder: (context){
+                    return SendRecipeDialogComponent(context, r.getName());
+                });//_sendRecipeDialog(context, r.getName()));
             },
             leading: const Icon(
                 Icons.local_dining, size: 40.0, color: Colors.purple),

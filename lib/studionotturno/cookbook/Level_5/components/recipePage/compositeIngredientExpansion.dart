@@ -85,7 +85,11 @@ class CompositeIngredientExpansionState extends State<CompositeIngredientExpansi
                       style:textStyle);
                   return GestureDetector(
                     onLongPress: (){
-                      showDialog(context: context,child: new CompositeIngredientRemoveDialog(context,this.recipe, item.ingredient.getName()));
+                      showDialog(
+                          context: context,
+                          builder:(context){
+                            return new CompositeIngredientRemoveDialog(context,this.recipe, item.ingredient.getName());
+                      });
                     },
                     onTap: (){
                       Navigator.pushReplacement(

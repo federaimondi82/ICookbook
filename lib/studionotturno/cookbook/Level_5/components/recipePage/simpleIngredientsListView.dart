@@ -44,7 +44,12 @@ class SimpleIngredientsListViewState extends State<SimpleIngredientsListView>{
             //TODO go to specific RecipePage
           },
           onLongPress: (){
-            showDialog(context: context,child: _simpleDialog(context,simple.getName()));
+            showDialog(
+              context: context,
+              builder: (context){
+                return _simpleDialog(context,simple.getName());
+              }
+            );
           },
           trailing: const Icon(Icons.plus_one,size: 40.0, color: Colors.purple),
           subtitle: Text(simple.getAmount().getAmount().round().toString()+' '+simple.getAmount().getUnit().getAcronym().toString().toLowerCase(),style: textStyle,),
